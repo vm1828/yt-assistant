@@ -1,0 +1,66 @@
+services:
+
+  # DATABASE
+  yt_assistant_db:
+    container_name: yt_assistant_db
+    restart: unless-stopped
+    build:
+      context: ./yt_assistant_db
+      dockerfile: Dockerfile.db.${ENV}
+    image: yt_assistant_db:latest
+    volumes:
+      - yt_assistant_db_data:/var/lib/postgresql/data
+    env_file:
+      - env/.db.env
+    ports:
+      - "5432:5432"
+    networks:
+      - app_network
+
+  # API
+  yt_assistant_api:
+    container_name: yt_assistant_api
+    restart: unless-stopped
+    build:
+      context: ./yt_assistant_api
+      dockerfile: Dockerfile.api.${ENV}
+    image: yt_assistant_api:latest
+    volumes:
+      - ./yt_assistant_api:/app
+    env_file:
+      - env/.env
+      - env/.api.env
+    ports:
+      - "${API_PORT}:${API_PORT}"
+    depends_on:
+      - yt_assistant_db
+    networks:
+      - app_network
+
+  # CLIENT
+  yt_assistant_client:
+    container_name: yt_assistant_client
+    restart: unless-stopped
+    build:
+      context: ./yt_assistant_client
+      dockerfile: Dockerfile.client.${ENV}
+    image: yt_assistant_client:latest
+    volumes:
+      - ./yt_assistant_client:/app
+    env_file:
+      - env/.env
+    ports:
+      - "${CLIENT_PORT}:${CLIENT_PORT}"
+    depends_on:
+      - yt_assistant_api
+    networks:
+      - app_network
+
+networks:
+  app_network:
+    name: "${ENV}_network"
+    driver: bridge
+
+volumes:
+  yt_assistant_db_data:
+    driver: local

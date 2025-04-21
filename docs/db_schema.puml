@@ -1,0 +1,69 @@
+@startuml
+
+entity "user" {
+  *id: VARCHAR <<PK>>  // Auth0 `sub`, e.g. "auth0|abc123"
+  email: VARCHAR
+}
+
+entity "video" {
+  +id: UUID
+  created_at: TIMESTAMP
+  title: VARCHAR
+  url: VARCHAR
+}
+
+entity "user_video" {
+  +id: UUID
+  created_at: TIMESTAMP
+  user_id: UUID
+  video_id: UUID
+}
+
+entity "transcript" {
+  +id: UUID
+  created_at: TIMESTAMP
+  video_id: UUID
+  transcript_text: TEXT
+}
+
+entity "summaries" {
+  +id: UUID
+  created_at: TIMESTAMP
+  video_id: UUID
+  summary_text: TEXT
+}
+
+entity "qa" {
+  +id: UUID
+  created_at: TIMESTAMP
+  user_id: UUID
+  video_id: UUID
+  question_text: TEXT
+  answer_text: TEXT
+}
+
+entity "embedding" {
+  +id: UUID
+  created_at: TIMESTAMP
+  video_id: UUID
+  embedding: vector(768)
+}
+
+'user-video relationship
+user_video::user_id --> user::id
+user_video::video_id --> video::id
+
+'video-transcript relationship
+transcript::video_id --> video::id
+
+'video-summaries relationship
+summaries::video_id --> video::id
+
+'video-qa relationship
+qa::video_id --> video::id
+qa::user_id --> user::id
+
+'video-embedding relationship
+embedding::video_id --> video::id
+
+@enduml
