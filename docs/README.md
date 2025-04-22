@@ -41,25 +41,42 @@ Environment variables are stored in `*.env` files in `env/` directory, e.g. `./e
 
 **`.env`**
 
-- ENV=local
-- API_HOST=0.0.0.0
-- API_PORT=8000
-- CLIENT_HOST=0.0.0.0
-- CLIENT_PORT=3000
+```
+ENV=
+API_HOST=
+API_PORT=
+CLIENT_HOST=
+CLIENT_PORT=
+```
 
 **`.api.env`**
 
-- POSTGRES_URL=`postgresql://<username>:<password>@<host>:<port>/<database_name>`
+```
+HUGGINGFACE_API_KEY=
+POSTGRES_URL=postgresql://<user>:<password>@<host>:<port>/<db_name>
+AUTH0_DOMAIN=
+AUTH0_AUDIENCE=
+```
 
 **`.db.env`**
 
-- POSTGRES_USER=username
-- POSTGRES_PASSWORD=password
-- POSTGRES_DB=database_name
+```
+POSTGRES_USER=
+POSTGRES_PASSWORD=
+POSTGRES_DB=
+````
+
+**`.client.env`**
+
+```
+VITE_AUTH0_DOMAIN=
+VITE_AUTH0_AUDIENCE=
+VITE_AUTH0_CLIENT_ID=
+```
 
 # API Documentation
 
-To access API documentation (Swagger UI), navigate to [host:8000/docs](http://<host>:8000/docs)
+To access API documentation (Swagger UI), navigate to [localhost:8000/docs](localhost:8000/docs)
 
 # DB Schema
 

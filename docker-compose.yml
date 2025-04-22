@@ -49,6 +49,7 @@ services:
       - ./yt_assistant_client:/app
     env_file:
       - env/.env
+      - env/.client.env
     ports:
       - "${CLIENT_PORT}:${CLIENT_PORT}"
     depends_on:

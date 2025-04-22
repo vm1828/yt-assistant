@@ -1,22 +1,36 @@
+# Node.js
 **/node_modules/
 **/dist/
 **/build/
-.eslintrc
 npm-debug.log
 
-__pycache__
-*.pyc
-*.pyo
-*.pyd
+# Env
+.env
+.env.*
+**/env/
+**.env
+
+# Docker
+Dockerfile
+docker-compose.yml
+
+# IDE, tools
+.vscode
+.eslintrc
+
+# Python
+__pycache__/
+*.py[cod]
 pip-log.txt
 .tox
-.coverage
-.coverage.*
+.coverage*
 .cache
 nosetests.xml
 coverage.xml
 *.cover
 *.log
-.git
-.mypy_cache
-.pytest_cache
+.mypy_cache/
+.pytest_cache/
+
+# Git
+.git/

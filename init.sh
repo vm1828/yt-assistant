@@ -15,6 +15,7 @@ ENV=local
 
 env_files=(
     "env/.env"
+    "env/.client.env"
     "env/.db.env"
     "env/.api.env"
 )
