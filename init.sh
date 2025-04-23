@@ -11,7 +11,7 @@ fi
 
 echo "" && echo "===================================================== SETUP ENVIRONMENT" && echo ""
 
-ENV=local
+export ENV=local
 
 env_files=(
     "env/.env"

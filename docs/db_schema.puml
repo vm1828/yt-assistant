@@ -1,8 +1,7 @@
 @startuml
 
-entity "user" {
+entity "account" {
   *id: VARCHAR <<PK>>  // Auth0 `sub`, e.g. "auth0|abc123"
-  email: VARCHAR
 }
 
 entity "video" {
@@ -12,10 +11,10 @@ entity "video" {
   url: VARCHAR
 }
 
-entity "user_video" {
+entity "account_video" {
   +id: UUID
   created_at: TIMESTAMP
-  user_id: UUID
+  account_id: UUID
   video_id: UUID
 }
 
@@ -36,7 +35,7 @@ entity "summaries" {
 entity "qa" {
   +id: UUID
   created_at: TIMESTAMP
-  user_id: UUID
+  account_id: UUID
   video_id: UUID
   question_text: TEXT
   answer_text: TEXT
@@ -49,9 +48,9 @@ entity "embedding" {
   embedding: vector(768)
 }
 
-'user-video relationship
-user_video::user_id --> user::id
-user_video::video_id --> video::id
+'account-video relationship
+account_video::account_id --> account::id
+account_video::video_id --> video::id
 
 'video-transcript relationship
 transcript::video_id --> video::id
@@ -61,7 +60,7 @@ summaries::video_id --> video::id
 
 'video-qa relationship
 qa::video_id --> video::id
-qa::user_id --> user::id
+qa::account_id --> account::id
 
 'video-embedding relationship
 embedding::video_id --> video::id

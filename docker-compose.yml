@@ -9,7 +9,7 @@ services:
       dockerfile: Dockerfile.db.${ENV}
     image: yt_assistant_db:latest
     volumes:
-      - yt_assistant_db_data:/var/lib/postgresql/data
+      - db_data:/var/lib/postgresql/data
     env_file:
       - env/.db.env
     ports:
@@ -63,5 +63,5 @@ networks:
     driver: bridge
 
 volumes:
-  yt_assistant_db_data:
+  db_data:
     driver: local
