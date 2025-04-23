@@ -3,3 +3,7 @@ Access db inside container:
 
 Tables:  
 `\dt`
+
+Remove volume:
+`docker volume ls`
+`docker volume remove yt-assistant_db_data`

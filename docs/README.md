@@ -79,7 +79,13 @@ VITE_AUTH0_CLIENT_ID=
 
 To access API documentation (Swagger UI), navigate to [localhost:8000/docs](localhost:8000/docs)
 
+## Endpoints
+
+- `GET /accounts/me` – Get the authenticated user's account (Auth0 protected)
+
 # DB Schema
+
+![db_schema_diagram](db_schema.png)
 
 ## account
 
