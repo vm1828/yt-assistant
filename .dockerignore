@@ -4,13 +4,11 @@
 **/build/
 npm-debug.log
 
-# Env
 .env
 .env.*
 **/env/
 **.env
 
-# Docker
 Dockerfile
 docker-compose.yml
 
@@ -19,7 +17,7 @@ docker-compose.yml
 .eslintrc
 
 # Python
-__pycache__/
+**/__pycache__/
 *.py[cod]
 pip-log.txt
 .tox
@@ -29,8 +27,11 @@ nosetests.xml
 coverage.xml
 *.cover
 *.log
-.mypy_cache/
-.pytest_cache/
+**/.mypy_cache/
+**/.pytest_cache/
 
 # Git
-.git/
+**/.git/
+
+# Tests
+**/tests/

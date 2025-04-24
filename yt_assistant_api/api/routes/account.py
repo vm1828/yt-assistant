@@ -19,9 +19,13 @@ def get_authenticated_user(
     auth0_user: Auth0Payload = Depends(get_current_account),
     db: Session = Depends(get_db),
 ):
+    # Check if account exists in the database
     account_id = auth0_user.sub
     db_user = get_account_by_id(db, account_id)
+
+    # If doesn't exist, create a new account
     if db_user is None:
         account_data = AccountCreate(id=account_id)
         db_user = create_account(db, account_data)
-    return db_user
+
+    return AccountRead(id=db_user.id)

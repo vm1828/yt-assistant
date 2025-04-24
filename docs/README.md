@@ -162,3 +162,17 @@ Stores vector embeddings related to videos, used for similarity search in RAG ta
 | created_at  | TIMESTAMP   | Timestamp of embedding creation |
 | video_id    | UUID        | Foreign key to `videos`         |
 | embedding   | vector(768) | Embedding vector                |
+
+# Unit Testing
+
+## Api
+
+To run unit tests for the api:  
+```
+cd yt_assistant_api
+PYTHONPATH=. pytest --cov
+```
+To see coverage:
+```
+coverage report -m
+```
