@@ -4,9 +4,9 @@
 set -e
 
 # Parse the command line arguments
-BUILD_FLAG=false
-if [ "$1" == "--build" ]; then
-    BUILD_FLAG=true
+BUILD=true
+if [ "$1" == "--no-build" ]; then
+    BUILD=false
 fi
 
 echo "" && echo "===================================================== SETUP ENVIRONMENT" && echo ""
@@ -14,7 +14,6 @@ echo "" && echo "===================================================== SETUP ENV
 export ENV=local
 
 env_files=(
-    "env/.env"
     "env/.client.env"
     "env/.db.env"
     "env/.api.env"
@@ -43,7 +42,7 @@ fi
 
 echo "" && echo "===================================================== BUILD PROJECT" && echo ""
 
-if [ "$BUILD_FLAG" = true ]; then
+if [ "$BUILD" = true ]; then
     echo "Building and starting Docker containers..."
     docker-compose up --build
 else

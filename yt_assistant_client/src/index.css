@@ -1,1 +1,117 @@
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap");
+
 @import "tailwindcss";
+
+@layer base {
+  body {
+    font-family: "DM Sans", serif;
+    font-optical-sizing: auto;
+    background: #f4f7fc; /* Light background */
+    color: #1a202c; /* Dark text */
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  h1 {
+    @apply mx-auto max-w-4xl text-center text-5xl font-bold leading-tight tracking-[-1%] text-gray-900 sm:text-[64px] sm:leading-[76px];
+  }
+
+  h2 {
+    @apply text-2xl font-bold text-gray-900 sm:text-3xl;
+  }
+
+  main {
+    @apply min-h-screen relative bg-white; /* Main content background */
+  }
+
+  header {
+    @apply sm:mt-10 mt-5;
+  }
+
+  header img {
+    @apply w-full max-w-lg h-auto object-contain mx-auto drop-shadow-md;
+  }
+
+  /* Dark mode base styles */
+  .dark body {
+    background: #030014; /* Dark background */
+    color: #e2e8f0; /* Light text for dark mode */
+  }
+}
+
+@theme {
+  --color-primary: #f4f7fc; /* Light primary */
+  --color-light-100: #d3d9f7;
+  --color-light-200: #b0bddf;
+  --color-gray-100: #a0a5b9;
+  --color-dark-100: #2d3748;
+
+  --font-dm-sans: "DM Sans", sans-serif;
+  --breakpoint-xs: 480px;
+}
+
+@layer components {
+  .simple-border {
+    @apply border-t border-gray-200 pt-2;
+  }
+  .user-login-button {
+    @apply absolute top-4 right-4 px-6 py-3 bg-gray-200 text-gray-900 rounded-xl shadow-md hover:bg-gray-300 transition;
+  }
+
+  .user-button {
+    @apply w-12 h-12 bg-gray-200 text-gray-900 rounded-full shadow-lg;
+  }
+
+  .user-button-logout {
+    @apply w-full p-2 flex justify-center text-gray-600 hover:text-gray-800;
+  }
+
+  .user-button-dropdown {
+    @apply text-gray-700 absolute top-16 right-0 w-40 bg-white shadow-lg rounded-lg p-3 space-y-2 border border-gray-300;
+  }
+
+  /* Dark mode component styles */
+  .dark .user-login-button {
+    @apply bg-gray-700 text-white hover:bg-gray-800;
+  }
+
+  .dark .user-button {
+    @apply bg-gray-700 text-white;
+  }
+
+  .dark .user-button-logout {
+    @apply text-gray-200 hover:text-gray-400;
+  }
+
+  .dark .user-button-dropdown {
+    @apply text-gray-200 bg-gray-800 border-gray-700;
+  }
+}
+
+@utility text-gradient {
+  @apply bg-gradient-to-r from-[#A6D8FF] to-[#5A7FFF] bg-clip-text text-transparent;
+}
+
+@utility fancy-text {
+  -webkit-text-stroke: 5px rgba(173, 185, 255, 0.5);
+  font-size: 190px;
+  font-family: "Bebas Neue", sans-serif;
+}
+
+@utility hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Hide Scrollbars */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

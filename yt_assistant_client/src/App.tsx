@@ -1,31 +1,69 @@
 import { useAuth0 } from "@auth0/auth0-react";
-import LoginButton from "./components/USER/LoginButton";
-import UserButton from "./components/USER/UserButton";
+import LoginButton from "./components/auth/UserLoginButton";
+import UserButton from "./components/auth/UserButton";
+import { useEffect } from "react";
+import { useThemeStore } from "./store/themeStore";
+import { getCurrentUser } from "./api/endpoints/account";
+import { useUserStore } from "./store/userStore";
+import logger from "./utils/logger";
 
-export default function App() {
-  const {
-    isAuthenticated,
-    isLoading,
-    user,
-    // getAccessTokenSilently
-  } = useAuth0();
+const App = () => {
+  const { isAuthenticated, isLoading, user, getAccessTokenSilently } =
+    useAuth0();
+  const { setUser } = useUserStore();
 
-  // const handleToken = async () => {
-  //   const token = await getAccessTokenSilently();
-  //   console.log("Token:", token);
-  // };
-  // const token = await handleToken(); // handleToken encapsulates the logic
-  // fetch("your-api-endpoint", { headers: { Authorization: `Bearer ${token}` } });
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const token = await getAccessTokenSilently();
+        const userData = await getCurrentUser(token);
+        setUser(userData);
+        logger.info(
+          { userId: userData.id, userData },
+          "User fetched successfully"
+        );
+      } catch (err) {
+        logger.error(
+          { error: err instanceof Error ? err.message : "Unknown error" },
+          "Error fetching user"
+        );
+      }
+    };
 
-  if (isLoading) return <div className="p-4 text-black">Loading...</div>;
+    if (isAuthenticated) {
+      fetchUser();
+    }
+  }, [isAuthenticated, getAccessTokenSilently, setUser]);
 
-  return (
-    <div className="min-h-screen bg-white text-black p-6 relative">
-      {/* Login Button */}
-      {!isAuthenticated && <LoginButton />}
+  logger.debug({ user: useUserStore.getState().user }, "Store State User");
 
-      {/* User Button and Dropdown */}
-      {isAuthenticated && user && <UserButton user={user} />}
-    </div>
-  );
-}
+  // Apply the theme to the body element
+  const { theme } = useThemeStore();
+  useEffect(() => {
+    const html = document.documentElement;
+    if (theme === "dark") {
+      html.classList.add("dark");
+      html.classList.remove("light");
+    } else {
+      html.classList.add("light");
+      html.classList.remove("dark");
+    }
+  }, [theme]);
+
+  let app;
+  if (isLoading) {
+    app = <div className="p-4 text-black">Loading...</div>;
+  } else if (!isAuthenticated) {
+    app = <LoginButton />;
+  } else if (isAuthenticated && user) {
+    app = (
+      <>
+        <UserButton user={user} />
+      </>
+    );
+  }
+
+  return <>{app}</>;
+};
+
+export default App;
