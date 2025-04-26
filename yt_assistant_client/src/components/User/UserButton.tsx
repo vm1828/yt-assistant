@@ -1,10 +1,6 @@
 import { useState } from "react";
 import UserButtonDropdown from "./UserButtonDropdown";
-import { User } from "@auth0/auth0-react";
-
-interface UserButtonProps {
-  user: User;
-}
+import { UserButtonProps } from "@/types";
 
 const UserButton = ({ user }: UserButtonProps) => {
   const [isDropdownVisible, setDropdownVisible] = useState(false);

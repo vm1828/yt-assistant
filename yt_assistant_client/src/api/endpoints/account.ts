@@ -1,4 +1,4 @@
-import apiClient from "../apiClient";
+import apiClient from "@/api/apiClient";
 
 export const getCurrentUser = async (token: string) => {
   const res = await apiClient.get("/accounts/me", {

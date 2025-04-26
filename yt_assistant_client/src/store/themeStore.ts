@@ -1,10 +1,5 @@
+import { ThemeState } from "@/types";
 import { create } from "zustand";
-
-type ThemeState = {
-  theme: "light" | "dark";
-  toggleTheme: () => void;
-  setTheme: (theme: "light" | "dark") => void;
-};
 
 export const useThemeStore = create<ThemeState>((set) => ({
   theme: "light", // default to light theme

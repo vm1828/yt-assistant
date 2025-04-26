@@ -1,6 +1,6 @@
 import { useAuth0 } from "@auth0/auth0-react";
-import LoginButton from "./components/auth/UserLoginButton";
-import UserButton from "./components/auth/UserButton";
+import LoginButton from "./components/User/UserLoginButton";
+import UserButton from "./components/User/UserButton";
 import { useEffect } from "react";
 import { useThemeStore } from "./store/themeStore";
 import { getCurrentUser } from "./api/endpoints/account";

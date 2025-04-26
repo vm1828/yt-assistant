@@ -1,5 +1,5 @@
 import React from "react";
-import { useThemeStore } from "../../store/themeStore";
+import { useThemeStore } from "@/store/themeStore";
 import { Sun, Moon } from "lucide-react"; // Import Sun and Moon icons
 
 const UserButtonThemeSwitcher: React.FC = () => {

@@ -1,10 +1,6 @@
-import { User } from "@auth0/auth0-react";
 import UserButtonThemeSwitcher from "./UserButtonThemeSwitcher";
 import UserButtonLogout from "./UserButtonLogout";
-
-interface UserButtonDropdownProps {
-  user: User;
-}
+import { UserButtonDropdownProps } from "@/types";
 
 const UserButtonDropdown: React.FC<UserButtonDropdownProps> = ({
   user,

@@ -1,6 +1,11 @@
 {
+  // Python
   "python.testing.pytestEnabled": true,
   "python.testing.unittestEnabled": false,
   "python.testing.cwd": "${workspaceFolder}/yt_assistant_api",
-  "python.testing.pytestArgs": [".."]
+  "python.testing.pytestArgs": [".."],
+
+  //JS/TS
+  "javascript.preferences.importModuleSpecifier": "non-relative",
+  "typescript.preferences.importModuleSpecifier": "non-relative"
 }
