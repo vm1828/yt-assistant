@@ -1,6 +1,5 @@
 #!/bin/bash
 # Local dev build script
-
 set -e
 
 # Parse the command line arguments
@@ -9,33 +8,18 @@ if [ "$1" == "--no-build" ]; then
     BUILD=false
 fi
 
+UTILS='./scripts/utils'
+find scripts/ -type f -exec chmod 700 {} +
+
 echo "" && echo "===================================================== SETUP ENVIRONMENT" && echo ""
 
 export ENV=local
-
-env_files=(
-    "env/.client.env"
-    "env/.db.env"
-    "env/.api.env"
-)
-
-for env_file in "${env_files[@]}"; do
-    echo "Sourcing $env_file"
-    set -o allexport
-    source "$env_file"
-    set +o allexport
-done
+source "${UTILS}/source_env_vars.sh"
 
 echo "" && echo "===================================================== INSTALL DEPENDENCIES" && echo ""
 
-if [ "$BUILD_FLAG" = true ]; then
-    echo "Installing Python dependencies..."
-    cd yt_assistant_api
-    poetry install --no-root
-    cd ..
-
-    echo "Instaling Node.js dependencies..."
-    npm install --prefix yt_assistant_client/
+if [ "$BUILD" = true ]; then
+    "${UTILS}/install_local_deps.sh"
 else
     echo "Skipping dependencies installation."
 fi
@@ -44,10 +28,12 @@ echo "" && echo "===================================================== BUILD PRO
 
 if [ "$BUILD" = true ]; then
     echo "Building and starting Docker containers..."
-    docker-compose up --build
+    docker-compose up --build -d
+    sleep 3
+    docker-compose exec yt_assistant_api poetry run alembic upgrade head
 else
     echo "Starting Docker containers without rebuilding..."
-    docker-compose up
+    docker-compose up -d
 fi
 
 echo ""

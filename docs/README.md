@@ -30,7 +30,7 @@ YT-Assistant is a web application designed to help users summarize YouTube video
 Run the following to install dependencies, build containers and start the project:
 
 ```bash
-./init.sh
+./scripts/init.sh
 ```
 
 With `--no-build` flag the script will just run the project from local environment
@@ -180,3 +180,10 @@ To see coverage:
 ```
 coverage report -m
 ```
+
+# Scripts
+
+Utility scripts are in `scripts/` dir.
+
+- `init.sh`
+- `alembic_migrate.sh`
