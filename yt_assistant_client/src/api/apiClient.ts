@@ -10,16 +10,4 @@ const apiClient = axios.create({
   },
 });
 
-// // Interceptor for logging requests during development/debugging.
-// apiClient.interceptors.request.use(
-//   (config) => {
-//     console.log("Request made with config:", config);
-//     return config;
-//   },
-//   (error) => {
-//     console.error("Request Error:", error);
-//     return Promise.reject(error);
-//   }
-// );
-
 export default apiClient;

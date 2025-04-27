@@ -1,6 +1,6 @@
 import React from "react";
 import { useThemeStore } from "@/store/themeStore";
-import { Sun, Moon } from "lucide-react"; // Import Sun and Moon icons
+import { Sun, Moon } from "lucide-react";
 
 const UserButtonThemeSwitcher: React.FC = () => {
   const { theme, toggleTheme } = useThemeStore();

@@ -10,6 +10,7 @@ const UserButton = ({ user }: UserButtonProps) => {
       {/* User Button */}
       <button
         className="user-button"
+        aria-label="User Button"
         onClick={() => setDropdownVisible(!isDropdownVisible)}
       >
         {user?.nickname?.[0]?.toUpperCase() || "U"}

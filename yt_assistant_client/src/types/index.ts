@@ -5,4 +5,5 @@ export type {
   UserButtonDropdownProps,
 } from "./User";
 
-export type { Theme, ThemeState } from "./theme";
+export type { ThemeState } from "./theme";
+export { Theme } from "./theme";

@@ -5,7 +5,11 @@ const LoginButton = () => {
   const { loginWithRedirect } = useAuth0();
 
   return (
-    <button onClick={() => loginWithRedirect()} className="user-login-button">
+    <button
+      onClick={() => loginWithRedirect()}
+      className="user-login-button"
+      aria-label="Login"
+    >
       <LogIn size={20} /> {/* Log In Icon */}
     </button>
   );

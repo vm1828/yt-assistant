@@ -6,47 +6,46 @@ import { useThemeStore } from "./store/themeStore";
 import { getCurrentUser } from "./api/endpoints/account";
 import { useUserStore } from "./store/userStore";
 import logger from "./utils/logger";
+import { Theme } from "@/types";
 
 const App = () => {
   const { isAuthenticated, isLoading, user, getAccessTokenSilently } =
     useAuth0();
-  const { setUser } = useUserStore();
 
+  // Fetch user on login, clear on logout ------- TODO: move to hooks/useUserData.ts
+  const { setUser, clearUser } = useUserStore();
   useEffect(() => {
     const fetchUser = async () => {
       try {
         const token = await getAccessTokenSilently();
         const userData = await getCurrentUser(token);
         setUser(userData);
-        logger.info(
-          { userId: userData.id, userData },
-          "User fetched successfully"
-        );
-      } catch (err) {
+      } catch (err: unknown) {
         logger.error(
-          { error: err instanceof Error ? err.message : "Unknown error" },
-          "Error fetching user"
+          { err: err instanceof Error ? err.message : "Unknown error" },
+          "Error fetching user data"
         );
       }
     };
-
     if (isAuthenticated) {
       fetchUser();
+    } else {
+      clearUser();
     }
-  }, [isAuthenticated, getAccessTokenSilently, setUser]);
+  }, [isAuthenticated, getAccessTokenSilently, setUser, clearUser]);
 
   logger.debug({ user: useUserStore.getState().user }, "Store State User");
 
-  // Apply the theme to the body element
+  // Apply the theme to the body element ------- TODO: move to hooks/useThemeSwitcher.ts
   const { theme } = useThemeStore();
   useEffect(() => {
     const html = document.documentElement;
-    if (theme === "dark") {
-      html.classList.add("dark");
-      html.classList.remove("light");
+    if (theme === Theme.DARK) {
+      html.classList.add(Theme.DARK);
+      html.classList.remove(Theme.LIGHT);
     } else {
-      html.classList.add("light");
-      html.classList.remove("dark");
+      html.classList.add(Theme.LIGHT);
+      html.classList.remove(Theme.DARK);
     }
   }, [theme]);
 

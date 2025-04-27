@@ -12,7 +12,7 @@ from tests.data.account import TEST_USER_SUB
 def test_get_authenticated_user_creates_account_if_missing(
     mock_create_account, mock_get_account_by_id, client
 ):
-    # ---------------- ARANGE ----------------
+    # ---------------- ARRANGE ----------------
 
     mock_get_account_by_id.return_value = None
     mock_create_account.return_value = Account(id=TEST_USER_SUB)
@@ -35,7 +35,7 @@ def test_get_authenticated_user_creates_account_if_missing(
 def test_get_authenticated_user_returns_existing_account(
     mock_create_account, mock_get_account_by_id, client
 ):
-    # ---------------- ARANGE ----------------
+    # ---------------- ARRANGE ----------------
 
     mock_get_account_by_id.return_value = Account(id=TEST_USER_SUB)
 
@@ -56,7 +56,7 @@ def test_get_authenticated_user_returns_existing_account(
 def test_get_authenticated_user_rejects_unauthorized_request(
     mock_verify_jwt_token, unauthenticated_client
 ):
-    # ---------------- ARANGE ----------------
+    # ---------------- ARRANGE ----------------
     headers = {"Authorization": "Bearer invalid_token"}
 
     # mock_get_jwk.return_value = {}

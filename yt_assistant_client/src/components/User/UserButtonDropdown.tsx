@@ -6,7 +6,11 @@ const UserButtonDropdown: React.FC<UserButtonDropdownProps> = ({
   user,
 }: UserButtonDropdownProps) => {
   return (
-    <div className="user-button-dropdown">
+    <div
+      role="menu"
+      aria-label="User Button Dropdown"
+      className="user-button-dropdown"
+    >
       <div className="text-sm truncate">{user?.email}</div>
       <div className="simple-border"></div>
 

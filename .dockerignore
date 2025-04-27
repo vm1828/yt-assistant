@@ -1,37 +1,41 @@
 # Node.js
 **/node_modules/
-**/dist/
 **/build/
-npm-debug.log
-
-.env
-.env.*
-**/env/
-**.env
-
-Dockerfile
-docker-compose.yml
-
-# IDE, tools
-.vscode
-.eslintrc
+**/npm-debug.log
+**/*.test.ts
+**/*.test.tsx
+**/*.spec.ts
+**/*.spec.tsx
+**/coverage/
+**/vitest.config.ts
+**/jest.config.ts
 
 # Python
 **/__pycache__/
-*.py[cod]
-pip-log.txt
-.tox
-.coverage*
-.cache
-nosetests.xml
-coverage.xml
-*.cover
-*.log
-**/.mypy_cache/
+**/*.py[cod]
+**/pip-log.txt
+**/.tox
+**/.coverage*
+**/.cache
+**/nosetests.xml
+**/coverage.xml
+**/*.cover
+**/*.log
+**/mypy_cache/
 **/.pytest_cache/
 
-# Git
-**/.git/
-
-# Tests
+# Other
+**/.vscode/
+**/.eslintrc
 **/tests/
+**/__tests__/
+**/*.md
+**/.vscode/
+**/*.log
+**/Dockerfile
+**/docker-compose.yml
+**/.env
+**/.env.*
+**/env/
+**/env
+**/.git/

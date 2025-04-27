@@ -166,19 +166,21 @@ Stores vector embeddings related to videos, used for similarity search in RAG ta
 
 # Unit Testing
 
-## Api
-
 To run unit tests for the api:
 
 ```
 cd yt_assistant_api
 PYTHONPATH=. pytest --cov
-```
-
-To see coverage:
-
-```
 coverage report -m
+
+```
+
+To run unit tests for the client:
+
+```
+cd yt_assistant_client
+npm run test
+npm run coverage # run tests with coverage
 ```
 
 # Scripts
