@@ -10,10 +10,39 @@ python = ">=3.12"
 fastapi = ">=0.115.12,<0.116.0"
 python-dotenv = ">=1.1.0,<2.0.0"
 uvicorn = ">=0.34.2,<0.35.0"
+sqlalchemy = "^2.0.40"
+authlib = "^1.5.2"
+httpx = "^0.28.1"
+psycopg2 = "^2.9.10"
+alembic = "^1.15.2"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.3.5"
+pytest-env = "^1.1.5"
+pytest-cov = "^6.1.1"
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+env = [
+    "ENV=test",
+    "API_HOST=localhost",
+    "API_PORT=8000",
+    "CLIENT_HOST=localhost",
+    "CLIENT_PORT=3000",
+    "HUGGINGFACE_API_KEY=test-hugginface-key",
+    "POSTGRES_URL=postgresql://test_user:test_passwd@test_db:5432/test_db",
+    "AUTH0_DOMAIN=test-auth0-domain",
+    "AUTH0_AUDIENCE=test-auth0-audience",
+    "CORS_ORIGINS=http://localhost:3000,http://test.com"
+]
+pythonpath = ["yt_assistant_api"]
+addopts = "--cov=yt_assistant_api --cov-report=term-missing"
+
+[tool.coverage.run]
+omit = [
+    "*/.vscode/*",
+    "*/site-packages/*"
+]

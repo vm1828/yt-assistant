@@ -44,6 +44,7 @@ pip-delete-this-directory.txt
 htmlcov/
 .tox/
 .nox/
+coverage
 .coverage
 .coverage.*
 .cache
@@ -198,6 +199,7 @@ dist-ssr
 
 # Editor directories and files
 .vscode/*
+!.vscode/settings.json
 !.vscode/extensions.json
 .idea
 .DS_Store

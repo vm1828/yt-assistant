@@ -1,0 +1,1 @@
+TEST_USER_SUB = "auth0|12345"
