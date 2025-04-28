@@ -2,12 +2,17 @@
 
 YT-Assistant is a web application designed to help users summarize YouTube video transcripts and extract valuable insights through question answering and reasoning. The app leverages LLMs for NLP tasks, including text summarization and Q&A. It stores video metadata and user data in a PostgreSQL database with the pgvector extension, enabling efficient retrieval for Retrieval-Augmented Generation tasks.
 
-## Features
+## Roadmap
 
-- User Authentification
-- YouTube video transcripts summarization
-- Q&A sessions
-- Storing video summaries for RAG
+- [x] User Authentication
+- [ ] Adding User Videos
+- [ ] Extracting Transcripts
+- [ ] Video Transcripts Summarization
+- [ ] Storing Video Summaries for RAG
+- [ ] Q&A Sessions
+- [ ] Video Player Integration
+- [ ] Finalizing UI
+- [ ] Future Enhancements
 
 ## Stack
 
