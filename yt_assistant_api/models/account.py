@@ -1,7 +1,8 @@
-from sqlalchemy import Column, String
-
-# from sqlalchemy.orm import relationship
 from core.db_session import Base
+
+from sqlalchemy import Column, String
+from sqlalchemy.orm import relationship
+from sqlalchemy.ext.associationproxy import association_proxy
 
 
 class Account(Base):
@@ -9,5 +10,7 @@ class Account(Base):
 
     id = Column(String, primary_key=True, index=True)  # Auth0 "sub"
 
-    # videos = relationship("Video", back_populates="account")
-    # qas = relationship("QA", back_populates="account")
+    account_videos = relationship(
+        "AccountVideo", back_populates="account", cascade="all, delete-orphan"
+    )
+    videos = association_proxy("account_videos", "video")

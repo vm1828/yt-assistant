@@ -5,17 +5,14 @@ entity "account" {
 }
 
 entity "video" {
-  +id: UUID
-  created_at: TIMESTAMP
+  +id: VARCHAR <<PK>>  // YouTube video ID, e.g. "dQw4w9WgXcQ"
   title: VARCHAR
-  url: VARCHAR
 }
 
 entity "account_video" {
-  +id: UUID
+  +account_id: VARCHAR <<PK, FK>>
+  +video_id: UUID <<PK, FK>>
   created_at: TIMESTAMP
-  account_id: UUID
-  video_id: UUID
 }
 
 entity "transcript" {

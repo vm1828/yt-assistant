@@ -108,9 +108,7 @@ Stores metadata about videos and their transcripts.
 | Column Name | Type      | Description               |
 | ----------- | --------- | ------------------------- |
 | id          | UUID      | Primary key               |
-| created_at  | TIMESTAMP | Timestamp of video upload |
 | title       | VARCHAR   | Video title               |
-| url         | VARCHAR   | YouTube video URL         |
 
 ## account_video
 
