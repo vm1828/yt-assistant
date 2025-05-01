@@ -20,8 +20,3 @@ app.add_middleware(
 )
 
 app.include_router(api_router)
-
-
-# @app.get("/")
-# async def root():
-#     return {"message": f"{settings.CORS_ORIGINS.split(",")}"}

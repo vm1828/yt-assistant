@@ -15,6 +15,7 @@ authlib = "^1.5.2"
 httpx = "^0.28.1"
 psycopg2 = "^2.9.10"
 alembic = "^1.15.2"
+beautifulsoup4 = "^4.13.4"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.3.5"

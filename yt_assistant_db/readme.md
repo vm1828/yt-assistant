@@ -22,3 +22,9 @@ poetry run alembic downgrade -1
 exit
 rm alembic/versions/<migration_file>.py # in repo
 ```
+
+Remove db data from tables:
+
+```
+TRUNCATE TABLE account_video, account, video RESTART IDENTITY CASCADE;
+```

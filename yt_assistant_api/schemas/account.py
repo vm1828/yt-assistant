@@ -7,7 +7,6 @@ class AccountCreate(BaseModel):
 
 class AccountRead(BaseModel):
     id: str
-
     model_config: ConfigDict = {"from_attributes": True}
 
 
