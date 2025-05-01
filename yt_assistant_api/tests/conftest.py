@@ -1,22 +1,20 @@
 import pytest
+
 from fastapi.testclient import TestClient
 from main import app
-from core.auth import get_current_account
-from schemas.account import Auth0Payload
-from tests.data.account import TEST_USER_SUB
+
+from core import get_current_account
+from schemas import Auth0Payload
 
 
 @pytest.fixture
-def client():
-    app.dependency_overrides[get_current_account] = lambda: Auth0Payload(
-        sub=TEST_USER_SUB
-    )
+def client_factory():
+    def make_client(sub: str, auth=True):
+        if not auth:
+            return TestClient(app)
+        app.dependency_overrides[get_current_account] = lambda: Auth0Payload(sub=sub)
+        client = TestClient(app)
+        return client
 
-    yield TestClient(app)
-
+    yield make_client
     app.dependency_overrides.clear()
-
-
-@pytest.fixture
-def unauthenticated_client():
-    yield TestClient(app)
