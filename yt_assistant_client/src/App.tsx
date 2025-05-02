@@ -1,53 +1,20 @@
 import { useAuth0 } from "@auth0/auth0-react";
-import LoginButton from "./components/User/UserLoginButton";
-import UserButton from "./components/User/UserButton";
-import { useEffect } from "react";
-import { useThemeStore } from "./store/themeStore";
-import { getCurrentUser } from "./api/endpoints/account";
-import { useUserStore } from "./store/userStore";
-import logger from "./utils/logger";
-import { Theme } from "@/types";
+
+import { LoginButton, UserButton } from "@/components/User";
+import { useUserStore } from "@/store";
+import { useUserData, useThemeSwitcher } from "@/hooks";
+import { logger } from "@/utils";
 
 const App = () => {
-  const { isAuthenticated, isLoading, user, getAccessTokenSilently } =
-    useAuth0();
+  const { isAuthenticated, isLoading, user } = useAuth0();
 
-  // Fetch user on login, clear on logout ------- TODO: move to hooks/useUserData.ts
-  const { setUser, clearUser } = useUserStore();
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const token = await getAccessTokenSilently();
-        const userData = await getCurrentUser(token);
-        setUser(userData);
-      } catch (err: unknown) {
-        logger.error(
-          { err: err instanceof Error ? err.message : "Unknown error" },
-          "Error fetching user data"
-        );
-      }
-    };
-    if (isAuthenticated) {
-      fetchUser();
-    } else {
-      clearUser();
-    }
-  }, [isAuthenticated, getAccessTokenSilently, setUser, clearUser]);
+  // Fetch user on login, clear on logout
+  useUserData();
 
   logger.debug({ user: useUserStore.getState().user }, "Store State User");
 
-  // Apply the theme to the body element ------- TODO: move to hooks/useThemeSwitcher.ts
-  const { theme } = useThemeStore();
-  useEffect(() => {
-    const html = document.documentElement;
-    if (theme === Theme.DARK) {
-      html.classList.add(Theme.DARK);
-      html.classList.remove(Theme.LIGHT);
-    } else {
-      html.classList.add(Theme.LIGHT);
-      html.classList.remove(Theme.DARK);
-    }
-  }, [theme]);
+  // Apply the theme to the body element
+  useThemeSwitcher();
 
   let app;
   if (isLoading) {
@@ -57,7 +24,7 @@ const App = () => {
   } else if (isAuthenticated && user) {
     app = (
       <>
-        <UserButton user={user} />
+        <UserButton />
       </>
     );
   }

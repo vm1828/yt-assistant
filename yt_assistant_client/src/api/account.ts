@@ -1,4 +1,4 @@
-import apiClient from "@/api/apiClient";
+import { apiClient } from "@/api";
 import { UserData } from "@/types";
 
 export const getCurrentUser = async (token: string): Promise<UserData> => {
