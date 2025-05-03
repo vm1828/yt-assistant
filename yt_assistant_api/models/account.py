@@ -1,7 +1,12 @@
-from sqlalchemy import Column, String
+from typing import List
 
-# from sqlalchemy.orm import relationship
+from sqlalchemy import Column, String
+from sqlalchemy.orm import relationship, Mapped
+from sqlalchemy.ext.associationproxy import association_proxy
+
 from core.db_session import Base
+from models.video import Video
+from models.accout_video import AccountVideo
 
 
 class Account(Base):
@@ -9,5 +14,7 @@ class Account(Base):
 
     id = Column(String, primary_key=True, index=True)  # Auth0 "sub"
 
-    # videos = relationship("Video", back_populates="account")
-    # qas = relationship("QA", back_populates="account")
+    account_videos: Mapped[List[AccountVideo]] = relationship(
+        "AccountVideo", back_populates="account", cascade="all, delete-orphan"
+    )
+    videos: Mapped[List[Video]] = association_proxy("account_videos", "video")

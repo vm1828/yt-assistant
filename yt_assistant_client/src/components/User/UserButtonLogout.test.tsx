@@ -1,7 +1,8 @@
+import { Mock } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { useAuth0 } from "@auth0/auth0-react";
-import { Mock } from "vitest";
-import UserButtonLogout from "@/components/User/UserButtonLogout";
+
+import { UserButtonLogout } from "@/components/User";
 
 vi.mock("@auth0/auth0-react");
 

@@ -1,9 +1,13 @@
 import { useState } from "react";
-import UserButtonDropdown from "./UserButtonDropdown";
-import { UserButtonProps } from "@/types";
 
-const UserButton = ({ user }: UserButtonProps) => {
+import { UserButtonDropdown } from "@/components/User";
+import { useUserStore } from "@/store";
+
+export const UserButton = () => {
   const [isDropdownVisible, setDropdownVisible] = useState(false);
+
+  const user = useUserStore((state) => state.auth0user);
+  if (!user) return null; // Don’t render until user is loaded
 
   return (
     <div className="absolute top-4 right-4">
@@ -17,9 +21,7 @@ const UserButton = ({ user }: UserButtonProps) => {
       </button>
 
       {/* User Button Dropdown */}
-      {isDropdownVisible && <UserButtonDropdown user={user} />}
+      {isDropdownVisible && <UserButtonDropdown />}
     </div>
   );
 };
-
-export default UserButton;

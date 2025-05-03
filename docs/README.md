@@ -5,13 +5,14 @@ YT-Assistant is a web application designed to help users summarize YouTube video
 ## Roadmap
 
 - [x] User Authentication
-- [ ] Adding User Videos
+- [x] UI Prototype
+- [x] Adding User Videos
 - [ ] Extracting Transcripts
 - [ ] Video Transcripts Summarization
 - [ ] Storing Video Summaries for RAG
 - [ ] Q&A Sessions
 - [ ] Video Player Integration
-- [ ] Finalizing UI
+- [ ] UI Refinement and Unit Testing
 - [ ] Future Enhancements
 
 ## Stack
@@ -105,12 +106,10 @@ Stores user id from Auth0.
 
 Stores metadata about videos and their transcripts.
 
-| Column Name | Type      | Description               |
-| ----------- | --------- | ------------------------- |
-| id          | UUID      | Primary key               |
-| created_at  | TIMESTAMP | Timestamp of video upload |
-| title       | VARCHAR   | Video title               |
-| url         | VARCHAR   | YouTube video URL         |
+| Column Name | Type    | Description |
+| ----------- | ------- | ----------- |
+| id          | UUID    | Primary key |
+| title       | VARCHAR | Video title |
 
 ## account_video
 

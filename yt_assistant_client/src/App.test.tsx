@@ -1,32 +1,33 @@
-import App from "@/App";
-import { render, screen, waitFor } from "@testing-library/react";
-
-import { TEST_AUTH0_USER, TEST_STORE_USER } from "@/test-utils/data/user";
-
-import { useThemeStore } from "@/store/themeStore";
-
-import { Theme, UserState } from "@/types";
-import { act } from "react";
-import { useUserStore } from "@/store/userStore";
 import { Mock } from "vitest";
+import { act } from "react";
+import { render, screen, waitFor } from "@testing-library/react";
 import { useAuth0 } from "@auth0/auth0-react";
-import { getCurrentUser } from "@/api/endpoints/account";
+
+import App from "@/App";
+import { useThemeStore, useUserStore } from "@/store";
+import { Theme, UserState } from "@/types";
+import { getCurrentUser } from "@/api";
+import { TEST_AUTH0_USER, TEST_STORE_USER } from "@/test-utils/data/user";
 
 // -------------------------- SETUP --------------------------
 
 vi.mock("@auth0/auth0-react", () => ({
   useAuth0: vi.fn(),
 }));
-vi.mock("@/api/endpoints/account", () => ({
+vi.mock("@/api", () => ({
   getCurrentUser: vi.fn(),
 }));
 
 const mockUserStore = () => {
-  const mockSetUser = vi.fn<(user: UserState["user"]) => void>();
+  const mockSetUser =
+    vi.fn<
+      (user: UserState["user"], auth0user: UserState["auth0user"]) => void
+    >();
   const mockClearUser = vi.fn<() => void>();
 
   useUserStore.setState({
     user: TEST_STORE_USER,
+    auth0user: TEST_AUTH0_USER,
     setUser: mockSetUser,
     clearUser: mockClearUser,
   });
@@ -62,18 +63,20 @@ describe("App Component - Rendering", () => {
     expect(loginButton).toHaveClass("user-login-button");
   });
 
-  test("render user button when authenticated", () => {
+  test("render user button when authenticated", async () => {
     // --------------- ARRANGE -------------------
     (useAuth0 as Mock).mockReturnValue({
       isAuthenticated: true,
-      getAccessTokenSilently: vi.fn(),
+      getAccessTokenSilently: vi.fn().mockResolvedValueOnce("token"),
       user: TEST_AUTH0_USER,
     });
     // ------------- ACT & ASSERT ----------------
     render(<App />);
-    const userButton = screen.getByRole("button", { name: /user button/i });
-    expect(userButton).toBeInTheDocument();
-    expect(userButton).toHaveClass("user-button");
+    await waitFor(() => {
+      const userButton = screen.getByRole("button", { name: /user button/i });
+      expect(userButton).toBeInTheDocument();
+      expect(userButton).toHaveClass("user-button");
+    });
   });
 });
 
@@ -92,7 +95,10 @@ describe("App Component - User Authentication & Store Management", () => {
     // ------------- ACT & ASSERT ----------------
     render(<App />);
     await waitFor(() => {
-      expect(mockSetUser).toHaveBeenCalledWith(TEST_STORE_USER);
+      expect(mockSetUser).toHaveBeenCalledWith(
+        TEST_STORE_USER,
+        TEST_AUTH0_USER
+      );
     });
   });
 

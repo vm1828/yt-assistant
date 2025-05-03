@@ -1,14 +1,15 @@
 import React from "react";
-import { useThemeStore } from "@/store/themeStore";
 import { Sun, Moon } from "lucide-react";
 
-const UserButtonThemeSwitcher: React.FC = () => {
+import { useThemeStore } from "@/store";
+
+export const UserButtonThemeSwitcher: React.FC = () => {
   const { theme, toggleTheme } = useThemeStore();
 
   return (
     <button
       onClick={toggleTheme}
-      className="p-3 rounded-lg transition-all"
+      className="user-dropdown-button"
       aria-label="Toggle theme"
     >
       {theme === "light" ? (
@@ -19,5 +20,3 @@ const UserButtonThemeSwitcher: React.FC = () => {
     </button>
   );
 };
-
-export default UserButtonThemeSwitcher;

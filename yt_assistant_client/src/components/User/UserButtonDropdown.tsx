@@ -1,15 +1,13 @@
-import UserButtonThemeSwitcher from "./UserButtonThemeSwitcher";
-import UserButtonLogout from "./UserButtonLogout";
-import { UserButtonDropdownProps } from "@/types";
+import { UserButtonLogout, UserButtonThemeSwitcher } from "@/components/User";
+import { useUserStore } from "@/store";
 
-const UserButtonDropdown: React.FC<UserButtonDropdownProps> = ({
-  user,
-}: UserButtonDropdownProps) => {
+export const UserButtonDropdown = () => {
+  const user = useUserStore((state) => state.auth0user);
   return (
     <div
       role="menu"
       aria-label="User Button Dropdown"
-      className="user-button-dropdown"
+      className="user-dropdown"
     >
       <div className="text-sm truncate">{user?.email}</div>
       <div className="simple-border"></div>
@@ -22,5 +20,3 @@ const UserButtonDropdown: React.FC<UserButtonDropdownProps> = ({
     </div>
   );
 };
-
-export default UserButtonDropdown;

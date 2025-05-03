@@ -4,16 +4,9 @@ export type UserData = {
   id: string;
 };
 
-export type UserState = {
+export interface UserState {
   user: UserData | null;
-  setUser: (user: UserData) => void;
+  auth0user: User | null;
+  setUser: (user: UserData, auth0user: User) => void;
   clearUser: () => void;
-};
-
-export type UserButtonProps = {
-  user: User;
-};
-
-export type UserButtonDropdownProps = {
-  user: User;
-};
+}
