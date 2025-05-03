@@ -9,7 +9,7 @@ export const UserButtonLogout = () => {
   };
 
   return (
-    <button onClick={handleLogout} className="user-dropdown-button">
+    <button onClick={handleLogout} className="user-dropdown-button w-full">
       <LogOut size={20} />
     </button>
   );

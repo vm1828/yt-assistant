@@ -61,15 +61,14 @@
 
   /* LOGIN BUTTON */
   .user-login-button {
-    @apply absolute top-4 right-4 rounded-xl bg-gray-200 px-6 py-3 text-gray-900 shadow-md transition hover:bg-gray-300;
+    @apply absolute top-4 right-4 rounded-md bg-gray-200 px-6 py-3 text-gray-900 shadow-md transition hover:bg-gray-300;
   }
   .dark .user-login-button {
     @apply bg-gray-700 text-white hover:bg-gray-800;
   }
-
   /* USER BUTTON */
   .user-button {
-    @apply h-12 w-12 rounded-full bg-gray-200 text-gray-900 shadow-lg;
+    @apply fixed top-4 right-4 z-50 h-12 w-12 rounded-full bg-gray-200 text-gray-900 shadow-lg;
   }
   .dark .user-button {
     @apply bg-gray-700 text-white;
@@ -77,19 +76,90 @@
 
   /* USER DROPDOWN */
   .user-dropdown {
-    @apply absolute top-16 right-0 w-40 space-y-2 rounded-lg border border-gray-300 bg-white p-3 text-gray-700 shadow-lg;
+    @apply fixed top-20 right-4 z-50 w-40 space-y-2 rounded-md border border-gray-300 bg-white p-3 text-gray-700 shadow-lg;
   }
   .dark .user-dropdown {
     @apply border-gray-700 bg-gray-800 text-gray-200;
   }
 
   .user-dropdown-button {
-    @apply flex w-full justify-center rounded-md p-2 text-gray-600 transition-colors hover:bg-gray-200 hover:text-gray-800;
+    @apply flex justify-center rounded-md p-2 text-gray-600 transition-colors hover:bg-gray-200 hover:text-gray-800;
   }
   .dark .user-dropdown-button {
     @apply text-gray-200 hover:bg-gray-600 hover:text-gray-200;
   }
+
+  /* BUTTON ACTION */
+  .button-action {
+    @apply rounded-md bg-gray-800 px-4 py-2 text-white transition hover:bg-gray-950;
+  }
+
+  /* VIDEO INPUT */
+  .input-field {
+    @apply w-full rounded-md border border-gray-300 bg-white px-4 py-2 pr-10 text-gray-700 shadow-sm focus:border-gray-700 focus:ring-0 focus:ring-gray-700 focus:outline-none;
+  }
+  .dark .input-field {
+    @apply border-gray-600 bg-gray-800 text-gray-100 placeholder-gray-400 focus:border-gray-300 focus:ring-0 focus:outline-none;
+  }
+
+  /* VIDEO SUBMIT BUTTON */
+  .video-submit-button {
+    @apply absolute top-1/2 right-2 -translate-y-1/2 text-gray-600 transition-all duration-200 ease-in-out hover:scale-110 hover:text-gray-700 focus:ring-2 focus:ring-gray-700 focus:outline-none active:scale-95 dark:text-gray-200 dark:hover:text-gray-300;
+  }
+  .dark .video-submit-button {
+    @apply text-gray-200 hover:text-gray-300 dark:hover:text-gray-400;
+  }
+
+  /* COLLAPSIBLE TOGGLE */
+  .collapsible-toggle {
+    @apply flex w-full items-center justify-center rounded-sm border border-white/40 bg-white/40 text-sm font-medium text-gray-900 backdrop-blur-md transition-all duration-300 hover:bg-white/50 hover:shadow-lg;
+  }
+  .dark .collapsible-toggle {
+    @apply border-white/20 bg-black/40 text-gray-200 hover:bg-white/20 hover:shadow-lg;
+  }
+
+  /* VIDEO SIDEBAR */
+  .video-sidebar {
+    @apply h-full w-4 overflow-hidden rounded-sm border-r border-white/30 bg-white/20 backdrop-blur-md transition-all duration-300 hover:h-full hover:w-64 hover:shadow-xl;
+  }
+  .video-sidebar {
+    @apply fixed top-0 left-0 z-40 h-1/7 w-5 rounded-sm; /* Set small height when collapsed */
+  }
+  .video-sidebar:hover {
+    @apply w-64; /* Expands on hover */
+  }
+  .dark .video-sidebar {
+    @apply border-r border-white/10 bg-black/30 backdrop-blur-md hover:shadow-xl;
+  }
+  .video-sidebar:hover .video-list-title {
+    @apply max-w-full opacity-100;
+  }
+
+  /* VIDEO LIST TITLE */
+  .video-list-title {
+    @apply overflow-hidden px-2 py-1 text-ellipsis whitespace-nowrap opacity-0 transition-opacity duration-200 hover:bg-white/40 dark:hover:bg-white/20;
+  }
+
+  .dark .video-list-title {
+    @apply bg-black/20 text-sm hover:bg-white/20;
+  }
+
+  /* SUMMARY */
+  .summary-container {
+    @apply mb-4;
+  }
+  .summary {
+    @apply rounded-md bg-gray-100 p-4;
+  }
+  .dark .summary {
+    @apply bg-gray-700 text-gray-100;
+  }
+  .summary p {
+    @apply text-gray-700 dark:text-gray-300;
+  }
 }
+
+/* ======================================= UTILITIES ======================================= */
 
 @utility text-gradient {
   @apply bg-gradient-to-r from-[#A6D8FF] to-[#5A7FFF] bg-clip-text text-transparent;

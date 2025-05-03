@@ -10,20 +10,23 @@ export const useUserData = () => {
   const { setUser, clearUser } = useUserStore();
 
   useEffect(() => {
-    if (isAuthenticated && user) {
-      getAccessTokenSilently()
-        .then((token) => getCurrentUser(token))
-        .then((userData) => {
+    const fetchUser = async () => {
+      if (isAuthenticated && user) {
+        try {
+          const token = await getAccessTokenSilently();
+          const userData = await getCurrentUser(token);
           setUser(userData, user);
-        })
-        .catch((err: unknown) => {
+        } catch (err: unknown) {
           logger.error(
             { err: err instanceof Error ? err.message : "Unknown error" },
-            "Error fetching user data"
+            "Error fetching user data",
           );
-        });
-    } else {
-      clearUser();
-    }
+        }
+      } else {
+        clearUser();
+      }
+    };
+
+    fetchUser();
   }, [isAuthenticated, getAccessTokenSilently, user, setUser, clearUser]);
 };
