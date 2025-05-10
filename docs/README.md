@@ -29,7 +29,7 @@ YT-Assistant is a web application designed to help users summarize YouTube video
 - Python 3.12
 - Poetry 2.1.2
 - Node.js v22 + npm v10
-- Docker
+- Docker 28.1.1
 
 ## Setup
 
