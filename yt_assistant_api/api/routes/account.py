@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
-from core import get_current_account, get_db
+from core import get_current_account, get_db_sync, logger
 from schemas import Auth0Payload, AccountCreate, AccountRead
-from crud import create_account, get_account_by_id
+from crud import create_account, get_account_by_id_sync
 
 router = APIRouter()
 
@@ -16,14 +16,14 @@ router = APIRouter()
 )
 def get_authenticated_user(
     auth0_user: Auth0Payload = Depends(get_current_account),
-    db: Session = Depends(get_db),
+    db: Session = Depends(get_db_sync),
 ):
-    # Check if account exists in the database
+    logger.info("Fetching user account...")  # Check if account exists in the database
     account_id = auth0_user.sub
-    db_user = get_account_by_id(db, account_id)
+    db_user = get_account_by_id_sync(db, account_id)
 
-    # If doesn't exist, create a new account
     if db_user is None:
+        logger.info("Adding new user account...")
         account_data = AccountCreate(id=account_id)
         db_user = create_account(db, account_data)
 

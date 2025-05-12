@@ -11,29 +11,29 @@ entity "video" {
 
 entity "account_video" {
   +account_id: VARCHAR <<PK, FK>>
-  +video_id: UUID <<PK, FK>>
+  +video_id: VARCHAR <<PK, FK>>
   created_at: TIMESTAMP
 }
 
 entity "transcript" {
   +id: UUID
   created_at: TIMESTAMP
-  video_id: UUID
+  video_id: VARCHAR
   transcript_text: TEXT
 }
 
 entity "summary" {
   +id: UUID
   created_at: TIMESTAMP
-  video_id: UUID
+  video_id: VARCHAR
   summary_text: TEXT
 }
 
 entity "qa" {
   +id: UUID
   created_at: TIMESTAMP
-  account_id: UUID
-  video_id: UUID
+  account_id: VARCHAR
+  video_id: VARCHAR
   question_text: TEXT
   answer_text: TEXT
 }
@@ -41,7 +41,7 @@ entity "qa" {
 entity "embedding" {
   +id: UUID
   created_at: TIMESTAMP
-  video_id: UUID
+  video_id: VARCHAR
   embedding: vector(768)
 }
 

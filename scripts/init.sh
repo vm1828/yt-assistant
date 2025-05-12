@@ -28,12 +28,12 @@ echo "" && echo "===================================================== BUILD PRO
 
 if [ "$BUILD" = true ]; then
     echo "Building and starting Docker containers..."
-    docker-compose up --build -d
+    docker compose up --build -d
     sleep 3
-    docker-compose exec yt_assistant_api poetry run alembic upgrade head
+    docker compose exec yt_assistant_api poetry run alembic upgrade head
 else
     echo "Starting Docker containers without rebuilding..."
-    docker-compose up -d
+    docker compose up -d
 fi
 
 echo ""

@@ -7,41 +7,41 @@ from tests.data import *
 
 
 # Case: No account exists, create one
-@patch("api.routes.account.get_account_by_id")
+@patch("api.routes.account.get_account_by_id_sync")
 @patch("api.routes.account.create_account")
 def test_get_authenticated_user_200_creates_account_if_missing(
-    mock_create_account, mock_get_account_by_id, client_factory
+    mock_create_account, mock_get_account_by_id_sync, client_factory
 ):
     # ---------------- ARRANGE ----------------
     client = client_factory(TEST_USER_1_SUB)
-    mock_get_account_by_id.return_value = None
+    mock_get_account_by_id_sync.return_value = None
     mock_create_account.return_value = Account(id=TEST_USER_1_SUB)
 
     # ----------------- ACT ------------------
     response = client.get("/accounts/me", headers=TEST_HEADERS)
 
     # ---------------- ASSERT ----------------
-    assert mock_get_account_by_id.call_count == 1
+    assert mock_get_account_by_id_sync.call_count == 1
     assert mock_create_account.call_count == 1
     assert response.status_code == 200
     assert response.json() == {"id": TEST_USER_1_SUB}
 
 
 # Case: Account exists already, return it
-@patch("api.routes.account.get_account_by_id")
+@patch("api.routes.account.get_account_by_id_sync")
 @patch("api.routes.account.create_account")
 def test_get_authenticated_user_200_returns_existing_account(
-    mock_create_account, mock_get_account_by_id, client_factory
+    mock_create_account, mock_get_account_by_id_sync, client_factory
 ):
     # ---------------- ARRANGE ----------------
     client = client_factory(TEST_USER_1_SUB)
-    mock_get_account_by_id.return_value = Account(id=TEST_USER_1_SUB)
+    mock_get_account_by_id_sync.return_value = Account(id=TEST_USER_1_SUB)
 
     # ----------------- ACT ------------------
     response = client.get("/accounts/me", headers=TEST_HEADERS)
 
     # ---------------- ASSERT ----------------
-    assert mock_get_account_by_id.call_count == 1
+    assert mock_get_account_by_id_sync.call_count == 1
     assert mock_create_account.call_count == 0
     assert response.status_code == 200
     assert response.json() == {"id": TEST_USER_1_SUB}
