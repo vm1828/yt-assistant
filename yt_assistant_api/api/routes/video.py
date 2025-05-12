@@ -2,7 +2,13 @@ from typing import cast
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
-from core import get_current_account, get_db_sync, get_db_async, validate_video_id
+from core import (
+    get_current_account,
+    get_db_sync,
+    get_db_async,
+    validate_video_id,
+    logger,
+)
 from crud import (
     get_video,
     get_account_video,
@@ -27,6 +33,7 @@ def get_user_videos(
     auth0_user: Auth0Payload = Depends(get_current_account),
     db: Session = Depends(get_db_sync),
 ):
+    logger.info("Fetching user account...")
     account_id = auth0_user.sub
     account = cast(Account, get_account_by_id_sync(db, account_id))
 
@@ -48,32 +55,39 @@ async def get_user_video(
     auth0_user: Auth0Payload = Depends(get_current_account),
     db: Session = Depends(get_db_async),
 ):
+    logger.info("Validating video id...")
     validate_video_id(video_id)
 
+    logger.info("Fetching user account...")
     account_id = auth0_user.sub
     account = cast(
         Account, await get_account_by_id_async(db, account_id)
     )  # authorized user always has account
 
-    # Try to get video from account videos
+    logger.info("Trying to get video from account videos...")
     video = await get_account_video(db, account, video_id)
     if not video:
 
-        # Check if video already added by someone else and add it to the user account.
+        logger.info(
+            "Trying to get video from all videos..."
+        )  # Check if video already added by someone else and add it to the user account.
         video = await get_video(db, video_id)
 
         if not video:
 
+            logger.info("Fetching video title...")
             title = await fetch_video_title(video_id)
 
             if not title:
                 raise HTTPException(status_code=404, detail="Video not found.")
 
+            logger.info("Adding new video...")
             data = VideoCreate(id=video_id, title=title)
             video = await create_video(db, account, data)
 
         else:
 
+            logger.info("Adding existing video to the account...")
             await add_video_to_account(db, account, video_id)
 
     return video
