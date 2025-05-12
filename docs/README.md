@@ -88,7 +88,11 @@ To access API documentation (Swagger UI), navigate to [localhost:8000/docs](loca
 
 ## Endpoints
 
-- `GET /accounts/me` – Get the authenticated user's account (Auth0 protected)
+- `GET /accounts/me` – Get the authenticated user's account
+- `GET /videos/` - Get videos of the authenticated user
+- `GET /videos/{video_id}` - Get a video of the authenticated user
+
+\*All endpoints are Auth0 protected
 
 # DB Schema
 

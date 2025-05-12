@@ -1,39 +1,45 @@
-from typing import List, Optional
-from sqlalchemy.orm import Session
+from typing import Optional
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from models import Account, Video, AccountVideo
 from schemas import VideoCreate
 
 
-def get_video(db: Session, video_id: str) -> Optional[Video]:
+async def get_video(db: AsyncSession, video_id: str) -> Optional[Video]:
     """Get video from all videos"""
-    return db.query(Video).filter(Video.id == video_id).first()
+    stmt = select(Video).where(Video.id == video_id)
+    result = await db.execute(stmt)
+    return result.scalar_one_or_none()
 
 
-def get_account_video(db: Session, account: Account, video_id: str) -> Optional[Video]:
-    """Get video from account videos"""
-    video = next((video for video in account.videos if video.id == video_id), None)
-    return video
+async def get_account_video(
+    db: AsyncSession, account: Account, video_id: str
+) -> Optional[Video]:
+    """Get video from the database related to the account."""
+    stmt = (
+        select(Video)
+        .join(Video.account_videos)
+        .where(AccountVideo.account_id == account.id)
+        .where(Video.id == video_id)
+    )
+    result = await db.execute(stmt)
+    return result.scalar_one_or_none()
 
 
-def create_video(db: Session, account: Account, data: VideoCreate) -> Video:
+async def create_video(db: AsyncSession, account: Account, data: VideoCreate) -> Video:
     """Add new video to the db."""
     video = Video(id=data.id, title=data.title)
-
     db.add(video)
-    db.commit()
-    db.refresh(video)
+    await db.commit()
+    await db.refresh(video)
 
-    add_video_to_account(db, account, data.id)
-
+    await add_video_to_account(db, account, data.id)
     return video
 
 
-def add_video_to_account(db: Session, account: Account, video_id: str):
-    """Add existing video to user account"""
-    account.account_videos.append(
-        AccountVideo(account_id=account.id, video_id=video_id)
-    )  # Link the video to the account using the proxy (automatic handling of AccountVideo)
-    db.add(account)  # Add account with the new relation to session
-    db.commit()
-    db.refresh(account)
+async def add_video_to_account(db: AsyncSession, account: Account, video_id: str):
+    """Add existing video to user account."""
+    link = AccountVideo(account_id=account.id, video_id=video_id)
+    db.add(link)
+    await db.commit()
