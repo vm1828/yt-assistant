@@ -7,7 +7,7 @@ YT-Assistant is a web application designed to help users summarize YouTube video
 - [x] User Authentication
 - [x] UI Prototype
 - [x] Adding User Videos
-- [ ] Extracting Transcripts
+- [x] Extracting Transcripts
 - [ ] Video Transcripts Summarization
 - [ ] Storing Video Summaries for RAG
 - [ ] Q&A Sessions
@@ -17,10 +17,15 @@ YT-Assistant is a web application designed to help users summarize YouTube video
 
 ## Stack
 
-- **Backend**: FastAPI + Auth0
-- **Frontend**: React + TypeScript + Tailwind CSS
+- **Backend**: FastAPI, Auth0
+- **Frontend**: React, TypeScript, Zustand, Tailwind CSS
 - **Database**: PostgreSQL + pgvector
 - **AI Integration**: Hugging Face API (for prototyping; can be changed to OpenAI)
+
+# UI Prototype
+
+![ui_prototype_light](ui_prototype_light.png)
+![ui_prototype_dark](ui_prototype_dark.png)
 
 # Local Environment
 
@@ -91,6 +96,7 @@ To access API documentation (Swagger UI), navigate to [localhost:8000/docs](loca
 - `GET /accounts/me` – Get the authenticated user's account
 - `GET /videos/` - Get videos of the authenticated user
 - `GET /videos/{video_id}` - Get a video of the authenticated user
+  `GET /transcripts/{video_id}` - Get the transcript of the video.
 
 \*All endpoints are Auth0 protected
 
