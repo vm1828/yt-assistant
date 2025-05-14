@@ -15,7 +15,7 @@ from crud import (
     create_video,
     add_video_to_account,
 )
-from services import fetch_video_title
+from services import fetch_video_title, fetch_video_transcript
 from schemas import Auth0Payload, VideoRead, VideoReadList, VideoCreate
 from crud.account import get_account_by_id_sync, get_account_by_id_async
 from models.account import Account
@@ -77,13 +77,17 @@ async def get_user_video(
 
             logger.info("Fetching video title...")
             title = await fetch_video_title(video_id)
+            transcript = await fetch_video_transcript(video_id)
 
-            if not title:
-                raise HTTPException(status_code=404, detail="Video not found.")
+            if not (title and transcript):
+                raise HTTPException(
+                    status_code=404,
+                    detail="Video not found or without a transcript.",
+                )
 
             logger.info("Adding new video...")
             data = VideoCreate(id=video_id, title=title)
-            video = await create_video(db, account, data)
+            video = await create_video(db, account, data, transcript)
 
         else:
 
