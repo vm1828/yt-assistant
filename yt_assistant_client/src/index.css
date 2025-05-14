@@ -120,10 +120,10 @@
 
   /* VIDEO SIDEBAR */
   .video-sidebar {
-    @apply h-full w-4 overflow-hidden rounded-sm border-r border-white/30 bg-white/20 backdrop-blur-md transition-all duration-300 hover:h-full hover:w-64 hover:shadow-xl;
+    @apply h-full w-4 overflow-hidden rounded-sm border-r border-white/30 bg-white/20 shadow-lg backdrop-blur-md transition-all duration-300 hover:h-full hover:w-64 hover:shadow-xl;
   }
   .video-sidebar {
-    @apply fixed top-0 left-0 z-40 h-1/7 w-5 rounded-sm; /* Set small height when collapsed */
+    @apply fixed top-0 left-0 z-40 h-full w-5 rounded-sm;
   }
   .video-sidebar:hover {
     @apply w-64; /* Expands on hover */
@@ -137,11 +137,11 @@
 
   /* VIDEO LIST TITLE */
   .video-list-title {
-    @apply overflow-hidden px-2 py-1 text-ellipsis whitespace-nowrap opacity-0 transition-opacity duration-200 hover:bg-white/40 dark:hover:bg-white/20;
+    @apply overflow-hidden px-2 py-1 text-sm text-ellipsis whitespace-nowrap opacity-0 transition-opacity duration-200 hover:bg-white/40 dark:hover:bg-white/20;
   }
 
   .dark .video-list-title {
-    @apply bg-black/20 text-sm hover:bg-white/20;
+    @apply bg-black/20 hover:bg-white/20;
   }
 
   /* SUMMARY */

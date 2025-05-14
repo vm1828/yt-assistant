@@ -7,6 +7,8 @@ TEST_USER_1_SUB = "auth0|12345"
 TEST_USER_2_SUB = "google-oauth2|114326681879294310515"
 
 TEST_VIDEO_1 = Video(id="dCLhUialKPQ", title="React JS 19 Full Course 2025")
+TEST_TRANSCRIPT_1 = {"transcript_text": "React JS 19 Full Course 2025 transcript"}
+
 TEST_VIDEO_2 = Video(id="1R5u3xQUUqI", title="Hamster Escapes from the Prison Maze")
 TEST_VIDEO_3 = Video(id="eMlx5fFNoYc", title="Attention in transformers, step-by-step")
 

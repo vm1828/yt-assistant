@@ -5,3 +5,4 @@ from .video import (
     create_video,
     add_video_to_account,
 )
+from .transcript import get_transcript

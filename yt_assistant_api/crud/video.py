@@ -2,7 +2,7 @@ from typing import Optional
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from models import Account, Video, AccountVideo
+from models import Account, Video, AccountVideo, Transcript
 from schemas import VideoCreate
 
 
@@ -27,14 +27,22 @@ async def get_account_video(
     return result.scalar_one_or_none()
 
 
-async def create_video(db: AsyncSession, account: Account, data: VideoCreate) -> Video:
-    """Add new video to the db."""
+async def create_video(
+    db: AsyncSession,
+    account: Account,
+    data: VideoCreate,
+    transcript_text: str,
+) -> Video:
+    """Add a new video, its transcript, and link it to the user."""
+
     video = Video(id=data.id, title=data.title)
     db.add(video)
-    await db.commit()
-    await db.refresh(video)
 
-    await add_video_to_account(db, account, data.id)
+    transcript = Transcript(video_id=data.id, transcript_text=transcript_text)
+    db.add(transcript)
+
+    await add_video_to_account(db, account, data.id)  # will also commit
+
     return video
 
 

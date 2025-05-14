@@ -32,9 +32,9 @@ const App = () => {
       <div>
         <UserButton />
 
-        <div className="flex h-screen flex-col px-2 md:flex-row">
+        <div className="mr-4 flex h-screen flex-col pl-6 md:flex-row">
           {/* Left side - Video + QAChat */}
-          <div className="flex h-full w-full flex-col md:w-1/2">
+          <div className="mr-4 flex h-full w-full flex-col md:w-1/2">
             <div className="flex-shrink-0">
               <Video />
             </div>
@@ -44,7 +44,7 @@ const App = () => {
           </div>
 
           {/* Right side - Summary */}
-          <div className="overflow-y-autop-4 w-full flex-shrink-0 pt-2 pl-2 md:h-full md:w-1/2">
+          <div className="w-full flex-shrink-0 overflow-hidden p-4 pt-2 pl-4 shadow-lg md:h-full md:w-1/2">
             <Summary />
           </div>
         </div>
