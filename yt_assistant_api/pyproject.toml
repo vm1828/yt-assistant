@@ -44,6 +44,8 @@ env = [
 ]
 pythonpath = ["yt_assistant_api"]
 addopts = "--cov=yt_assistant_api --cov-report=term-missing"
+asyncio_mode = "strict"
+asyncio_default_fixture_loop_scope = "function"
 
 [tool.coverage.run]
 omit = [
