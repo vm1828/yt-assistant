@@ -3,6 +3,8 @@ import httpx
 from bs4 import BeautifulSoup
 from youtube_transcript_api import YouTubeTranscriptApi
 
+ytt_api = YouTubeTranscriptApi()
+
 
 async def fetch_video_title(video_id: str):
     video_url = f"https://www.youtube.com/watch?v={video_id}"
@@ -14,9 +16,7 @@ async def fetch_video_title(video_id: str):
 
 
 async def fetch_video_transcript(video_id: str) -> Optional[str]:
-    transcript = YouTubeTranscriptApi.get_transcript(video_id)
+    transcript = ytt_api.fetch(video_id)
     return (
-        " ".join(segment["text"] for segment in transcript).strip()
-        if transcript
-        else None
+        " ".join(segment.text for segment in transcript).strip() if transcript else None
     )
