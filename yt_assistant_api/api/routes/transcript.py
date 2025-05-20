@@ -28,7 +28,6 @@ def get_video_transcript(
     validate_video_id(video_id)
 
     logger.info("Fetching transcript...")
-
     transcript = get_transcript(db, video_id)
     if not transcript:
         raise HTTPException(
