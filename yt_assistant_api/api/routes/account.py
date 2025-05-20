@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
 from core import get_current_account, get_db_sync, logger
-from schemas import Auth0Payload, AccountCreate, AccountRead
+from schemas import Auth0Payload, AccountCreate, AccountResponse
 from crud import create_account, get_account_by_id_sync
 
 router = APIRouter()
@@ -10,7 +10,7 @@ router = APIRouter()
 
 @router.get(
     "/me",
-    response_model=AccountRead,
+    response_model=AccountResponse,
     description="""Returns the authenticated user's account details. User must be authenticated via Auth0.
     If no local account exists, one will be created automatically.""",
 )

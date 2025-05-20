@@ -16,7 +16,7 @@ from crud import (
     add_video_to_account,
 )
 from services import fetch_video_title, fetch_video_transcript
-from schemas import Auth0Payload, VideoRead, VideoReadList, VideoCreate
+from schemas import Auth0Payload, VideoResponse, VideosResponse, VideoCreate
 from crud.account import get_account_by_id_sync, get_account_by_id_async
 from models.account import Account
 
@@ -26,7 +26,7 @@ router = APIRouter()
 
 @router.get(
     "/",
-    response_model=VideoReadList,
+    response_model=VideosResponse,
     description="Returns a list of all videos of the authenticated user. ",
 )
 def get_user_videos(
@@ -40,12 +40,12 @@ def get_user_videos(
     if not account.videos:
         raise HTTPException(status_code=404, detail="No videos found for this user.")
 
-    return {"videos": account.videos}
+    return VideosResponse(videos=account.videos)
 
 
 @router.get(
     "/{video_id}",
-    response_model=VideoRead,
+    response_model=VideoResponse,
     description="""Returns details of a specific video for the authenticated user.
     If the video doesn't exist, it will attempt to fetch the title from YouTube and create a new video entry.
     If the title cannot be fetched, an error will be raised.""",

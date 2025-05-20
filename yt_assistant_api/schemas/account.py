@@ -5,9 +5,10 @@ class AccountCreate(BaseModel):
     id: str
 
 
-class AccountRead(BaseModel):
+class AccountResponse(BaseModel):
     id: str
-    model_config: ConfigDict = {"from_attributes": True}
+
+    model_config = ConfigDict(from_attributes=True)
 
 
 class Auth0Payload(BaseModel):

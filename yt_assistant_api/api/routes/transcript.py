@@ -8,7 +8,7 @@ from core import (
     logger,
 )
 from crud import get_transcript
-from schemas import TranscriptRead
+from schemas import TranscriptResponse
 
 
 router = APIRouter()
@@ -16,7 +16,7 @@ router = APIRouter()
 
 @router.get(
     "/{video_id}",
-    response_model=TranscriptRead,
+    response_model=TranscriptResponse,
     description="Returns transcript of a specific video for the authenticated user.",
     dependencies=[Depends(get_current_account)],
 )

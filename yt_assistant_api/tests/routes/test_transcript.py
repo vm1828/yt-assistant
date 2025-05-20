@@ -1,5 +1,5 @@
 from unittest.mock import patch
-from schemas import TranscriptRead
+from schemas import TranscriptResponse
 from tests.data import TEST_HEADERS, TEST_USER_1_SUB, TEST_TRANSCRIPT_1, TEST_VIDEO_1
 
 
@@ -36,7 +36,7 @@ def test_get_transcript_200(
     # ---------------- ASSERT ----------------
     assert mock_validate_video_id.call_count == 1
     assert mock_get_transcript.call_count == 1
-    expected = TranscriptRead.model_validate(TEST_TRANSCRIPT_1)
+    expected = TranscriptResponse.model_validate(TEST_TRANSCRIPT_1)
     assert response.status_code == 200
     assert response.json() == expected.model_dump()
 
