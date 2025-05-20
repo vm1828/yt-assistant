@@ -9,7 +9,7 @@ from uuid import uuid4
 from core.db_session import Base
 
 if TYPE_CHECKING:
-    from models import Video
+    from models import Video, Summary
 
 
 class Transcript(Base):
@@ -29,4 +29,11 @@ class Transcript(Base):
 
     video: Mapped["Video"] = relationship(
         "Video", back_populates="transcript", uselist=False
+    )
+
+    summary: Mapped["Summary"] = relationship(
+        "Summary",
+        back_populates="transcript",
+        uselist=False,
+        cascade="all, delete-orphan",
     )
