@@ -8,7 +8,7 @@ YT-Assistant is a web application designed to help users summarize YouTube video
 - [x] UI Prototype
 - [x] Adding User Videos
 - [x] Extracting Transcripts
-- [ ] Video Transcripts Summarization
+- [x] Video Transcripts Summarization
 - [ ] Storing Video Summaries for RAG
 - [ ] Q&A Sessions
 - [ ] Video Player Integration
@@ -20,7 +20,7 @@ YT-Assistant is a web application designed to help users summarize YouTube video
 - **Backend**: FastAPI, Auth0
 - **Frontend**: React, TypeScript, Zustand, Tailwind CSS
 - **Database**: PostgreSQL + pgvector
-- **AI Integration**: Hugging Face API (for prototyping; can be changed to OpenAI)
+- **LLM**: Gemini (Google GenAI) + LangChain
 
 # UI Prototype
 
@@ -58,7 +58,7 @@ API_HOST=
 API_PORT=
 CLIENT_HOST=
 CLIENT_PORT=
-HUGGINGFACE_API_KEY=
+GOOGLE_API_KEY=
 POSTGRES_URL=postgresql://<user>:<password>@<host>:<port>/<db_name>
 AUTH0_DOMAIN=
 AUTH0_AUDIENCE=
@@ -96,7 +96,8 @@ To access API documentation (Swagger UI), navigate to [localhost:8000/docs](loca
 - `GET /accounts/me` – Get the authenticated user's account
 - `GET /videos/` - Get videos of the authenticated user
 - `GET /videos/{video_id}` - Get a video of the authenticated user
-- `GET /transcripts/{video_id}` - Get the transcript of the video.
+- `GET /transcripts/{video_id}` - Get the transcript of the video
+- `GET /summaries/{video_id}` – Get the summary of the video
 
 \*All endpoints are Auth0 protected
 
