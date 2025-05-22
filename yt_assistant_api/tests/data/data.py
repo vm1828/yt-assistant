@@ -1,5 +1,5 @@
 from datetime import datetime
-from models import Account, Video, AccountVideo, Transcript
+from models import Account, Video, AccountVideo, Transcript, Summary
 
 TEST_HEADERS = {"Authorization": "Bearer test_token"}
 
@@ -12,6 +12,12 @@ TEST_TRANSCRIPT_1 = Transcript(
     video_id="dCLhUialKPQ",
     created_at=datetime(2025, 1, 1, 0, 0, 0),
     transcript_text="React JS 19 Full Course 2025 transcript.",
+)
+TEST_SUMMARY_1 = Summary(
+    id="c044d534-8475-23lb-1299-2k4363f2s994",
+    created_at=datetime(2025, 1, 1, 0, 5, 0),
+    transcript_id="b0c43684-4978-43b4-9488-6b8a63f2a764",
+    summary_text="React JS 19 Full Course 2025 summary.",
 )
 
 TEST_VIDEO_2 = Video(id="1R5u3xQUUqI", title="Hamster Escapes from the Prison Maze")

@@ -10,9 +10,22 @@ from schemas import Auth0Payload
 
 @pytest.fixture(scope="session", autouse=True)
 def set_local_env():
-    os.environ["POSTGRES_URL"] = ""
+    # Set env vars
+    env_vars = {
+        "POSTGRES_URL": "",
+        "GOOGLE_API_KEY": "",
+    }
+    original_env = {key: os.environ.get(key) for key in env_vars}
+    os.environ.update(env_vars)
+
     yield
-    del os.environ["POSTGRES_URL"]
+
+    # Restore original env
+    for key in env_vars:
+        if original_env[key] is None:
+            os.environ.pop(key, None)
+        else:
+            os.environ[key] = original_env[key]
 
 
 @pytest.fixture
