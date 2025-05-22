@@ -7,12 +7,14 @@ class VideoCreate(BaseModel):
     title: str
 
 
-class VideoRead(BaseModel):
+class VideoResponse(BaseModel):
     id: str
     title: str
-    model_config: ConfigDict = {"from_attributes": True}
+
+    model_config = ConfigDict(from_attributes=True)
 
 
-class VideoReadList(BaseModel):
-    videos: List[VideoRead]
-    model_config: ConfigDict = {"from_attributes": True}
+class VideosResponse(BaseModel):
+    videos: List[VideoResponse]
+
+    model_config = ConfigDict(from_attributes=True)

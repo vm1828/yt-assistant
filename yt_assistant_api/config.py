@@ -1,3 +1,5 @@
+# TODO update settings and refactor
+
 import os
 from dotenv import load_dotenv
 

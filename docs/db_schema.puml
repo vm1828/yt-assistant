@@ -25,7 +25,7 @@ entity "transcript" {
 entity "summary" {
   +id: UUID
   created_at: TIMESTAMP
-  video_id: VARCHAR
+  transcript_id: UUID
   summary_text: TEXT
 }
 
@@ -53,7 +53,7 @@ account_video::video_id --> video::id
 transcript::video_id --> video::id
 
 'video-summary relationship
-summary::video_id --> video::id
+summary::transcript_id --> transcript::id
 
 'video-qa relationship
 qa::video_id --> video::id

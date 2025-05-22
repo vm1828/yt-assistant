@@ -2,7 +2,7 @@ from unittest.mock import patch
 
 # from fastapi import HTTPException, status
 
-from schemas import VideoReadList
+from schemas import VideosResponse
 from tests.data import *
 
 
@@ -19,7 +19,7 @@ def test_get_user_videos_returns_user_videos(
     response = client.get("/videos/", headers=TEST_HEADERS)
 
     # ---------------- ASSERT ----------------
-    expected = VideoReadList.model_validate({"videos": [TEST_VIDEO_1, TEST_VIDEO_2]})
+    expected = VideosResponse.model_validate({"videos": [TEST_VIDEO_1, TEST_VIDEO_2]})
     assert response.status_code == 200
     assert response.json() == expected.model_dump()
 

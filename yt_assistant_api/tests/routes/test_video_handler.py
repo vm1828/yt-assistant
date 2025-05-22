@@ -1,6 +1,6 @@
 from unittest.mock import patch
 
-from schemas import VideoRead
+from schemas import VideoResponse
 from tests.data import *
 
 
@@ -51,7 +51,7 @@ def test_get_user_video_200_in_account(
     assert mock_fetch_video_title.call_count == 0
     assert mock_create_video.call_count == 0
     assert mock_add_video_to_account.call_count == 0
-    expected = VideoRead.model_validate(TEST_VIDEO_1)
+    expected = VideoResponse.model_validate(TEST_VIDEO_1)
     assert response.status_code == 200
     assert response.json() == expected.model_dump()
 
@@ -97,7 +97,7 @@ def test_get_user_video_200_creates_video_from_youtube(
     assert mock_fetch_video_transcript.call_count == 1
     assert mock_create_video.call_count == 1
     assert mock_add_video_to_account.call_count == 0
-    expected = VideoRead.model_validate(TEST_VIDEO_1)
+    expected = VideoResponse.model_validate(TEST_VIDEO_1)
     assert response.status_code == 200
     assert response.json() == expected.model_dump()
 
@@ -181,6 +181,6 @@ def test_get_user_video_200_in_db_adds_to_account(
     assert mock_fetch_video_transcript.call_count == 0
     assert mock_create_video.call_count == 0
     assert mock_add_video_to_account.call_count == 1
-    expected = VideoRead.model_validate(TEST_VIDEO_1)
+    expected = VideoResponse.model_validate(TEST_VIDEO_1)
     assert response.status_code == 200
     assert response.json() == expected.model_dump()
