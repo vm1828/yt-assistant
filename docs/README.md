@@ -93,7 +93,8 @@ To access API documentation (Swagger UI), navigate to [localhost:8000/docs](loca
 
 ## Endpoints
 
-- `GET /accounts/me` – Get the authenticated user's account
+- `GET /accounts/` – Returns the authenticated user's account details
+- `POST /accounts/` - Creates a new account for the authenticated user if one does not exist.
 - `GET /videos/` - Get videos of the authenticated user
 - `GET /videos/{video_id}` - Get a video of the authenticated user
 - `GET /transcripts/{video_id}` - Get the transcript of the video
@@ -126,11 +127,11 @@ Stores metadata about videos and their transcripts.
 
 Tracks the videos that a account has interacted with.
 
-| Column Name | Type      | Description                             |
-| ----------- | --------- | --------------------------------------- |
-| account_id  | VARCHAR   | Foreign key to `account` (created by)   |
-| video_id    | VARCHAR   | Foreign key to `video`                  |
-| created_at  | TIMESTAMP | Timestamp of account's last interaction |
+| Column Name | Type      | Description                              |
+| ----------- | --------- | ---------------------------------------- |
+| account_id  | VARCHAR   | Foreign key to `account` (created by)    |
+| video_id    | VARCHAR   | Foreign key to `video`                   |
+| created_at  | TIMESTAMP | Timestamp of adding video to the account |
 
 ## transcript
 
@@ -140,7 +141,7 @@ Stores the raw transcript text or file paths.
 | --------------- | --------- | -------------------------------- |
 | id              | UUID      | Primary key                      |
 | created_at      | TIMESTAMP | Timestamp of transcript creation |
-| video_id        | VARCHAR   | Foreign key to Video table       |
+| video_id        | VARCHAR   | Foreign key to `video`           |
 | transcript_text | TEXT      | Raw transcript content           |
 
 ## summary
@@ -175,7 +176,7 @@ Stores vector embeddings related to videos, used for similarity search in RAG ta
 | ----------- | ----------- | ------------------------------- |
 | id          | UUID        | Primary key                     |
 | created_at  | TIMESTAMP   | Timestamp of embedding creation |
-| video_id    | UUID        | Foreign key to `videos`         |
+| video_id    | UUID        | Foreign key to `video`          |
 | summary_emb | vector(768) | Embedding vector                |
 
 # Unit Testing
