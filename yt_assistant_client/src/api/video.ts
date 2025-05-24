@@ -33,6 +33,25 @@ export const getVideoById = async (
 };
 
 /**
+ * Add new video to the user account
+ */
+export const postVideo = async (
+  video_id: string,
+  token: string,
+): Promise<Video> => {
+  const res = await apiClient.post(
+    "/videos/",
+    { id: video_id },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    },
+  );
+  return res.data;
+};
+
+/**
  * Fetch a transcript by video ID
  */
 export const getTranscriptByVideoId = async (

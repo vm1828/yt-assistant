@@ -1,7 +1,8 @@
-import { getVideoById } from "@/api";
+import { getVideoById, postVideo } from "@/api";
 import { useVideoStore } from "@/store";
 import { extractYouTubeId, logger } from "@/utils";
 import { useAuth0 } from "@auth0/auth0-react";
+import axios from "axios";
 import { Play } from "lucide-react";
 import { useState } from "react";
 
@@ -15,27 +16,42 @@ export const VideoForm = () => {
     setValidationError(null);
   };
 
+  const showValidationError = (message: string, timeout = 4000) => {
+    setValidationError(message);
+    setTimeout(() => setValidationError(null), timeout);
+  };
+
   const handleSubmit = async (e?: React.FormEvent) => {
     e?.preventDefault();
 
     const videoId = extractYouTubeId(url);
     if (!videoId) {
-      setValidationError("Please enter a valid YouTube URL.");
+      showValidationError("Please enter a valid YouTube URL");
       return;
     }
 
+    const token = await getAccessTokenSilently();
+
     try {
-      const token = await getAccessTokenSilently();
-      const video = await getVideoById(videoId, token);
+      const video = await postVideo(videoId, token);
       addVideo(video);
       setCurrentVideo(video);
       setUrl("");
-    } catch (err: unknown) {
-      logger.error(
-        { err: err instanceof Error ? err.message : "Unknown error" },
-        "Failed to fetch video",
-      );
-      setValidationError("Failed to load video. Please try again.");
+      showValidationError("");
+    } catch (err) {
+      logger.error(err, "Failed to add video");
+
+      if (axios.isAxiosError(err) && err.response?.status === 409) {
+        try {
+          const video = await getVideoById(videoId, token);
+          setCurrentVideo(video);
+          showValidationError("Video already added to your account");
+        } catch {
+          showValidationError("Video already added, but failed to load");
+        }
+      } else {
+        showValidationError("Failed to add video");
+      }
     }
   };
 

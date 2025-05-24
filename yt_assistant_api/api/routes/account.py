@@ -15,6 +15,7 @@ router = APIRouter()
     response_model=AccountResponse,
     description="Returns the authenticated user's account details. Must be authenticated via Auth0.",
     responses={
+        401: {"description": "Not authenticated"},
         404: {"description": "Account not found"},
     },
 )
@@ -39,6 +40,7 @@ async def get_authenticated_user(
     description="Creates a new account for the authenticated user if one does not exist.",
     status_code=status.HTTP_201_CREATED,
     responses={
+        401: {"description": "Not authenticated"},
         409: {"description": "Account already exists"},
     },
 )

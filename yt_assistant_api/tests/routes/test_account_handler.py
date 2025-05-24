@@ -8,25 +8,7 @@ from tests.data import *
 # =========================================== GET ===========================================
 
 
-# Case: No account exists, return 404
-@patch("api.routes.account.get_account_by_id_async")
-def test_get_authenticated_user_404_if_account_missing(
-    mock_get_account_by_id_async, client_factory
-):
-    # ---------------- ARRANGE ----------------
-    client = client_factory(TEST_USER_1_SUB)
-    mock_get_account_by_id_async.return_value = None
-
-    # ----------------- ACT ------------------
-    response = client.get("/accounts/", headers=TEST_HEADERS)
-
-    # ---------------- ASSERT ----------------
-    assert mock_get_account_by_id_async.call_count == 1
-    assert response.status_code == 404
-    assert response.json() == {"detail": "Account not found"}
-
-
-# Case: Account exists already, return it
+# Case 200: Account exists
 @patch("api.routes.account.get_account_by_id_async")
 def test_get_authenticated_user_200_returns_existing_account(
     mock_get_account_by_id_async, client_factory
@@ -44,7 +26,25 @@ def test_get_authenticated_user_200_returns_existing_account(
     assert response.json() == {"id": TEST_USER_1_SUB}
 
 
-# Case: Unauthorized access with invalid token
+# Case 404: Account does not exist
+@patch("api.routes.account.get_account_by_id_async")
+def test_get_authenticated_user_404_if_account_missing(
+    mock_get_account_by_id_async, client_factory
+):
+    # ---------------- ARRANGE ----------------
+    client = client_factory(TEST_USER_1_SUB)
+    mock_get_account_by_id_async.return_value = None
+
+    # ----------------- ACT ------------------
+    response = client.get("/accounts/", headers=TEST_HEADERS)
+
+    # ---------------- ASSERT ----------------
+    assert mock_get_account_by_id_async.call_count == 1
+    assert response.status_code == 404
+    assert response.json() == {"detail": "Account not found"}
+
+
+# Case 401: Unauthorized access with invalid token
 @patch("core.auth.verify_jwt_token")
 def test_get_authenticated_user_401_rejects_unauthorized_request(
     mock_verify_jwt_token, client_factory
@@ -67,7 +67,7 @@ def test_get_authenticated_user_401_rejects_unauthorized_request(
     assert response.json() == {"detail": "Invalid token"}
 
 
-# Case: Unauthorized access with missing Authorization header
+# Case 401: Unauthorized access with missing Authorization header
 @patch("core.auth.verify_jwt_token")
 def test_get_authenticated_user_401_missing_auth_header(
     mock_verify_jwt_token, client_factory
@@ -86,7 +86,7 @@ def test_get_authenticated_user_401_missing_auth_header(
 # =========================================== POST ===========================================
 
 
-# Case: Account does not exist, create it
+# Case 201: Account does not exist, creates new account
 @patch("api.routes.account.get_account_by_id_async")
 @patch("api.routes.account.create_account")
 def test_post_authenticated_user_201_creates_account(
@@ -107,7 +107,7 @@ def test_post_authenticated_user_201_creates_account(
     assert response.json() == {"id": TEST_USER_1_SUB}
 
 
-# Case: Account already exists, return 409
+# Case 409: Account already exists
 @patch("api.routes.account.get_account_by_id_async")
 @patch("api.routes.account.create_account")
 def test_post_authenticated_user_409_if_account_exists(
@@ -127,7 +127,7 @@ def test_post_authenticated_user_409_if_account_exists(
     assert response.json() == {"detail": "Account already exists"}
 
 
-# Case: Unauthorized access with invalid token
+# Case 401: Unauthorized access with invalid token
 @patch("core.auth.verify_jwt_token")
 def test_post_authenticated_user_401_invalid_token(
     mock_verify_jwt_token, client_factory
@@ -149,7 +149,7 @@ def test_post_authenticated_user_401_invalid_token(
     assert response.json() == {"detail": "Invalid token"}
 
 
-# Case: Unauthorized access with missing Authorization header
+# Case 401: Unauthorized access with missing Authorization header
 @patch("core.auth.verify_jwt_token")
 def test_post_authenticated_user_401_missing_auth_header(
     mock_verify_jwt_token, client_factory
