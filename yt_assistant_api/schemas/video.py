@@ -1,10 +1,15 @@
-from typing import List
+from typing import List, Optional
 from pydantic import BaseModel, ConfigDict
+
+
+class VideoRequest(BaseModel):
+    id: str
 
 
 class VideoCreate(BaseModel):
     id: str
     title: str
+    transcript_text: str
 
 
 class VideoResponse(BaseModel):
@@ -15,6 +20,6 @@ class VideoResponse(BaseModel):
 
 
 class VideosResponse(BaseModel):
-    videos: List[VideoResponse]
+    videos: Optional[List[VideoResponse]] = []
 
     model_config = ConfigDict(from_attributes=True)
