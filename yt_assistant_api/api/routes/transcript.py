@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from core import (
     get_current_account,
-    get_db_sync,
+    get_db_async,
     validate_video_id,
     logger,
 )
@@ -19,20 +19,24 @@ router = APIRouter()
     response_model=TranscriptResponse,
     description="Returns transcript of a specific video for the authenticated user.",
     dependencies=[Depends(get_current_account)],
+    responses={
+        401: {"description": "Not authenticated"},
+        404: {"description": "No video has been added"},
+    },
 )
-def get_video_transcript(
+async def get_video_transcript(
     video_id: str,
-    db: Session = Depends(get_db_sync),
+    db: AsyncSession = Depends(get_db_async),
 ):
     logger.info("Validating video id...")
     validate_video_id(video_id)
 
     logger.info("Fetching transcript...")
-    transcript = get_transcript(db, video_id)
+    transcript = await get_transcript(db, video_id)
     if not transcript:
         raise HTTPException(
             status_code=404,
-            detail="Video is not added yet. Please add the video first.",
+            detail="No video has been added. Please add a video first.",
         )
 
     return transcript

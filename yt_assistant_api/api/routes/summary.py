@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from core import (
     get_current_account,
-    get_db_sync,
+    get_db_async,
     validate_video_id,
     logger,
 )
@@ -22,15 +22,15 @@ router = APIRouter()
     description="Returns summary of a video transcript for the authenticated user.",
     dependencies=[Depends(get_current_account)],
 )
-def get_video_summary(
+async def get_video_summary(
     video_id: str,
-    db: Session = Depends(get_db_sync),
+    db: AsyncSession = Depends(get_db_async),
 ):
     logger.info("Validating video id...")
     validate_video_id(video_id)
 
     logger.info("Fetching transcript...")
-    transcript = get_transcript(db, video_id)
+    transcript = await get_transcript(db, video_id)
     if not transcript:
         raise HTTPException(
             status_code=404,
@@ -38,7 +38,7 @@ def get_video_summary(
         )
 
     logger.info("Trying to fetch summary...")
-    summary = get_summary(db, transcript.id)
+    summary = await get_summary(db, transcript.id)
 
     if not summary:
         logger.info("Creating summary...")
@@ -46,6 +46,6 @@ def get_video_summary(
 
         logger.info("Saving summary to db...")
         data = SummaryCreate(summary_text=summary_text, transcript_id=transcript.id)
-        summary = create_summary(db, data)
+        summary = await create_summary(db, data)
 
     return SummaryResponse(video_id=video_id, summary_text=summary.summary_text)
