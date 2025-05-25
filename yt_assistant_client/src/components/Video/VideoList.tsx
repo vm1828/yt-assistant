@@ -6,7 +6,7 @@ export const VideoList = () => {
   return (
     <>
       {videos.length > 0 && (
-        <div className="mt-5">
+        <div className="scroll-hidden mt-5 max-h-[100vh] overflow-y-auto">
           <ul className="video-list-title">
             {[...videos].reverse().map((video) => (
               <li

@@ -10,7 +10,7 @@ prompt = ChatPromptTemplate.from_messages(
     [
         (
             "system",
-            "You are a technical assistant that converts dense content into concise, structured study notes.",
+            "You are a technical assistant that makes concise, structured study notes.",
         ),
         (
             "human",

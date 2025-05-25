@@ -137,7 +137,7 @@
 
   /* VIDEO LIST TITLE */
   .video-list-title {
-    @apply overflow-hidden px-2 py-1 text-sm text-ellipsis whitespace-nowrap opacity-0 transition-opacity duration-200 hover:bg-white/40 dark:hover:bg-white/20;
+    @apply overflow-hidden px-2 py-1 text-sm text-ellipsis whitespace-nowrap opacity-0 transition-opacity duration-200;
   }
 
   .dark .video-list-title {
@@ -181,10 +181,12 @@
 }
 
 /* Hide Scrollbars */
-.no-scrollbar::-webkit-scrollbar {
-  display: none;
+.scroll-hidden {
+  overflow-y: auto;
+  -ms-overflow-style: none; /* Internet Explorer and Edge */
+  scrollbar-width: none; /* Firefox */
 }
-.no-scrollbar {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
+
+.scroll-hidden::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
 }

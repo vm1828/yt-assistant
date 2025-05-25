@@ -32,7 +32,7 @@ const App = () => {
       <div>
         <UserButton />
 
-        <div className="mr-4 flex h-screen flex-col pl-6 md:flex-row">
+        <div className="scroll-hidden mr-4 flex h-screen flex-col pl-6 md:flex-row">
           {/* Left side - Video + QAChat */}
           <div className="mr-4 flex h-full w-full flex-col md:w-1/2">
             <div className="flex-shrink-0">
