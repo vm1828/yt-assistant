@@ -7,11 +7,6 @@ import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
 import "katex/dist/katex.min.css";
 
-enum ContentType {
-  TRANSCRIPT = "transcript",
-  SUMMARY = "summary",
-}
-
 type FetchOptions<T> = {
   cache: Record<string, T>;
   fetchFn: (id: string, token: string) => Promise<T | null>;

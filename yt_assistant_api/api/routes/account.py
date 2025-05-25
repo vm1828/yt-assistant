@@ -9,6 +9,8 @@ from core import get_db
 
 router = APIRouter()
 
+# ------------------------------------------ GET -------------------------------------------
+
 
 @router.get(
     "/",
@@ -32,6 +34,9 @@ async def get_authenticated_user(
         )
 
     return db_user
+
+
+# ------------------------------------------ POST -------------------------------------------
 
 
 @router.post(

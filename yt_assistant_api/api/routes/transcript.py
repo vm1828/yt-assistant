@@ -20,6 +20,7 @@ router = APIRouter()
     description="Returns transcript of a specific video for the authenticated user.",
     dependencies=[Depends(get_current_account)],
     responses={
+        400: {"description": "Invalid YouTube video ID"},
         401: {"description": "Not authenticated"},
         404: {"description": "No video has been added"},
     },

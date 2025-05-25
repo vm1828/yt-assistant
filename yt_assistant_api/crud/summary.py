@@ -13,7 +13,6 @@ async def create_summary(db: AsyncSession, data: SummaryCreate) -> Summary:
         transcript_id=data.transcript_id,
         summary_text=data.summary_text,
     )
-
     db.add(summary)
     await db.commit()
     await db.refresh(summary)
