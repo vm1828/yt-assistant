@@ -27,7 +27,7 @@ router = APIRouter()
 @router.get(
     "/",
     response_model=VideosResponse,
-    description="Returns a list of all videos of the authenticated user. ",
+    description="Returns a list of all videos of the authenticated user.",
 )
 async def get_user_videos(
     auth0_user: Auth0Payload = Depends(get_current_account),
@@ -47,7 +47,7 @@ async def get_user_videos(
 @router.get(
     "/{video_id}",
     response_model=VideoResponse,
-    description="Returns details of a specific video added to the account of the authenticated user.",
+    description="Returns details of a specific video added to the authenticated user's account.",
     responses={
         400: {"description": "Invalid YouTube video ID"},
         404: {"description": "Video not found for this user"},

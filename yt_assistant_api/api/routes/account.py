@@ -15,7 +15,7 @@ router = APIRouter()
 @router.get(
     "/",
     response_model=AccountResponse,
-    description="Returns the authenticated user's account details. Must be authenticated via Auth0.",
+    description="Returns the authenticated user's account details.",
     responses={
         401: {"description": "Not authenticated"},
         404: {"description": "Account not found"},

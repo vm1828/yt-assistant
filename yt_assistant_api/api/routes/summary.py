@@ -21,7 +21,7 @@ router = APIRouter()
 @router.get(
     "/{video_id}",
     response_model=SummaryResponse,
-    description="Get existing summary of a video transcript for the authenticated user.",
+    description="Returns the summary of a video transcript for the authenticated user.",
     dependencies=[Depends(get_current_account)],
     responses={
         400: {"description": "Invalid YouTube video ID"},
@@ -56,7 +56,7 @@ async def get_video_summary(
     "/",
     response_model=SummaryResponse,
     status_code=status.HTTP_201_CREATED,
-    description="Create a summary of a video transcript for the authenticated user.",
+    description="Creates a summary of a video transcript for the authenticated user.",
     dependencies=[Depends(get_current_account)],
     responses={
         400: {"description": "Invalid YouTube video ID"},

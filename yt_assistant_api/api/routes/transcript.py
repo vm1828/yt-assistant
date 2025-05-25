@@ -17,7 +17,7 @@ router = APIRouter()
 @router.get(
     "/{video_id}",
     response_model=TranscriptResponse,
-    description="Returns transcript of a specific video for the authenticated user.",
+    description="Returns the transcript of a specific video for the authenticated user.",
     dependencies=[Depends(get_current_account)],
     responses={
         400: {"description": "Invalid YouTube video ID"},
