@@ -5,13 +5,13 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from core import (
     get_current_account,
-    get_db_async,
+    get_db,
     validate_video_id,
     logger,
 )
 from schemas import Auth0Payload
 from schemas.video import *
-from crud.account import get_account_by_id_async
+from crud.account import get_account_by_id
 from crud.video import *
 from services import fetch_video_title, fetch_video_transcript
 
@@ -31,9 +31,9 @@ router = APIRouter()
 )
 async def get_user_videos(
     auth0_user: Auth0Payload = Depends(get_current_account),
-    db: AsyncSession = Depends(get_db_async),
+    db: AsyncSession = Depends(get_db),
 ):
-    account = await get_account_by_id_async(db, auth0_user.sub, lazy=False)
+    account = await get_account_by_id(db, auth0_user.sub, lazy=False)
 
     videos = account.videos or []
     return VideosResponse(videos=videos)
@@ -56,7 +56,7 @@ async def get_user_videos(
 async def get_user_video(
     video_id: str,
     auth0_user=Depends(get_current_account),
-    db: AsyncSession = Depends(get_db_async),
+    db: AsyncSession = Depends(get_db),
 ):
     validate_video_id(video_id)
 
@@ -91,7 +91,7 @@ async def get_user_video(
 async def add_video(
     payload: VideoRequest,
     auth0_user=Depends(get_current_account),
-    db: AsyncSession = Depends(get_db_async),
+    db: AsyncSession = Depends(get_db),
 ):
     video_id = payload.id
     validate_video_id(video_id)

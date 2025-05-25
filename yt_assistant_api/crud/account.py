@@ -15,7 +15,7 @@ async def create_account(db: AsyncSession, data: AccountCreate):
     return account
 
 
-async def get_account_by_id_async(db: AsyncSession, account_id: str, lazy: bool = True):
+async def get_account_by_id(db: AsyncSession, account_id: str, lazy: bool = True):
     logger.info("Fetching user account...")
     stmt = select(Account).where(Account.id == account_id)
 
@@ -25,10 +25,4 @@ async def get_account_by_id_async(db: AsyncSession, account_id: str, lazy: bool 
         )
 
     result = await db.execute(stmt)
-    return result.scalar_one_or_none()
-
-
-def get_account_by_id_sync(db: Session, account_id: str):
-    stmt = select(Account).where(Account.id == account_id)
-    result = db.execute(stmt)
     return result.scalar_one_or_none()

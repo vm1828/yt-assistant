@@ -3,7 +3,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from core import (
     get_current_account,
-    get_db_async,
+    get_db,
     validate_video_id,
     logger,
 )
@@ -24,7 +24,7 @@ router = APIRouter()
 )
 async def get_video_summary(
     video_id: str,
-    db: AsyncSession = Depends(get_db_async),
+    db: AsyncSession = Depends(get_db),
 ):
     logger.info("Validating video id...")
     validate_video_id(video_id)

@@ -11,14 +11,6 @@ engine = create_engine(settings.POSTGRES_URL, echo=True)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 
-def get_db_sync():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
-
-
 # ---------------- ASYNC ENGINE ----------------
 ASYNC_POSTGRES_URL = settings.POSTGRES_URL.replace(
     "postgresql://", "postgresql+asyncpg://"
@@ -33,6 +25,6 @@ AsyncSessionLocal = sessionmaker(
 )
 
 
-async def get_db_async():
+async def get_db():
     async with AsyncSessionLocal() as session:
         yield session

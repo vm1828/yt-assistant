@@ -4,8 +4,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from core import get_current_account, logger
 from schemas import Auth0Payload, AccountCreate, AccountResponse
-from crud import create_account, get_account_by_id_async
-from core import get_db_async
+from crud import create_account, get_account_by_id
+from core import get_db
 
 router = APIRouter()
 
@@ -21,10 +21,10 @@ router = APIRouter()
 )
 async def get_authenticated_user(
     auth0_user: Auth0Payload = Depends(get_current_account),
-    db: AsyncSession = Depends(get_db_async),
+    db: AsyncSession = Depends(get_db),
 ):
     logger.info("Fetching user account...")
-    db_user = await get_account_by_id_async(db, auth0_user.sub)
+    db_user = await get_account_by_id(db, auth0_user.sub)
 
     if db_user is None:
         raise HTTPException(
@@ -46,10 +46,10 @@ async def get_authenticated_user(
 )
 async def create_authenticated_user_account(
     auth0_user: Auth0Payload = Depends(get_current_account),
-    db: AsyncSession = Depends(get_db_async),
+    db: AsyncSession = Depends(get_db),
 ):
     logger.info("Creating new user account...")
-    db_user = await get_account_by_id_async(db, auth0_user.sub)
+    db_user = await get_account_by_id(db, auth0_user.sub)
 
     if db_user is not None:
         raise HTTPException(

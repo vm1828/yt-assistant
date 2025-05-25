@@ -9,37 +9,37 @@ from tests.data import *
 
 
 # Case 200: Account exists
-@patch("api.routes.account.get_account_by_id_async")
+@patch("api.routes.account.get_account_by_id")
 def test_get_authenticated_user_200_returns_existing_account(
-    mock_get_account_by_id_async, client_factory
+    mock_get_account_by_id, client_factory
 ):
     # ---------------- ARRANGE ----------------
     client = client_factory(TEST_USER_1_SUB)
-    mock_get_account_by_id_async.return_value = Account(id=TEST_USER_1_SUB)
+    mock_get_account_by_id.return_value = Account(id=TEST_USER_1_SUB)
 
     # ----------------- ACT ------------------
     response = client.get("/accounts/", headers=TEST_HEADERS)
 
     # ---------------- ASSERT ----------------
-    assert mock_get_account_by_id_async.call_count == 1
+    assert mock_get_account_by_id.call_count == 1
     assert response.status_code == 200
     assert response.json() == {"id": TEST_USER_1_SUB}
 
 
 # Case 404: Account does not exist
-@patch("api.routes.account.get_account_by_id_async")
+@patch("api.routes.account.get_account_by_id")
 def test_get_authenticated_user_404_if_account_missing(
-    mock_get_account_by_id_async, client_factory
+    mock_get_account_by_id, client_factory
 ):
     # ---------------- ARRANGE ----------------
     client = client_factory(TEST_USER_1_SUB)
-    mock_get_account_by_id_async.return_value = None
+    mock_get_account_by_id.return_value = None
 
     # ----------------- ACT ------------------
     response = client.get("/accounts/", headers=TEST_HEADERS)
 
     # ---------------- ASSERT ----------------
-    assert mock_get_account_by_id_async.call_count == 1
+    assert mock_get_account_by_id.call_count == 1
     assert response.status_code == 404
     assert response.json() == {"detail": "Account not found"}
 
@@ -87,41 +87,41 @@ def test_get_authenticated_user_401_missing_auth_header(
 
 
 # Case 201: Account does not exist, creates new account
-@patch("api.routes.account.get_account_by_id_async")
+@patch("api.routes.account.get_account_by_id")
 @patch("api.routes.account.create_account")
 def test_post_authenticated_user_201_creates_account(
-    mock_create_account, mock_get_account_by_id_async, client_factory
+    mock_create_account, mock_get_account_by_id, client_factory
 ):
     # ---------------- ARRANGE ----------------
     client = client_factory(TEST_USER_1_SUB)
-    mock_get_account_by_id_async.return_value = None
+    mock_get_account_by_id.return_value = None
     mock_create_account.return_value = Account(id=TEST_USER_1_SUB)
 
     # ----------------- ACT ------------------
     response = client.post("/accounts/", headers=TEST_HEADERS)
 
     # ---------------- ASSERT ----------------
-    assert mock_get_account_by_id_async.call_count == 1
+    assert mock_get_account_by_id.call_count == 1
     assert mock_create_account.call_count == 1
     assert response.status_code == 201
     assert response.json() == {"id": TEST_USER_1_SUB}
 
 
 # Case 409: Account already exists
-@patch("api.routes.account.get_account_by_id_async")
+@patch("api.routes.account.get_account_by_id")
 @patch("api.routes.account.create_account")
 def test_post_authenticated_user_409_if_account_exists(
-    mock_create_account, mock_get_account_by_id_async, client_factory
+    mock_create_account, mock_get_account_by_id, client_factory
 ):
     # ---------------- ARRANGE ----------------
     client = client_factory(TEST_USER_1_SUB)
-    mock_get_account_by_id_async.return_value = Account(id=TEST_USER_1_SUB)
+    mock_get_account_by_id.return_value = Account(id=TEST_USER_1_SUB)
 
     # ----------------- ACT ------------------
     response = client.post("/accounts/", headers=TEST_HEADERS)
 
     # ---------------- ASSERT ----------------
-    assert mock_get_account_by_id_async.call_count == 1
+    assert mock_get_account_by_id.call_count == 1
     assert mock_create_account.call_count == 0
     assert response.status_code == 409
     assert response.json() == {"detail": "Account already exists"}
