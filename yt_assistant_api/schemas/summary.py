@@ -2,6 +2,10 @@ from uuid import UUID
 from pydantic import BaseModel, ConfigDict
 
 
+class SummaryRequest(BaseModel):
+    video_id: str
+
+
 class SummaryCreate(BaseModel):
     summary_text: str
     transcript_id: UUID

@@ -3,21 +3,7 @@ from schemas import TranscriptResponse
 from tests.data import TEST_HEADERS, TEST_USER_1_SUB, TEST_TRANSCRIPT_1, TEST_VIDEO_1
 
 
-# Case: Invalid YouTube video ID
-def test_get_transcript_400_invalid_video_id(client_factory):
-    # ---------------- ARRANGE ----------------
-    client = client_factory(TEST_USER_1_SUB)
-    invalid_video_id = "invalid_id"  # valid id has 11 symbols
-
-    # ----------------- ACT ------------------
-    response = client.get(f"/transcripts/{invalid_video_id}", headers=TEST_HEADERS)
-
-    # ---------------- ASSERT ----------------
-    assert response.status_code == 400
-    assert response.json() == {"detail": "Invalid YouTube video ID"}
-
-
-# Case: Transcript exists in the db
+# Case 200: Transcript exists in the db
 @patch("api.routes.transcript.get_transcript")
 @patch("api.routes.transcript.validate_video_id")
 def test_get_transcript_200(
@@ -41,7 +27,21 @@ def test_get_transcript_200(
     assert response.json() == expected.model_dump()
 
 
-# Case: Transcript not found in the db
+# Case 400: Invalid YouTube video ID
+def test_get_transcript_400_invalid_video_id(client_factory):
+    # ---------------- ARRANGE ----------------
+    client = client_factory(TEST_USER_1_SUB)
+    invalid_video_id = "invalid_id"  # valid id has 11 symbols
+
+    # ----------------- ACT ------------------
+    response = client.get(f"/transcripts/{invalid_video_id}", headers=TEST_HEADERS)
+
+    # ---------------- ASSERT ----------------
+    assert response.status_code == 400
+    assert response.json() == {"detail": "Invalid YouTube video ID"}
+
+
+# Case 404: Transcript not found in the db
 @patch("api.routes.transcript.get_transcript")
 @patch("api.routes.transcript.validate_video_id")
 def test_get_transcript_404_not_found(
@@ -63,5 +63,5 @@ def test_get_transcript_404_not_found(
     assert mock_get_transcript.call_count == 1
     assert response.status_code == 404
     assert response.json() == {
-        "detail": "Video is not added yet. Please add the video first."
+        "detail": "No video has been added. Please add a video first."
     }
