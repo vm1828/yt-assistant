@@ -1,11 +1,19 @@
 {
-  // Python
+  "[python]": {
+    "editor.defaultFormatter": "ms-python.black-formatter",
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": "explicit"
+    }
+  },
   "python.testing.pytestEnabled": true,
   "python.testing.unittestEnabled": false,
   "python.testing.cwd": "${workspaceFolder}/yt_assistant_api",
   "python.testing.pytestArgs": [".."],
-
-  //JS/TS
   "javascript.preferences.importModuleSpecifier": "non-relative",
-  "typescript.preferences.importModuleSpecifier": "non-relative"
+  "typescript.preferences.importModuleSpecifier": "non-relative",
+  "sonarlint.connectedMode.project": {
+    "connectionId": "vm1828",
+    "projectKey": "vm1828_yt-assistant"
+  }
 }
