@@ -5,7 +5,7 @@ cd yt_assistant_api
 sudo apt-get update
 sudo apt-get install -y libpq-dev build-essential python3-dev
 sudo ln -s /usr/bin/python3 /usr/bin/python
-poetry install --no-root
+poetry install --with dev --no-interaction
 cd ..
 
 echo "Instaling Node.js dependencies..."

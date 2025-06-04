@@ -209,3 +209,19 @@ Utility scripts are in `scripts/` dir.
 
 - `init.sh`
 - `alembic_migrate.sh`
+
+# Code Formatting & Linting
+
+```
+# Check
+cd yt_assistant_api
+poetry run black --check .
+poetry run isort --check .
+poetry run flake8 .
+```
+
+```
+# Autofix
+poetry run black .
+poetry run isort .
+```
