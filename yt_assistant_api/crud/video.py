@@ -1,9 +1,10 @@
 from typing import Optional
-from sqlalchemy import select
-from sqlalchemy.orm import selectinload
-from sqlalchemy.ext.asyncio import AsyncSession
 
-from models import Video, AccountVideo, Transcript
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import selectinload
+
+from models import AccountVideo, Transcript, Video
 from schemas import VideoCreate
 
 

@@ -1,10 +1,10 @@
 import os
-import pytest
 
+import pytest
 from fastapi.testclient import TestClient
-from main import app
 
 from core import get_current_account
+from main import app
 from schemas import Auth0Payload
 
 

@@ -1,4 +1,5 @@
 from typing import Optional
+
 import httpx
 from bs4 import BeautifulSoup
 from youtube_transcript_api import YouTubeTranscriptApi

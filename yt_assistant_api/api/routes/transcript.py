@@ -4,12 +4,11 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from core import (
     get_current_account,
     get_db,
-    validate_video_id,
     logger,
+    validate_video_id,
 )
 from crud import get_transcript
 from schemas import TranscriptResponse
-
 
 router = APIRouter()
 

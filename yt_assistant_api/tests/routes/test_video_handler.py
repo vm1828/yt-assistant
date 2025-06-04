@@ -1,7 +1,7 @@
 from unittest.mock import patch
 
-from schemas import VideoResponse
 from models import Video
+from schemas import VideoResponse
 from tests.data import *
 
 # =========================================== GET ===========================================
@@ -62,7 +62,7 @@ def test_get_user_video_404_video_not_found(mock_get_account_video, client_facto
 # Case 201: Video in db and can be added to the account
 @patch("api.routes.video.add_video_to_account")
 @patch("api.routes.video.get_video")
-def test_get_user_video_201_video_in_db_can_be_added_to_account(
+def test_post_user_video_201_video_in_db_can_be_added_to_account(
     mock_get_video,
     mock_add_video_to_account,
     client_factory,
@@ -73,7 +73,7 @@ def test_get_user_video_201_video_in_db_can_be_added_to_account(
 
     # ----------------- ACT ------------------
     response = client.post(
-        f"/videos/",
+        "/videos/",
         headers=TEST_HEADERS,
         json={"id": TEST_VIDEO_1.id},
     )
@@ -82,7 +82,6 @@ def test_get_user_video_201_video_in_db_can_be_added_to_account(
     # ---------------- ASSERT ----------------
     assert mock_get_video.call_count == 1
     assert mock_add_video_to_account.call_count == 1
-    expected = VideoResponse.model_validate(TEST_VIDEO_1)
     assert response.status_code == 201
     assert response.json() == expected.model_dump()
 
@@ -92,7 +91,7 @@ def test_get_user_video_201_video_in_db_can_be_added_to_account(
 @patch("api.routes.video.fetch_video_transcript")
 @patch("api.routes.video.fetch_video_title")
 @patch("api.routes.video.get_video")
-def test_get_user_video_201_video_not_in_db_can_be_fetched(
+def test_post_user_video_201_video_not_in_db_can_be_fetched(
     mock_get_video,
     mock_fetch_video_title,
     mock_fetch_video_transcript,
@@ -108,7 +107,7 @@ def test_get_user_video_201_video_not_in_db_can_be_fetched(
 
     # ----------------- ACT ------------------
     response = client.post(
-        f"/videos/",
+        "/videos/",
         headers=TEST_HEADERS,
         json={"id": TEST_VIDEO_1.id},
     )
@@ -119,13 +118,12 @@ def test_get_user_video_201_video_not_in_db_can_be_fetched(
     assert mock_fetch_video_title.call_count == 1
     assert mock_fetch_video_transcript.call_count == 1
     assert mock_create_video.call_count == 1
-    expected = VideoResponse.model_validate(TEST_VIDEO_1)
     assert response.status_code == 201
     assert response.json() == expected.model_dump()
 
 
 # Case 400: Invalid YouTube Video ID
-def test_get_user_video_400_invalid_video_id(client_factory):
+def test_post_user_video_400_invalid_video_id(client_factory):
     # ---------------- ARRANGE ----------------
     client = client_factory(TEST_USER_1_SUB)
 
@@ -133,7 +131,7 @@ def test_get_user_video_400_invalid_video_id(client_factory):
 
     # ----------------- ACT ------------------
     response = client.post(
-        f"/videos/",
+        "/videos/",
         headers=TEST_HEADERS,
         json={"id": invalid_video_id},
     )
@@ -146,7 +144,7 @@ def test_get_user_video_400_invalid_video_id(client_factory):
 # Case 409: Video in db and already added to the account
 @patch("api.routes.video.add_video_to_account")
 @patch("api.routes.video.get_video")
-def test_get_user_video_409_video_in_db_already_added_to_account(
+def test_post_user_video_409_video_in_db_already_added_to_account(
     mock_get_video,
     mock_add_video_to_account,
     client_factory,
@@ -159,11 +157,10 @@ def test_get_user_video_409_video_in_db_already_added_to_account(
 
     # ----------------- ACT ------------------
     response = client.post(
-        f"/videos/",
+        "/videos/",
         headers=TEST_HEADERS,
         json={"id": TEST_VIDEO_1.id},
     )
-    expected = VideoResponse.model_validate(TEST_VIDEO_1)
 
     # ---------------- ASSERT ----------------
     assert mock_get_video.call_count == 1
@@ -177,7 +174,7 @@ def test_get_user_video_409_video_in_db_already_added_to_account(
 @patch("api.routes.video.fetch_video_transcript")
 @patch("api.routes.video.fetch_video_title")
 @patch("api.routes.video.get_video")
-def test_get_user_video_404_video_not_in_db_no_title(
+def test_post_user_video_404_video_not_in_db_no_title(
     mock_get_video,
     mock_fetch_video_title,
     mock_fetch_video_transcript,
@@ -193,7 +190,7 @@ def test_get_user_video_404_video_not_in_db_no_title(
 
     # ----------------- ACT ------------------
     response = client.post(
-        f"/videos/",
+        "/videos/",
         headers=TEST_HEADERS,
         json={"id": valid_video_id},
     )
@@ -214,7 +211,7 @@ def test_get_user_video_404_video_not_in_db_no_title(
 @patch("api.routes.video.fetch_video_transcript")
 @patch("api.routes.video.fetch_video_title")
 @patch("api.routes.video.get_video")
-def test_get_user_video_404_video_not_in_db_no_title(
+def test_post_user_video_404_video_not_in_db_no_transcript(
     mock_get_video,
     mock_fetch_video_title,
     mock_fetch_video_transcript,
@@ -230,7 +227,7 @@ def test_get_user_video_404_video_not_in_db_no_title(
 
     # ----------------- ACT ------------------
     response = client.post(
-        f"/videos/",
+        "/videos/",
         headers=TEST_HEADERS,
         json={"id": valid_video_id},
     )

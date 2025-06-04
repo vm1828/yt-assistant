@@ -1,6 +1,7 @@
 import os
 from abc import ABC, abstractmethod
 from enum import Enum, IntEnum
+
 from langchain.prompts import ChatPromptTemplate
 from langchain_google_genai import ChatGoogleGenerativeAI
 

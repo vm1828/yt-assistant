@@ -1,21 +1,20 @@
 from enum import Enum
-import os
+from unittest.mock import MagicMock, patch
+
 import pytest
-from unittest.mock import patch, MagicMock
+from langchain.prompts import ChatPromptTemplate
 
 from services import summary
 from services.summary import (
-    get_summary_size,
-    SumSize,
-    SumModel,
-    get_adapter,
-    summarize,
-    LLMAdapter,
-    GeminiAdapter,
     _ADAPTERS,
+    GeminiAdapter,
+    LLMAdapter,
+    SumModel,
+    SumSize,
+    get_adapter,
+    get_summary_size,
+    summarize,
 )
-from langchain.prompts import ChatPromptTemplate
-
 from tests.data import TEST_SUMMARY_1, TEST_TRANSCRIPT_1
 
 

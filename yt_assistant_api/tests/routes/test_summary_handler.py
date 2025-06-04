@@ -1,10 +1,10 @@
 from unittest.mock import patch
 
 from tests.data import (
-    TEST_USER_1_SUB,
     TEST_HEADERS,
-    TEST_TRANSCRIPT_1,
     TEST_SUMMARY_1,
+    TEST_TRANSCRIPT_1,
+    TEST_USER_1_SUB,
 )
 
 # =========================================== GET ===========================================
@@ -129,7 +129,7 @@ def test_create_video_summary_201(
 
     # ----------------- ACT ------------------
     response = client.post(
-        f"/summaries/",
+        "/summaries/",
         headers=TEST_HEADERS,
         json={"video_id": TEST_TRANSCRIPT_1.video_id},
     )
@@ -154,7 +154,7 @@ def test_create_video_summary_400_invalid_video_id(client_factory):
 
     # ----------------- ACT ------------------
     response = client.post(
-        f"/summaries/", headers=TEST_HEADERS, json={"video_id": "bad_id"}
+        "/summaries/", headers=TEST_HEADERS, json={"video_id": "bad_id"}
     )
 
     # ---------------- ASSERT ----------------
@@ -168,7 +168,7 @@ def test_create_video_summary_401_unauthorized(client_factory):
     client = client_factory(TEST_USER_1_SUB, auth=False)
 
     # ----------------- ACT ------------------
-    response = client.post(f"/summaries/", json={"video_id": "bad_id"})
+    response = client.post("/summaries/", json={"video_id": "bad_id"})
 
     # ---------------- ASSERT ----------------
     assert response.status_code == 401
@@ -185,7 +185,7 @@ def test_create_video_summary_404_no_transcript(mock_get_transcript, client_fact
 
     # ----------------- ACT ------------------
     response = client.post(
-        f"/summaries/",
+        "/summaries/",
         headers=TEST_HEADERS,
         json={"video_id": valid_id},
     )
@@ -217,7 +217,7 @@ def test_create_video_summary_409_summary_exists(
 
     # ----------------- ACT ------------------
     response = client.post(
-        f"/summaries/",
+        "/summaries/",
         headers=TEST_HEADERS,
         json={"video_id": TEST_TRANSCRIPT_1.video_id},
     )
