@@ -1,7 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from api import router
 from core import (
     get_current_account,
     get_db,
@@ -9,7 +8,7 @@ from core import (
     validate_video_id,
 )
 from crud import create_summary, get_summary, get_transcript
-from schemas.summary import *
+from schemas import SummaryCreate, SummaryRequest, SummaryResponse
 from services import summarize
 
 router = APIRouter()

@@ -2,7 +2,6 @@ from unittest.mock import patch
 
 from fastapi import HTTPException, status
 
-from main import app
 from models import Account
 from tests.data import *
 

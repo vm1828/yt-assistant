@@ -6,7 +6,6 @@ from tests.data import *
 # from fastapi import HTTPException, status
 
 
-
 # Case 200: User has videos
 @patch("api.routes.video.get_account_by_id")
 def test_get_user_videos_returns_user_videos(mock_get_account_by_id, client_factory):

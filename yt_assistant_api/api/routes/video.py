@@ -10,9 +10,9 @@ from core import (
     validate_video_id,
 )
 from crud.account import get_account_by_id
-from crud.video import *
+from crud.video import add_video_to_account, create_video, get_account_video, get_video
 from schemas import Auth0Payload
-from schemas.video import *
+from schemas.video import VideoCreate, VideoRequest, VideoResponse, VideosResponse
 from services import fetch_video_title, fetch_video_transcript
 
 router = APIRouter()
