@@ -1,10 +1,13 @@
 name: YT-Assistant CI
 
 on:
-  push: # any branch
-  workflow_dispatch: # manual trigger
+  push:
+    branches:
+      - develop
   pull_request:
-    branches: [develop]
+    branches:
+      - develop
+  workflow_dispatch:
 
 jobs:
   api-lint:
