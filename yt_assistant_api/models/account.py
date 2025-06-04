@@ -1,8 +1,8 @@
-from typing import List, TYPE_CHECKING
+from typing import TYPE_CHECKING, List
 
 from sqlalchemy import String
-from sqlalchemy.orm import Mapped, relationship, mapped_column
 from sqlalchemy.ext.associationproxy import association_proxy
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from core.db_session import Base
 

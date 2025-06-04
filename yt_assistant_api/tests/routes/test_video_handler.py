@@ -1,7 +1,7 @@
 from unittest.mock import patch
 
-from schemas import VideoResponse
 from models import Video
+from schemas import VideoResponse
 from tests.data import *
 
 # =========================================== GET ===========================================

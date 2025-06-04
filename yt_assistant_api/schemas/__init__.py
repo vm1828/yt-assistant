@@ -1,4 +1,4 @@
 from .account import AccountCreate, AccountResponse, Auth0Payload
-from .video import VideoRequest, VideoCreate, VideoResponse, VideosResponse
+from .summary import SummaryCreate, SummaryRequest, SummaryResponse
 from .transcript import TranscriptResponse
-from .summary import SummaryRequest, SummaryCreate, SummaryResponse
+from .video import VideoCreate, VideoRequest, VideoResponse, VideosResponse

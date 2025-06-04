@@ -1,10 +1,10 @@
 from unittest.mock import patch
 
 from tests.data import (
-    TEST_USER_1_SUB,
     TEST_HEADERS,
-    TEST_TRANSCRIPT_1,
     TEST_SUMMARY_1,
+    TEST_TRANSCRIPT_1,
+    TEST_USER_1_SUB,
 )
 
 # =========================================== GET ===========================================

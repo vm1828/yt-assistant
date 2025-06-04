@@ -1,11 +1,9 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
-
-from core import get_current_account, logger
-from schemas import Auth0Payload, AccountCreate, AccountResponse
+from core import get_current_account, get_db, logger
 from crud import create_account, get_account_by_id
-from core import get_db
+from schemas import AccountCreate, AccountResponse, Auth0Payload
 
 router = APIRouter()
 

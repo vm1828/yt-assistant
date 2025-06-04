@@ -1,4 +1,5 @@
 from unittest.mock import patch
+
 from fastapi import HTTPException, status
 
 from main import app

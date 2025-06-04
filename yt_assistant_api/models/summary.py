@@ -1,11 +1,11 @@
 from datetime import datetime
 from typing import TYPE_CHECKING
+from uuid import uuid4
 
-from sqlalchemy import DateTime, Text, ForeignKey, Uuid
+from sqlalchemy import DateTime, ForeignKey, Text, Uuid
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.sql import func
 
-from uuid import uuid4
 from core.db_session import Base
 
 if TYPE_CHECKING:

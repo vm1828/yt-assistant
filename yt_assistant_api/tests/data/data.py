@@ -1,5 +1,6 @@
 from datetime import datetime
-from models import Account, Video, AccountVideo, Transcript, Summary
+
+from models import Account, AccountVideo, Summary, Transcript, Video
 
 TEST_HEADERS = {"Authorization": "Bearer test_token"}
 

@@ -1,10 +1,10 @@
-from fastapi import HTTPException, Security
-from fastapi.security import OAuth2PasswordBearer
+import httpx
 from authlib.jose import JsonWebToken
 from authlib.jose.errors import JoseError
-from config import settings
-import httpx
+from fastapi import HTTPException, Security
+from fastapi.security import OAuth2PasswordBearer
 
+from config import settings
 from schemas.account import Auth0Payload
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")

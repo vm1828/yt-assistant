@@ -1,9 +1,10 @@
 from unittest.mock import patch
 
-# from fastapi import HTTPException, status
-
 from schemas import VideosResponse
 from tests.data import *
+
+# from fastapi import HTTPException, status
+
 
 
 # Case 200: User has videos

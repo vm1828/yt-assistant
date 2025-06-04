@@ -1,8 +1,8 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from config import settings
 from api.router import api_router
+from config import settings
 
 app = FastAPI(
     title=f"yt-assistant-{settings.ENV}",

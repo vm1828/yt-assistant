@@ -1,5 +1,6 @@
 from fastapi import APIRouter
-from api.routes import account, video, transcript, summary
+
+from api.routes import account, summary, transcript, video
 
 api_router = APIRouter()
 

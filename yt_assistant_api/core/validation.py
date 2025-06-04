@@ -1,5 +1,7 @@
 import re
+
 from fastapi import HTTPException
+
 from .logger import logger
 
 YOUTUBE_VIDEO_ID_REGEX = re.compile(r"^[a-zA-Z0-9_-]{11}$")

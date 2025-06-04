@@ -1,6 +1,7 @@
 from unittest.mock import patch
+
 from schemas import TranscriptResponse
-from tests.data import TEST_HEADERS, TEST_USER_1_SUB, TEST_TRANSCRIPT_1, TEST_VIDEO_1
+from tests.data import TEST_HEADERS, TEST_TRANSCRIPT_1, TEST_USER_1_SUB, TEST_VIDEO_1
 
 
 # Case 200: Transcript exists in the db
