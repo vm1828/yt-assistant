@@ -3,12 +3,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from core import (
-    get_current_account,
-    get_db,
-    logger,
-    validate_video_id,
-)
+from core import get_current_account, get_db, logger, validate_video_id
 from crud.account import get_account_by_id
 from crud.video import add_video_to_account, create_video, get_account_video, get_video
 from schemas import Auth0Payload
@@ -49,6 +44,7 @@ async def get_user_videos(
     description="Returns details of a specific video added to the authenticated user's account.",
     responses={
         400: {"description": "Invalid YouTube video ID"},
+        403: {"description": "Account not approved"},
         404: {"description": "Video not found for this user"},
     },
 )
@@ -83,6 +79,7 @@ async def get_user_video(
     ),
     responses={
         400: {"description": "Invalid YouTube video ID"},
+        403: {"description": "Account not approved"},
         404: {"description": "Video not found or failed to fetch a transcript"},
         409: {"description": "Video already added to the account"},
     },

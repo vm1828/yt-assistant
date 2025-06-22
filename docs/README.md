@@ -21,22 +21,24 @@ YT-Assistant is a web application designed to help users summarize YouTube video
 - **Frontend**: React, TypeScript, Zustand, Tailwind CSS
 - **Database**: PostgreSQL + pgvector
 - **LLM**: Gemini (Google GenAI) + LangChain
+- **Code Quality**: black, isort, flake8, SonarQube
+- **CI/CD**: GitHub Actions
 
-# UI Prototype
+## UI Prototype
 
 ![ui_prototype_light](ui_prototype_light.png)
 ![ui_prototype_dark](ui_prototype_dark.png)
 
-# Local Environment
+## Local Environment
 
-## Dependencies
+### Dependencies
 
 - Python 3.12
 - Poetry 2.1.2
 - Node.js v22 + npm v10
 - Docker 28.1.1
 
-## Setup
+### Setup
 
 Run the following to install dependencies, build containers and start the project:
 
@@ -46,13 +48,13 @@ Run the following to install dependencies, build containers and start the projec
 
 With `--no-build` flag the script will just run the project from local environment
 
-## Environment
+### Environment
 
 Environment variables are stored in `*.env` files in `env/` directory, e.g. `./env/api.env`, `./env/.api.env` etc.
 
 **`.api.env`**
 
-```
+```dotenv
 ENV=
 API_HOST=
 API_PORT=
@@ -67,7 +69,7 @@ CORS_ORIGINS=http://localhost:3000,http://prod-frontend.com
 
 **`.db.env`**
 
-```
+```dotenv
 ENV=
 POSTGRES_USER=
 POSTGRES_PASSWORD=
@@ -76,7 +78,7 @@ POSTGRES_DB=
 
 **`.client.env`**
 
-```
+```dotenv
 VITE_ENV=
 VITE_API_HOST=
 VITE_API_PORT=
@@ -87,11 +89,11 @@ VITE_AUTH0_AUDIENCE=
 VITE_AUTH0_CLIENT_ID=
 ```
 
-# API Documentation
+## API Documentation
 
 To access API documentation (Swagger UI), navigate to [localhost:8000/docs](localhost:8000/docs)
 
-## Endpoints
+### Endpoints
 
 - `GET /accounts/` - Returns the authenticated user's account details.
 - `POST /accounts/` - Creates a new account for the authenticated user if one does not exist.
@@ -107,11 +109,11 @@ To access API documentation (Swagger UI), navigate to [localhost:8000/docs](loca
 
 \*All endpoints are Auth0 protected
 
-# DB Schema
+## DB Schema
 
 ![db_schema_diagram](db_schema.png)
 
-## account
+### account
 
 Stores user id from Auth0.
 
@@ -184,11 +186,11 @@ Stores vector embeddings related to videos, used for similarity search in RAG ta
 | video_id    | UUID        | Foreign key to `video`          |
 | summary_emb | vector(768) | Embedding vector                |
 
-# Unit Testing
+## Unit Testing
 
 To run unit tests for the api:
 
-```
+```bash
 cd yt_assistant_api
 PYTHONPATH=. pytest --cov
 coverage report -m
@@ -197,22 +199,22 @@ coverage report -m
 
 To run unit tests for the client:
 
-```
+```bash
 cd yt_assistant_client
 npm run test
 npm run coverage # run tests with coverage
 ```
 
-# Scripts
+## Scripts
 
 Utility scripts are in `scripts/` dir.
 
 - `init.sh`
 - `alembic_migrate.sh`
 
-# Code Formatting & Linting
+## Code Formatting & Linting
 
-```
+```bash
 # Check
 cd yt_assistant_api
 poetry run black --check .
@@ -220,7 +222,7 @@ poetry run isort --check .
 poetry run flake8 .
 ```
 
-```
+```bash
 # Autofix
 poetry run black .
 poetry run isort .

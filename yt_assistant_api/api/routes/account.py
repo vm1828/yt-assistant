@@ -44,6 +44,7 @@ async def get_authenticated_user(
     status_code=status.HTTP_201_CREATED,
     responses={
         401: {"description": "Not authenticated"},
+        403: {"description": "Account not approved"},
         409: {"description": "Account already exists"},
     },
 )
