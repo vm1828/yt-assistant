@@ -26,7 +26,18 @@ const App = () => {
   if (isLoading) {
     app = <div className="p-4 text-black">Loading...</div>;
   } else if (!isAuthenticated) {
-    app = <LoginButton />;
+    app = (
+      <>
+        <LoginButton />
+        <div className="mt-4 text-center text-sm text-gray-600">
+          Access is granted after admin approval. Please log in or register to
+          begin.
+          <br />
+          Newly registered users are typically approved within 24 hours. If not,
+          please contact the administration.
+        </div>
+      </>
+    );
   } else if (isAuthenticated && user) {
     app = (
       <div>
