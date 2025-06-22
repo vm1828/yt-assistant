@@ -1,12 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from core import (
-    get_current_account,
-    get_db,
-    logger,
-    validate_video_id,
-)
+from core import get_current_account, get_db, logger, validate_video_id
 from crud import get_transcript
 from schemas import TranscriptResponse
 
@@ -21,6 +16,7 @@ router = APIRouter()
     responses={
         400: {"description": "Invalid YouTube video ID"},
         401: {"description": "Not authenticated"},
+        403: {"description": "Account not approved"},
         404: {"description": "No video has been added"},
     },
 )

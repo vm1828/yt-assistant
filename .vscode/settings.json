@@ -6,6 +6,7 @@
       "source.organizeImports": "explicit"
     }
   },
+  "flake8.cwd": "./yt_assistant_api",
   "python.testing.pytestEnabled": true,
   "python.testing.unittestEnabled": false,
   "python.testing.cwd": "${workspaceFolder}/yt_assistant_api",
