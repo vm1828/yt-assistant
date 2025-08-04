@@ -179,12 +179,12 @@ Stores account questions and generated answers.
 
 Stores vector embeddings related to videos, used for similarity search in RAG tasks.
 
-| Column Name | Type        | Description                     |
-| ----------- | ----------- | ------------------------------- |
-| id          | UUID        | Primary key                     |
-| created_at  | TIMESTAMP   | Timestamp of embedding creation |
-| video_id    | UUID        | Foreign key to `video`          |
-| summary_emb | vector(768) | Embedding vector                |
+| Column Name   | Type        | Description                     |
+| ------------- | ----------- | ------------------------------- |
+| id            | UUID        | Primary key                     |
+| created_at    | TIMESTAMP   | Timestamp of embedding creation |
+| transcript_id | UUID        | Foreign key to `transcript`     |
+| summary_emb   | vector(768) | Embedding vector                |
 
 ## Unit Testing
 

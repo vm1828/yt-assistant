@@ -41,7 +41,7 @@ entity "qa" {
 entity "embedding" {
   +id: UUID
   created_at: TIMESTAMP
-  video_id: VARCHAR
+  transcript_id: VARCHAR
   embedding: vector(768)
 }
 
@@ -60,6 +60,6 @@ qa::video_id --> video::id
 qa::account_id --> account::id
 
 'video-embedding relationship
-embedding::video_id --> video::id
+embedding::transcript_id --> transcript::id
 
 @enduml
