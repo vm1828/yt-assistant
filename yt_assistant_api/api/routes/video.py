@@ -9,6 +9,7 @@ from crud.video import add_video_to_account, create_video, get_account_video, ge
 from schemas import Auth0Payload
 from schemas.video import VideoCreate, VideoRequest, VideoResponse, VideosResponse
 from services import fetch_video_title, fetch_video_transcript
+from tasks import dispatch_transcript_embedding_task
 
 router = APIRouter()
 
@@ -123,5 +124,8 @@ async def add_video(
             auth0_user.sub,
             data,
         )
+
+        # Trigger async embedding task for new video
+        dispatch_transcript_embedding_task(video_id)
 
     return video

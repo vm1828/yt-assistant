@@ -1,0 +1,1 @@
+from .dispatch import dispatch_transcript_embedding_task

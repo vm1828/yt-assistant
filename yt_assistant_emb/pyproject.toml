@@ -1,0 +1,23 @@
+[tool.poetry]
+package-mode = false
+name = "yt-assistant-api"
+version = "0.1.0"
+description = "YT-Assistant API"
+authors = ["vm1828 <vm18281828@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = ">=3.12,<3.14"
+celery = "^5.5.3"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3.5"
+pytest-env = "^1.1.5"
+pytest-cov = "^6.1.1"
+pytest-asyncio = "^0.26.0"
+black = "^25.1.0"
+flake8 = "^7.2.0"
+isort = "^6.0.1"
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
