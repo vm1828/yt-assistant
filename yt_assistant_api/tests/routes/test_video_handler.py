@@ -91,7 +91,9 @@ def test_post_user_video_201_video_in_db_can_be_added_to_account(
 @patch("api.routes.video.fetch_video_transcript")
 @patch("api.routes.video.fetch_video_title")
 @patch("api.routes.video.get_video")
+@patch("api.routes.video.dispatch_transcript_embedding_task")
 def test_post_user_video_201_video_not_in_db_can_be_fetched(
+    mock_dispatch_transcript_embedding_task,
     mock_get_video,
     mock_fetch_video_title,
     mock_fetch_video_transcript,
@@ -118,6 +120,7 @@ def test_post_user_video_201_video_not_in_db_can_be_fetched(
     assert mock_fetch_video_title.call_count == 1
     assert mock_fetch_video_transcript.call_count == 1
     assert mock_create_video.call_count == 1
+    assert mock_dispatch_transcript_embedding_task.call_count == 1
     assert response.status_code == 201
     assert response.json() == expected.model_dump()
 
