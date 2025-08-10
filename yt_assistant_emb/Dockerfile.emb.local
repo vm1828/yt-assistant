@@ -10,7 +10,7 @@ COPY requirements-dev.txt /app/
 RUN pip install --upgrade pip setuptools wheel \
     && pip install --no-cache-dir -r requirements-dev.txt
 
-COPY . /app
+COPY tasks /app
 
 # Start Celery worker
 CMD ["celery", "-A", "tasks.embed", "worker", "--loglevel=info"]
