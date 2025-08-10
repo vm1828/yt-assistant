@@ -65,6 +65,7 @@ POSTGRES_URL=postgresql://<user>:<password>@<host>:<port>/<db_name>
 AUTH0_DOMAIN=
 AUTH0_AUDIENCE=
 CORS_ORIGINS=http://localhost:3000,http://prod-frontend.com
+REDIS_URL=redis://yt_assistant_redis:6379/0
 ```
 
 **`.db.env`**
@@ -87,6 +88,14 @@ VITE_CLIENT_PORT=
 VITE_AUTH0_DOMAIN=
 VITE_AUTH0_AUDIENCE=
 VITE_AUTH0_CLIENT_ID=
+```
+
+**`.emb.env`**
+
+```dotenv
+ENV=
+REDIS_URL=redis://yt_assistant_redis:6379/0
+POSTGRES_URL=postgresql://user:password@yt_assistant_db:5432/yt_assistant_db
 ```
 
 ## API Documentation
@@ -179,12 +188,12 @@ Stores account questions and generated answers.
 
 Stores vector embeddings related to videos, used for similarity search in RAG tasks.
 
-| Column Name   | Type        | Description                     |
-| ------------- | ----------- | ------------------------------- |
-| id            | UUID        | Primary key                     |
-| created_at    | TIMESTAMP   | Timestamp of embedding creation |
-| transcript_id | UUID        | Foreign key to `transcript`     |
-| summary_emb   | vector(768) | Embedding vector                |
+| Column Name    | Type        | Description                     |
+| -------------- | ----------- | ------------------------------- |
+| id             | UUID        | Primary key                     |
+| created_at     | TIMESTAMP   | Timestamp of embedding creation |
+| transcript_id  | UUID        | Foreign key to `transcript`     |
+| transcript_emb | vector(768) | Embedding vector                |
 
 ## Unit Testing
 
