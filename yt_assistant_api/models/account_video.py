@@ -21,7 +21,7 @@ class AccountVideo(Base):
         String, ForeignKey("video.id"), primary_key=True
     )
     created_at: Mapped[datetime] = mapped_column(
-        DateTime, server_default=func.now(), nullable=False
+        DateTime(timezone=True), server_default=func.now(), nullable=False
     )
 
     account: Mapped["Account"] = relationship(

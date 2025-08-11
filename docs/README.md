@@ -184,16 +184,27 @@ Stores account questions and generated answers.
 | question_text | TEXT      | Account's question                    |
 | answer_text   | TEXT      | Model's answer                        |
 
+## transcript_chunk
+
+Stores chunks of transcripts, vectorized as embeddings in embedding table.
+
+| Column Name   | Type | Description                                             |
+| ------------- | ---- | ------------------------------------------------------- |
+| id            | UUID | Primary key                                             |
+| transcript_id | UUID | Foreign key to `transcript`                             |
+| chunk_text    | TEXT | Chunk of transcript text (denormalized for performance) |
+| chunk_index   | INT  | Chunk index, can be used for ordering chunks            |
+
 ## embedding
 
 Stores vector embeddings related to videos, used for similarity search in RAG tasks.
 
-| Column Name    | Type        | Description                     |
-| -------------- | ----------- | ------------------------------- |
-| id             | UUID        | Primary key                     |
-| created_at     | TIMESTAMP   | Timestamp of embedding creation |
-| transcript_id  | UUID        | Foreign key to `transcript`     |
-| transcript_emb | vector(768) | Embedding vector                |
+| Column Name         | Type        | Description                       |
+| ------------------- | ----------- | --------------------------------- |
+| id                  | UUID        | Primary key                       |
+| created_at          | TIMESTAMP   | Timestamp of embedding creation   |
+| transcript_chunk_id | UUID        | Foreign key to `transcript_chunk` |
+| transcript_emb      | vector(768) | Embedding vector                  |
 
 ## Unit Testing
 

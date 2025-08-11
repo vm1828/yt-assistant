@@ -38,10 +38,17 @@ entity "qa" {
   answer_text: TEXT
 }
 
+entity "transcript_chunk" {
+  +id: UUID
+  transcript_id: UUID
+  chunk_text: TEXT
+  chunk_index: INT
+}
+
 entity "embedding" {
   +id: UUID
   created_at: TIMESTAMP
-  transcript_id: VARCHAR
+  transcript_chunk_id: VARCHAR
   embedding: vector(768)
 }
 
@@ -59,7 +66,10 @@ summary::transcript_id --> transcript::id
 qa::video_id --> video::id
 qa::account_id --> account::id
 
-'video-embedding relationship
-embedding::transcript_id --> transcript::id
+'transcript-transcript_chunk relationship
+transcript_chunk::transcript_id --> transcript::id
+
+'transcript_chunk-embedding relationship
+embedding::transcript_chunk_id --> transcript_chunk::id
 
 @enduml
