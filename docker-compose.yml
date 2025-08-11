@@ -47,6 +47,7 @@ services:
     image: yt_assistant_client:latest
     volumes:
       - ./yt_assistant_client:/app
+      - /app/node_modules/
     env_file:
       - env/.client.env
     ports:
