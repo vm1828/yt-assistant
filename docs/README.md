@@ -9,7 +9,7 @@ YT-Assistant is a web application designed to help users summarize YouTube video
 - [x] Adding User Videos
 - [x] Extracting Transcripts
 - [x] Video Transcripts Summarization
-- [ ] Storing Transcripts data for RAG
+- [x] Storing Transcripts data for RAG
 - [ ] Q&A Sessions
 - [ ] Video Player Integration
 - [ ] UI Refinement and Unit Testing
@@ -20,9 +20,15 @@ YT-Assistant is a web application designed to help users summarize YouTube video
 - **Backend**: FastAPI, Auth0
 - **Frontend**: React, TypeScript, Zustand, Tailwind CSS
 - **Database**: PostgreSQL + pgvector
+- **Task Processing**: Celery + Redis
 - **LLM**: Gemini (Google GenAI) + LangChain
 - **Code Quality**: black, isort, flake8, SonarQube
 - **CI/CD**: GitHub Actions
+
+### Models
+
+- **Summarization**: _gemini-2.0-flash_
+- **Embeddings**: _gemini-embedding-001_
 
 ## UI Prototype
 
@@ -206,6 +212,20 @@ Stores vector embeddings related to videos, used for similarity search in RAG ta
 | transcript_chunk_id | UUID        | Foreign key to `transcript_chunk` |
 | transcript_emb      | vector(768) | Embedding vector                  |
 
+## Services
+
+### Embedding service
+
+Handles transcript chunk embeddings and vector storage.
+
+**Workflow**:
+
+1. API receives a new video with and processes it, saving transcript to db.
+2. API dispatches a task to Celery via Redis.
+3. The embedding service splits the transcript into chunks, computes embeddings for each chunk, and stores them in the database (transcript_chunk and embedding tables).
+
+\*\*Storing chunks alongside the full transcript, rather than just using offset indexes, slightly denormalizes the database but significantly improves search speed and RAG performance, making the tradeoff worthwhile.
+
 ## Unit Testing
 
 To run unit tests for the api and embedding service:
@@ -236,7 +256,7 @@ Utility scripts are in `scripts/` dir.
 - `init.sh`
 - `alembic_migrate.sh`
 
-## Code Formatting & Linting
+## Code Formatting & Linting (outdated, needs revisiting)
 
 ```bash
 # Check
