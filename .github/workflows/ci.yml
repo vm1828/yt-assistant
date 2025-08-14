@@ -10,11 +10,13 @@ on:
   workflow_dispatch:
 
 jobs:
+  # ---------------------- API jobs (Poetry) ----------------------
   api-lint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: ./.github/actions/setup-python-poetry
+      - uses: ./.github/actions/setup-api-env
+
       - name: Run api linters
         run: |
           cd yt_assistant_api
@@ -27,8 +29,36 @@ jobs:
     needs: api-lint
     steps:
       - uses: actions/checkout@v4
-      - uses: ./.github/actions/setup-python-poetry
+      - uses: ./.github/actions/setup-api-env
+
       - name: Run api unit tests
         run: |
           cd yt_assistant_api
           PYTHONPATH=. poetry run pytest --cov
+
+  # ---------------------- Embedding microservice jobs (pip) ----------------------
+  emb-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-emb-env
+
+      - name: Run emb linters
+        run: |
+          cd yt_assistant_emb
+          black --check .
+          isort --check .
+          flake8 .
+
+  emb-unit-tests:
+    runs-on: ubuntu-latest
+    needs: emb-lint
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-emb-env
+
+      - name: Run emb unit tests
+        run: |
+          cd yt_assistant_emb
+          PYTHONPATH=. pytest --cov
+

@@ -3,7 +3,6 @@ from uuid import UUID, uuid4
 
 from sqlalchemy import ForeignKey, Integer, Text, Uuid
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy.sql import func
 
 from core.db_session import Base
 
