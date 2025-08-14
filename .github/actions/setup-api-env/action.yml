@@ -1,0 +1,29 @@
+name: Setup yt_assistant_api Environment with Python & Poetry
+
+runs:
+  using: "composite"
+  steps:
+    # ---------------------- Set up Python ----------------------
+    - name: Set up Python 3.12
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.12"
+
+    # ---------------------- Cache Poetry ----------------------
+    - name: Cache Poetry
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/.cache/pypoetry
+          ~/.virtualenvs
+        key: ${{ runner.os }}-poetry-${{ hashFiles('**/poetry.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-poetry-
+
+    # ---------------------- Install dev dependencies ----------------------
+    - name: Install yt_assistant_api dev dependencies
+      run: |
+        curl -sSL https://install.python-poetry.org | python3 -
+        cd yt_assistant_api
+        poetry install --with dev --no-interaction
+      shell: bash

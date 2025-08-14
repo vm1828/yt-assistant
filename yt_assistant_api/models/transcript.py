@@ -1,6 +1,6 @@
 from datetime import datetime
 from typing import TYPE_CHECKING
-from uuid import uuid4
+from uuid import UUID, uuid4
 
 from sqlalchemy import DateTime, ForeignKey, String, Text, Uuid
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -9,15 +9,15 @@ from sqlalchemy.sql import func
 from core.db_session import Base
 
 if TYPE_CHECKING:
-    from models import Summary, Video
+    from models import Summary, TranscriptChunk, Video
 
 
 class Transcript(Base):
     __tablename__ = "transcript"
 
-    id: Mapped[str] = mapped_column(Uuid, primary_key=True, default=uuid4)
+    id: Mapped[UUID] = mapped_column(Uuid, primary_key=True, default=uuid4)
     created_at: Mapped[datetime] = mapped_column(
-        DateTime, server_default=func.now(), nullable=False
+        DateTime(timezone=True), server_default=func.now(), nullable=False
     )
     video_id: Mapped[str] = mapped_column(
         String,
@@ -36,4 +36,7 @@ class Transcript(Base):
         back_populates="transcript",
         uselist=False,
         cascade="all, delete-orphan",
+    )
+    chunks: Mapped[list["TranscriptChunk"]] = relationship(
+        "TranscriptChunk", back_populates="transcript", cascade="all, delete-orphan"
     )

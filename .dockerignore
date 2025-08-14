@@ -32,7 +32,7 @@
 **/*.md
 **/.vscode/
 **/*.log
-**/Dockerfile
+**/Dockerfile*
 **/docker-compose.yml
 **/.env
 **/.env.*
