@@ -5,7 +5,7 @@ entity "account" {
 }
 
 entity "video" {
-  +id: VARCHAR <<PK>>  // YouTube video ID, e.g. "dQw4w9WgXcQ"
+  *id: VARCHAR <<PK>>  // YouTube video ID, e.g. "dQw4w9WgXcQ"
   title: VARCHAR
 }
 
@@ -16,60 +16,60 @@ entity "account_video" {
 }
 
 entity "transcript" {
-  +id: UUID
+  *id: UUID <<PK>>
   created_at: TIMESTAMP
-  video_id: VARCHAR
+  video_id: VARCHAR <<FK>>
   transcript_text: TEXT
 }
 
 entity "summary" {
-  +id: UUID
+  *id: UUID <<PK>>
   created_at: TIMESTAMP
-  transcript_id: UUID
+  transcript_id: UUID <<FK>>
   summary_text: TEXT
 }
 
-entity "qa" {
-  +id: UUID
+entity "conversation" {
+  *id: UUID <<PK>>
   created_at: TIMESTAMP
-  account_id: VARCHAR
-  video_id: VARCHAR
-  question_text: TEXT
-  answer_text: TEXT
+  account_id: VARCHAR <<FK>>
+  video_id: VARCHAR <<FK>>
+}
+
+entity "message" {
+  *id: UUID <<PK>>
+  created_at: TIMESTAMP
+  conversation_id: UUID <<FK>>
+  user_message: TEXT
+  ai_response: TEXT
 }
 
 entity "transcript_chunk" {
-  +id: UUID
-  transcript_id: UUID
+  *id: UUID <<PK>>
+  transcript_id: UUID <<FK>>
   chunk_text: TEXT
   chunk_index: INT
 }
 
 entity "embedding" {
-  +id: UUID
+  *id: UUID <<PK>>
   created_at: TIMESTAMP
-  transcript_chunk_id: VARCHAR
+  transcript_chunk_id: UUID <<FK>>
   embedding: vector(768)
 }
 
-'account-video relationship
+' Relationships
 account_video::account_id --> account::id
 account_video::video_id --> video::id
 
-'video-transcript relationship
 transcript::video_id --> video::id
-
-'video-summary relationship
 summary::transcript_id --> transcript::id
 
-'video-qa relationship
-qa::video_id --> video::id
-qa::account_id --> account::id
-
-'transcript-transcript_chunk relationship
 transcript_chunk::transcript_id --> transcript::id
-
-'transcript_chunk-embedding relationship
 embedding::transcript_chunk_id --> transcript_chunk::id
+
+conversation::account_id --> account::id
+conversation::video_id --> video::id
+message::conversation_id --> conversation::id
 
 @enduml
