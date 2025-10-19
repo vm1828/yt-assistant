@@ -67,11 +67,11 @@ API_PORT=
 CLIENT_HOST=
 CLIENT_PORT=
 GOOGLE_API_KEY=
-POSTGRES_URL=postgresql://<user>:<password>@<host>:<port>/<db_name>
+POSTGRES_URL=postgresql://<username>:<password>@<host>:<port>/<db_name>
 AUTH0_DOMAIN=
 AUTH0_AUDIENCE=
 CORS_ORIGINS=http://localhost:3000,http://prod-frontend.com
-REDIS_URL=redis://yt_assistant_redis:6379/0
+REDIS_URL=redis://<username>:<password>@<host>:<port>/<db_index>
 ```
 
 **`.db.env`**
@@ -100,7 +100,7 @@ VITE_AUTH0_CLIENT_ID=
 
 ```dotenv
 ENV=
-REDIS_URL=redis://yt_assistant_redis:6379/0
+REDIS_URL=redis://user:password@yt_assistant_redis:6379/0
 POSTGRES_URL=postgresql://user:password@yt_assistant_db:5432/yt_assistant_db
 GOOGLE_API_KEY=
 ```
@@ -188,6 +188,8 @@ Stores chat sessions for an account about a specific video.
 | created_at  | TIMESTAMP | Timestamp of conversation creation          |
 | account_id  | VARCHAR   | Foreign key to `account` (owner of session) |
 | video_id    | VARCHAR   | Foreign key to `video`                      |
+
+- `UNIQUE (account_id, video_id)` — ensures one conversation per account per video.
 
 ## message
 

@@ -36,6 +36,11 @@ entity "conversation" {
   video_id: VARCHAR <<FK>>
 }
 
+note right of conversation
+  Unique(account_id, video_id)
+  One conversation per account video
+end note
+
 entity "message" {
   *id: UUID <<PK>>
   created_at: TIMESTAMP
