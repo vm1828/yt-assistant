@@ -16,7 +16,6 @@ async def create_account(db: AsyncSession, data: AccountCreate):
 
 
 async def get_account_by_id(db: AsyncSession, account_id: str, lazy: bool = True):
-    logger.info("Fetching user account...")
     stmt = select(Account).where(Account.id == account_id)
 
     if not lazy:
