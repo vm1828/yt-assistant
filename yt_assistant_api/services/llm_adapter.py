@@ -47,11 +47,11 @@ class LLMOutputSize(IntEnum):
 _ADAPTERS: dict[tuple[LLM, LLMOutputSize], LLMAdapter] = {}
 
 
-def get_adapter(model: LLM, size: LLMOutputSize) -> LLMAdapter:
-    key = (model, size)
+def get_adapter(model: LLM, max_tokens: LLMOutputSize) -> LLMAdapter:
+    key = (model, max_tokens)
     if key not in _ADAPTERS:
         if model in [LLM.GEMINI_2_0_FLASH]:
-            _ADAPTERS[key] = GeminiAdapter(size, model)
+            _ADAPTERS[key] = GeminiAdapter(max_tokens, model)
         else:
             raise ValueError(f"Unsupported model type: {model}")
     return _ADAPTERS[key]

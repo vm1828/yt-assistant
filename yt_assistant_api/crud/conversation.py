@@ -1,13 +1,9 @@
-import logging
-
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
 from models import Conversation
 from schemas import ConversationCreate
-
-logger = logging.getLogger(__name__)
 
 
 async def get_conversation_by_user_and_video(
@@ -28,10 +24,7 @@ async def create_conversation(
     db: AsyncSession, data: ConversationCreate
 ) -> Conversation:
     """Create conversation"""
-    conversation = Conversation(
-        account_id=data.account_id,
-        video_id=data.video_id,
-    )
+    conversation = Conversation(**data.model_dump())
     db.add(conversation)
     await db.commit()
     await db.refresh(conversation)

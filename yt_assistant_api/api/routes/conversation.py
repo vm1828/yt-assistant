@@ -7,8 +7,6 @@ from schemas import ConversationCreate, ConversationRequest, ConversationRespons
 
 router = APIRouter()
 
-# ========================================= CONVERSATION =========================================
-
 # --------------------------------------------- GET ----------------------------------------------
 
 

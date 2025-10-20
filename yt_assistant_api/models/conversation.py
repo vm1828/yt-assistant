@@ -13,6 +13,8 @@ if TYPE_CHECKING:
 
 
 class Conversation(Base):
+    # TODO make 1-to-1 with AccountVideo (create account_video id, use it as FK, on delete remove orphaned entries).
+
     __tablename__ = "conversation"
     __table_args__ = (
         UniqueConstraint(
