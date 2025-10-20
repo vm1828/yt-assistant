@@ -1,20 +1,9 @@
-from enum import Enum
 from unittest.mock import MagicMock, patch
 
 import pytest
-from langchain.prompts import ChatPromptTemplate
 
-from services import summary
-from services.summary import (
-    _ADAPTERS,
-    GeminiAdapter,
-    LLMAdapter,
-    SumModel,
-    SumSize,
-    get_adapter,
-    get_summary_size,
-    summarize,
-)
+from services.llm_adapter import LLM, LLMAdapter, LLMOutputSize
+from services.summary import get_summary_size, summarize
 from tests.data import TEST_SUMMARY_1, TEST_TRANSCRIPT_1
 
 
@@ -22,88 +11,33 @@ from tests.data import TEST_SUMMARY_1, TEST_TRANSCRIPT_1
 @pytest.mark.parametrize(
     "txt, expected",
     [
-        ("", SumSize.S),
-        ("a" * 100, SumSize.S),
-        ("b" * 500, SumSize.M),
-        ("c" * 1500, SumSize.M),
-        ("d" * 2000, SumSize.L),
-        ("e" * 5000, SumSize.L),
+        ("", LLMOutputSize.S),
+        ("a" * 100, LLMOutputSize.S),
+        ("b" * 500, LLMOutputSize.S),
+        ("c" * 1500, LLMOutputSize.M),
+        ("d" * 2000, LLMOutputSize.M),
+        ("e" * 5000, LLMOutputSize.L),
     ],
 )
 def test_get_summary_size(txt, expected):
     assert get_summary_size(txt) == expected
 
 
-# ==================================== Tests for `get_adapter` ====================================
-
-
-# UNIT: Singleton behavior
-@patch.object(summary, "GeminiAdapter")
-def test_get_adapter_creates_once_per_key(mock_adapter_class):
-    # ---------------- ARRANGE ----------------
-    mock_inst = MagicMock(spec=LLMAdapter)
-    mock_adapter_class.return_value = mock_inst
-    _ADAPTERS.clear()
-
-    # ----------------- ACT ------------------
-    a1 = get_adapter(SumModel.GEMINI, SumSize.M)
-    a2 = get_adapter(SumModel.GEMINI, SumSize.M)
-
-    # ---------------- ASSERT ----------------
-    assert a1 is a2
-    mock_adapter_class.assert_called_once_with(SumSize.M)
-
-
-# UNIT: Unsupported model
-def test_get_adapter_unsupported_model():
-    _ADAPTERS.clear()
-
-    class FakeModel(Enum):
-        OTHER = "other"
-
-    with pytest.raises(ValueError):
-        get_adapter(FakeModel.OTHER, SumSize.S)
-
-
-# ==================================== Tests for GEMINI Adapter ====================================
-
-
-# UNIT: GeminiAdapter summarize method
-@patch("services.summary.ChatGoogleGenerativeAI")
-@patch.object(ChatPromptTemplate, "format_messages", autospec=True)
-def test_gemini_adapter_summarize(mock_format, mock_llm_class):
-    # ---------------- ARRANGE ----------------
-    fake_msg = ["msg"]
-    expected_summary = TEST_SUMMARY_1.summary_text
-    mock_format.return_value = fake_msg
-    fake_response = MagicMock()
-    fake_response.content = expected_summary
-    inst_llm = mock_llm_class.return_value
-    inst_llm.invoke.return_value = fake_response
-    adapter = GeminiAdapter(123)
-
-    # ----------------- ACT ------------------
-    actual_summary = adapter.summarize(TEST_TRANSCRIPT_1.transcript_text)
-
-    # ---------------- ASSERT ----------------
-    mock_format.assert_called_once()  # ensure prompt formatting
-    inst_llm.invoke.assert_called_once_with(fake_msg)
-    assert actual_summary == expected_summary
-
-
 # ==================================== Tests for `summarize` =====================================
 
 
 # UNIT: summarize
+@patch("services.summary.summarization_prompt", new_callable=MagicMock)
 @patch("services.summary.get_summary_size")
 @patch("services.summary.get_adapter")
-def test_summarize_delegates(mock_get_adapter, mock_get_size):
+def test_summarize(mock_get_adapter, mock_get_size, mock_prompt):
     # ---------------- ARRANGE ----------------
     transcript_txt = TEST_TRANSCRIPT_1.transcript_text
     expected_summary = TEST_SUMMARY_1.summary_text
-    mock_get_size.return_value = SumSize.L
+
+    mock_get_size.return_value = LLMOutputSize.L
     fake_adapter = MagicMock(spec=LLMAdapter)
-    fake_adapter.summarize.return_value = expected_summary
+    fake_adapter.invoke.return_value = expected_summary
     mock_get_adapter.return_value = fake_adapter
 
     # ----------------- ACT ------------------
@@ -111,6 +45,6 @@ def test_summarize_delegates(mock_get_adapter, mock_get_size):
 
     # ---------------- ASSERT ----------------
     mock_get_size.assert_called_once_with(transcript_txt)
-    mock_get_adapter.assert_called_once_with(SumModel.GEMINI, SumSize.L)
-    fake_adapter.summarize.assert_called_once_with(transcript_txt)
+    mock_get_adapter.assert_called_once_with(LLM.GEMINI_2_0_FLASH, LLMOutputSize.L)
+    fake_adapter.invoke.assert_called_once_with(transcript_txt, mock_prompt)
     assert actual_summary == expected_summary

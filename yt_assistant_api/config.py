@@ -16,6 +16,8 @@ class Settings:
     CLIENT_PORT: str = os.getenv("CLIENT_PORT")
     POSTGRES_URL: str = os.getenv("POSTGRES_URL")
 
+    GOOGLE_API_KEY: str = os.getenv("GOOGLE_API_KEY")
+
     AUTH0_DOMAIN = os.getenv("AUTH0_DOMAIN")
     AUTH0_AUDIENCE = os.getenv("AUTH0_AUDIENCE")
     JWT_ALGORITHM: str = "HS256"
