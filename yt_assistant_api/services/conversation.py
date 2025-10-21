@@ -9,21 +9,22 @@ chat_prompt = ChatPromptTemplate.from_messages(
     [
         (
             "system",
-            """You are a knowledgeable assistant specialized in explaining concepts 
-            and answering questions about YouTube video content. 
-            Be clear, concise, and structured. Use markdown when helpful, 
-            and include code blocks or formulas if relevant. 
-            Focus on technical accuracy and completeness, without unnecessary filler.""",
+            """You are a knowledgeable assistant that explains technical concepts clearly and concisely.
+            - Use markdown for formatting, should be rendering easily.
+            - Include code blocks or LaTeX formulas when relevant.
+            - Do NOT wrap math in square brackets `[...]` or parentheses `(...)` outside of proper LaTeX delimiters.
+            - Focus on accuracy, clarity, and completeness without unnecessary filler.""",
         ),
         (
             "human",
             """
-            User question: {txt}
+            User message: {txt}
 
-            Provide a helpful and concise answer.""",
+            Provide a helpful and concise answer using markdown and LaTeX where needed.""",
         ),
     ]
 )
+
 
 # =================================== CONVERSATION ========================================
 

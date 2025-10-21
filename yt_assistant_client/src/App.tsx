@@ -7,8 +7,11 @@ import { logger } from "@/utils";
 import { Video } from "@/components/Video";
 import { QAChat } from "@/components/QAChat";
 import { Summary } from "@/components/Summary";
+import { useState } from "react";
+import { ChevronRight, ChevronLeft } from "lucide-react";
 
 const App = () => {
+  const [isSummaryOpen, setIsSummaryOpen] = useState(true);
   const { isAuthenticated, isLoading, user } = useAuth0();
 
   // Fetch user on login, clear on logout
@@ -45,7 +48,9 @@ const App = () => {
 
         <div className="scroll-hidden mr-4 flex h-screen flex-col pl-6 md:flex-row">
           {/* Left side - Video + QAChat */}
-          <div className="mr-4 flex h-full w-full flex-col md:w-1/2">
+          <div
+            className={`mr-4 flex h-full flex-col overflow-hidden pl-6 md:w-full md:flex-col ${isSummaryOpen ? "md:w-1/2" : "md:w-full"}`}
+          >
             <div className="flex-shrink-0">
               <Video />
             </div>
@@ -55,9 +60,23 @@ const App = () => {
           </div>
 
           {/* Right side - Summary */}
-          <div className="w-full flex-shrink-0 overflow-hidden p-4 pt-2 pl-4 shadow-lg md:h-full md:w-1/2">
-            <Summary />
-          </div>
+          {isSummaryOpen && (
+            <div className="w-full flex-shrink-0 overflow-hidden p-4 pt-2 pl-4 shadow-lg transition-all md:h-full md:w-1/2">
+              <Summary />
+            </div>
+          )}
+
+          {/* Toggle button */}
+          <button
+            onClick={() => setIsSummaryOpen(!isSummaryOpen)}
+            className="collapsible-toggle collapsible-toggle-summary"
+          >
+            {isSummaryOpen ? (
+              <ChevronRight className="h-5 w-5" />
+            ) : (
+              <ChevronLeft className="h-5 w-5" />
+            )}
+          </button>
         </div>
       </div>
     );

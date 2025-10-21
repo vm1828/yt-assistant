@@ -15,7 +15,7 @@ export const Video = () => {
       <div className="w-full">
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="collapsible-toggle"
+          className="collapsible-toggle collapsible-toggle-video"
         >
           <span className="truncate">Video</span>
           {isOpen ? (

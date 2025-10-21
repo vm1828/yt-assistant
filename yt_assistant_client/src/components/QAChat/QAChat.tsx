@@ -109,13 +109,13 @@ export const QAChat = () => {
   return (
     <div className="mt-2 flex h-full flex-col overflow-hidden rounded-md bg-white/60 p-4 shadow-md backdrop-blur-md dark:bg-black/60">
       {/* Scrollable messages */}
-      <div className="hide-scrollbar flex-1 overflow-y-auto pr-1">
+      <div className="hide-scrollbar min-h-0 flex-1 overflow-y-auto pr-1 text-xs">
         {conversation.messages.map((msg, index) => (
           <div key={index} className="flex flex-col gap-1">
             {/* User message */}
             {msg.user_message && (
               <div className="flex justify-end">
-                <div className="max-w-xs rounded-lg bg-gray-500 p-3 text-white shadow md:max-w-md">
+                <div className="mb-1 min-w-3/12 rounded-lg bg-gray-500 p-3 text-white shadow md:max-w-md">
                   {msg.user_message}
                 </div>
               </div>
@@ -123,7 +123,7 @@ export const QAChat = () => {
             {/* AI response */}
             {msg.ai_response && (
               <div className="flex justify-start">
-                <div className="max-w-xs overflow-x-auto rounded-lg bg-gray-200 p-3 break-words whitespace-pre-wrap text-gray-800 shadow md:max-w-md dark:bg-gray-700 dark:text-gray-100">
+                <div className="mb-2 min-w-12/12 overflow-x-auto rounded-lg bg-gray-200 p-3 text-gray-800 shadow md:max-w-md dark:bg-gray-700 dark:text-gray-100">
                   {msg.ai_response === "..." ? (
                     <span className="animate-pulse text-xl font-bold text-gray-500">
                       ...
