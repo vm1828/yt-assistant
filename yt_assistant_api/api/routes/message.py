@@ -1,8 +1,8 @@
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from core import get_current_account, get_db, logger
-from crud import create_message
+from crud import create_message, get_conversation_by_id
 from schemas import MessageCreate, MessageRequest, MessageResponse
 from services import get_ai_response
 
@@ -21,6 +21,7 @@ router = APIRouter()
         400: {"description": "Invalid YouTube video ID"},
         401: {"description": "Not authenticated"},
         403: {"description": "Account not approved"},
+        404: {"description": "Conversation is not added yet"},
     },  # TODO refactor, remove duplications in responses documentation
 )
 async def post_message(
@@ -33,10 +34,24 @@ async def post_message(
         payload.conversation_id,
     )
 
+    logger.info("Retrieve conversation from db...")
+    conversation = await get_conversation_by_id(db, conversation_id, lazy=False)
+    if not conversation:
+        raise HTTPException(
+            404, "Conversation is not added yet. Please add the conversation first."
+        )
+
+    # Create context-aware LLM input
+    history = []
+    for msg in conversation.messages:
+        history.append(f"User: {msg.user_message}")
+        history.append(f"Assistant: {msg.ai_response}")
+    history.append(f"User: {user_message}")
+    # TODO Imporove efficiency and avoid limitations (limit messages / isolated embedding spaces / summarized history etc.)
+    context_aware_msg = "\n".join(history)
+
     logger.info("Trying to get response from LLM...")
-    ai_response = await get_ai_response(
-        user_message
-    )  # TODO replace with context-aware logic
+    ai_response = await get_ai_response(context_aware_msg)
 
     logger.info("Writing message to db...")
     data = MessageCreate(
