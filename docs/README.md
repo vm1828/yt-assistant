@@ -107,7 +107,7 @@ GOOGLE_API_KEY=
 
 ## API Documentation
 
-To access API documentation (Swagger UI), navigate to [localhost:8000/docs](localhost:8000/docs)
+[API Specs](https://vm1828.github.io/yt-assistant/redoc.html)
 
 ### Endpoints
 
@@ -122,6 +122,9 @@ To access API documentation (Swagger UI), navigate to [localhost:8000/docs](loca
 
 - `GET /summaries/{video_id}` - Returns the summary of a video transcript for the authenticated user.
 - `POST /summaries/` - Creates a summary of a video transcript for the authenticated user.
+- `GET /conversations/{video_id}` - Returns the conversation associated with a specific video for the authenticated user.
+- `POST /conversations/` - Creates a new chat conversation linked to a specific video for the authenticated user.
+- `POST /messages/` - Sends a new chat message within a specific conversation and returns the LLM-generated response.
 
 \*All endpoints are Auth0 protected
 
