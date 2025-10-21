@@ -1,7 +1,7 @@
 import { getTranscriptByVideoId, getSummaryByVideoId } from "@/api";
 import { useVideoStore } from "@/store";
 import { useAuth0 } from "@auth0/auth0-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
@@ -24,7 +24,18 @@ export const Summary = () => {
     setCurrentTranscript,
     setCurrentSummary,
   } = useVideoStore();
-  if (!currentVideo) return;
+
+  // Show cached summary immediately when currentVideo changes
+  useEffect(() => {
+    if (!currentVideo) return;
+    const cachedSummary = summaryCache[currentVideo.id];
+    if (cachedSummary) {
+      setContent(cachedSummary.summary_text);
+    } else {
+      setContent("No summary available yet.");
+    }
+  }, [currentVideo, summaryCache]);
+  if (!currentVideo) return null;
 
   const fetchContent = async <T,>(
     videoId: string,
