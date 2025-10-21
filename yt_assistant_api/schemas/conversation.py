@@ -17,6 +17,7 @@ class ConversationCreate(BaseModel):
 
 class ConversationResponse(BaseModel):
     id: UUID
+    video_id: str
     messages: Optional[list[MessageRead]] = []
 
     model_config = ConfigDict(from_attributes=True)

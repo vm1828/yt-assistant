@@ -15,10 +15,12 @@ export const useVideoStore = create<VideoState>((set, get) => ({
   videos: [],
   transcriptCache: {},
   summaryCache: {},
+  conversationCache: {},
 
   currentVideo: null,
   currentTranscript: null,
   currentSummary: null,
+  currentConversation: null,
 
   addVideo: (video) =>
     set((state) => {
@@ -32,6 +34,7 @@ export const useVideoStore = create<VideoState>((set, get) => ({
         currentVideo: video,
         currentTranscript: get().transcriptCache[video.id] || null,
         currentSummary: get().summaryCache[video.id] || null,
+        currentConversation: get().conversationCache[video.id] || null,
       };
     }),
 
@@ -40,6 +43,7 @@ export const useVideoStore = create<VideoState>((set, get) => ({
       currentVideo: video,
       currentTranscript: get().transcriptCache[video.id] || null,
       currentSummary: get().summaryCache[video.id] || null,
+      currentConversation: get().conversationCache[video.id] || null,
     }),
   setCurrentTranscript: (transcript) => {
     const videoId = get().currentVideo?.id;
@@ -57,6 +61,14 @@ export const useVideoStore = create<VideoState>((set, get) => ({
     const trimmed = trimCache(cache);
     set({ currentSummary: summary, summaryCache: trimmed });
   },
+  setCurrentConversation: (conversation) => {
+    const videoId = get().currentVideo?.id;
+    if (!videoId) return;
+
+    const cache = { ...get().conversationCache, [videoId]: conversation };
+    const trimmed = trimCache(cache);
+    set({ currentConversation: conversation, conversationCache: trimmed });
+  },
 
   setVideos: (videos) =>
     set(() => ({
@@ -70,7 +82,9 @@ export const useVideoStore = create<VideoState>((set, get) => ({
       currentVideo: null,
       currentTranscript: null,
       currentSummary: null,
+      currentConversation: null,
       transcriptCache: {},
       summaryCache: {},
+      conversationCache: {},
     }),
 }));

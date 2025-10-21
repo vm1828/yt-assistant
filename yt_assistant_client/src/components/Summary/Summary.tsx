@@ -35,7 +35,6 @@ export const Summary = () => {
       setContent("No summary available yet.");
     }
   }, [currentVideo, summaryCache]);
-  if (!currentVideo) return null;
 
   const fetchContent = async <T,>(
     videoId: string,
