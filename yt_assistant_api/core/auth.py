@@ -1,10 +1,11 @@
 import httpx
 from authlib.jose import JsonWebToken
 from authlib.jose.errors import JoseError
-from fastapi import HTTPException, Security
+from fastapi import HTTPException, Security, status
 from fastapi.security import OAuth2PasswordBearer
 
 from config import settings
+from core.exceptions import EXC_403_ACCOUNT_NOT_APPROVED
 from schemas.account import Auth0Payload
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
@@ -27,14 +28,21 @@ async def verify_jwt_token(token: str, audience: str, approved_claim: str) -> di
         claims.validate()  # raise an error if the token is expired or invalid
 
         if audience not in claims.get("aud"):
-            raise HTTPException(status_code=401, detail="Invalid audience")
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid audience"
+            )
 
         if not claims.get(approved_claim, False):
-            raise HTTPException(status_code=403, detail="Account not approved")
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail=EXC_403_ACCOUNT_NOT_APPROVED.detail,
+            )
 
         return claims  # dict with account info
     except JoseError:
-        raise HTTPException(status_code=401, detail="Invalid token")
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token"
+        )
 
 
 async def get_current_account(token: str = Security(oauth2_scheme)):

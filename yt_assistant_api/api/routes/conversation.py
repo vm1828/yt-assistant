@@ -1,11 +1,14 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from core import get_current_account, get_db, logger, validate_video_id
-from core.constants import (
-    RESP_400_INVALID_YT_ID,
-    RESP_401_NOT_AUTHENTICATED,
-    RESP_403_ACCOUNT_NOT_APPROVED,
+from core.exceptions import (
+    EXC_400_INVALID_YT_ID,
+    EXC_401_NOT_AUTHENTICATED,
+    EXC_403_ACCOUNT_NOT_APPROVED,
+    EXC_404_CONV_NOT_FOUND,
+    EXC_409_CONV_ALREADY_EXISTS,
+    create_responses,
 )
 from crud import create_conversation, get_conversation_by_user_and_video
 from schemas import ConversationCreate, ConversationRequest, ConversationResponse
@@ -19,12 +22,12 @@ router = APIRouter()
     "/{video_id}",
     response_model=ConversationResponse,
     description="Returns the conversation for the authenticated user's account and the given video.",
-    responses={
-        400: RESP_400_INVALID_YT_ID,
-        401: RESP_401_NOT_AUTHENTICATED,
-        403: RESP_403_ACCOUNT_NOT_APPROVED,
-        404: {"description": "Conversation not found"},
-    },
+    responses=create_responses(
+        EXC_400_INVALID_YT_ID,
+        EXC_401_NOT_AUTHENTICATED,
+        EXC_403_ACCOUNT_NOT_APPROVED,
+        EXC_404_CONV_NOT_FOUND,
+    ),
 )
 async def get_conversation(
     video_id: str,
@@ -39,9 +42,7 @@ async def get_conversation(
     )
 
     if conversation is None:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="Conversation not found"
-        )
+        raise EXC_404_CONV_NOT_FOUND
 
     return conversation
 
@@ -54,11 +55,12 @@ async def get_conversation(
     response_model=ConversationResponse,
     description="Creates a conversation for the authenticated user's account and the given video.",
     status_code=status.HTTP_201_CREATED,
-    responses={
-        400: RESP_400_INVALID_YT_ID,
-        401: RESP_401_NOT_AUTHENTICATED,
-        403: {"description": "Account not approved"},
-    },
+    responses=create_responses(
+        EXC_400_INVALID_YT_ID,
+        EXC_401_NOT_AUTHENTICATED,
+        EXC_403_ACCOUNT_NOT_APPROVED,
+        EXC_409_CONV_ALREADY_EXISTS,
+    ),
 )
 async def post_conversation(
     payload: ConversationRequest,
@@ -74,9 +76,7 @@ async def post_conversation(
     )
 
     if conversation is not None:
-        raise HTTPException(
-            status_code=status.HTTP_409_CONFLICT, detail="Conversation already exists"
-        )
+        raise EXC_409_CONV_ALREADY_EXISTS
 
     conversation_data = ConversationCreate(account_id=auth0_user.sub, video_id=video_id)
     conversation = await create_conversation(db, conversation_data)

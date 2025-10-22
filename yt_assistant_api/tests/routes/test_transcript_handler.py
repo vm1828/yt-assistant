@@ -1,5 +1,6 @@
 from unittest.mock import patch
 
+from core.exceptions import EXC_400_INVALID_YT_ID, EXC_404_VID_NOT_ADDED
 from schemas import TranscriptResponse
 from tests.data import TEST_HEADERS, TEST_TRANSCRIPT_1, TEST_USER_1_SUB, TEST_VIDEO_1
 
@@ -39,7 +40,7 @@ def test_get_transcript_400_invalid_video_id(client_factory):
 
     # ---------------- ASSERT ----------------
     assert response.status_code == 400
-    assert response.json() == {"detail": "Invalid YouTube video ID"}
+    assert response.json()["detail"] == EXC_400_INVALID_YT_ID.detail
 
 
 # Case 404: Transcript not found in the db
@@ -63,6 +64,4 @@ def test_get_transcript_404_not_found(
     assert mock_validate_video_id.call_count == 1
     assert mock_get_transcript.call_count == 1
     assert response.status_code == 404
-    assert response.json() == {
-        "detail": "No video has been added. Please add a video first."
-    }
+    assert response.json()["detail"] == EXC_404_VID_NOT_ADDED.detail

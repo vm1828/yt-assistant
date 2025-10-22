@@ -1,11 +1,13 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from core import get_current_account, get_db, logger
-from core.constants import (
-    RESP_400_INVALID_YT_ID,
-    RESP_401_NOT_AUTHENTICATED,
-    RESP_403_ACCOUNT_NOT_APPROVED,
+from core.exceptions import (
+    EXC_400_INVALID_YT_ID,
+    EXC_401_NOT_AUTHENTICATED,
+    EXC_403_ACCOUNT_NOT_APPROVED,
+    EXC_404_CONV_NOT_ADDED,
+    create_responses,
 )
 from crud import create_message, get_conversation_by_id
 from schemas import MessageCreate, MessageRequest, MessageResponse
@@ -22,12 +24,12 @@ router = APIRouter()
     description="Post a new message within a conversation.",
     status_code=status.HTTP_201_CREATED,
     dependencies=[Depends(get_current_account)],
-    responses={
-        400: RESP_400_INVALID_YT_ID,
-        401: RESP_401_NOT_AUTHENTICATED,
-        403: RESP_403_ACCOUNT_NOT_APPROVED,
-        404: {"description": "Conversation is not added yet"},
-    },
+    responses=create_responses(
+        EXC_400_INVALID_YT_ID,
+        EXC_401_NOT_AUTHENTICATED,
+        EXC_403_ACCOUNT_NOT_APPROVED,
+        EXC_404_CONV_NOT_ADDED,
+    ),
 )
 async def post_message(
     payload: MessageRequest,
@@ -42,9 +44,7 @@ async def post_message(
     logger.info("Retrieve conversation from db...")
     conversation = await get_conversation_by_id(db, conversation_id, lazy=False)
     if not conversation:
-        raise HTTPException(
-            404, "Conversation is not added yet. Please add the conversation first."
-        )
+        raise EXC_404_CONV_NOT_ADDED
 
     # Create context-aware LLM input
     history = []
