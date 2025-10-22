@@ -1,6 +1,7 @@
 import logging
-import os
 import sys
+
+from config import settings
 
 from .constants import Env
 
@@ -11,7 +12,7 @@ log_levels = {
     Env.TEST: logging.WARNING,
     Env.PROD: logging.ERROR,
 }
-env = Env[os.getenv("ENV").upper()]
+env = Env[settings.ENV.upper()]
 log_level = log_levels[env]
 
 # Create logger

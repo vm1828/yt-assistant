@@ -1,5 +1,3 @@
-# TODO update settings and refactor
-
 import os
 
 from dotenv import load_dotenv
@@ -15,6 +13,7 @@ class Settings:
     CLIENT_HOST: str = os.getenv("CLIENT_HOST")
     CLIENT_PORT: str = os.getenv("CLIENT_PORT")
     POSTGRES_URL: str = os.getenv("POSTGRES_URL")
+    REDIS_URL: str = os.getenv("REDIS_URL")
 
     GOOGLE_API_KEY: str = os.getenv("GOOGLE_API_KEY")
 
