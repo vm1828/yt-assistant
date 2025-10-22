@@ -2,6 +2,11 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from core import get_current_account, get_db, logger, validate_video_id
+from core.constants import (
+    RESP_400_INVALID_YT_ID,
+    RESP_401_NOT_AUTHENTICATED,
+    RESP_403_ACCOUNT_NOT_APPROVED,
+)
 from crud import create_summary, get_summary, get_transcript
 from schemas import SummaryCreate, SummaryRequest, SummaryResponse
 from services import summarize
@@ -17,9 +22,9 @@ router = APIRouter()
     description="Returns the summary of a video transcript for the authenticated user.",
     dependencies=[Depends(get_current_account)],
     responses={
-        400: {"description": "Invalid YouTube video ID"},
-        401: {"description": "Not authenticated"},
-        403: {"description": "Account not approved"},
+        400: RESP_400_INVALID_YT_ID,
+        401: RESP_401_NOT_AUTHENTICATED,
+        403: RESP_403_ACCOUNT_NOT_APPROVED,
         404: {"description": "Summary does not exist yet"},
     },
 )
@@ -53,9 +58,9 @@ async def get_video_summary(
     description="Creates a summary of a video transcript for the authenticated user.",
     dependencies=[Depends(get_current_account)],
     responses={
-        400: {"description": "Invalid YouTube video ID"},
-        401: {"description": "Not authenticated"},
-        403: {"description": "Account not approved"},
+        400: RESP_400_INVALID_YT_ID,
+        401: RESP_401_NOT_AUTHENTICATED,
+        403: RESP_403_ACCOUNT_NOT_APPROVED,
         404: {"description": "Video is not added yet"},
         409: {"description": "Summary already exists"},
     },

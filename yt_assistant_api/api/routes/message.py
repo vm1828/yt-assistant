@@ -2,6 +2,11 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from core import get_current_account, get_db, logger
+from core.constants import (
+    RESP_400_INVALID_YT_ID,
+    RESP_401_NOT_AUTHENTICATED,
+    RESP_403_ACCOUNT_NOT_APPROVED,
+)
 from crud import create_message, get_conversation_by_id
 from schemas import MessageCreate, MessageRequest, MessageResponse
 from services import get_ai_response
@@ -18,11 +23,11 @@ router = APIRouter()
     status_code=status.HTTP_201_CREATED,
     dependencies=[Depends(get_current_account)],
     responses={
-        400: {"description": "Invalid YouTube video ID"},
-        401: {"description": "Not authenticated"},
-        403: {"description": "Account not approved"},
+        400: RESP_400_INVALID_YT_ID,
+        401: RESP_401_NOT_AUTHENTICATED,
+        403: RESP_403_ACCOUNT_NOT_APPROVED,
         404: {"description": "Conversation is not added yet"},
-    },  # TODO refactor, remove duplications in responses documentation
+    },
 )
 async def post_message(
     payload: MessageRequest,

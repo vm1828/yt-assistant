@@ -4,6 +4,11 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from core import get_current_account, get_db, logger, validate_video_id
+from core.constants import (
+    RESP_400_INVALID_YT_ID,
+    RESP_401_NOT_AUTHENTICATED,
+    RESP_403_ACCOUNT_NOT_APPROVED,
+)
 from crud.account import get_account_by_id
 from crud.video import add_video_to_account, create_video, get_account_video, get_video
 from schemas import Auth0Payload
@@ -44,8 +49,9 @@ async def get_user_videos(
     response_model=VideoResponse,
     description="Returns details of a specific video added to the authenticated user's account.",
     responses={
-        400: {"description": "Invalid YouTube video ID"},
-        403: {"description": "Account not approved"},
+        400: RESP_400_INVALID_YT_ID,
+        401: RESP_401_NOT_AUTHENTICATED,
+        403: RESP_403_ACCOUNT_NOT_APPROVED,
         404: {"description": "Video not found for this user"},
     },
 )
@@ -79,8 +85,9 @@ async def get_user_video(
         "- If the video isn't added yet, fetches metadata and transcript, then adds and links to the account.\n"
     ),
     responses={
-        400: {"description": "Invalid YouTube video ID"},
-        403: {"description": "Account not approved"},
+        400: RESP_400_INVALID_YT_ID,
+        401: RESP_401_NOT_AUTHENTICATED,
+        403: RESP_403_ACCOUNT_NOT_APPROVED,
         404: {"description": "Video not found or failed to fetch a transcript"},
         409: {"description": "Video already added to the account"},
     },

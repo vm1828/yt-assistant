@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from core import get_current_account, get_db, logger
+from core.constants import RESP_401_NOT_AUTHENTICATED, RESP_403_ACCOUNT_NOT_APPROVED
 from crud import create_account, get_account_by_id
 from schemas import AccountCreate, AccountResponse, Auth0Payload
 
@@ -15,7 +16,7 @@ router = APIRouter()
     response_model=AccountResponse,
     description="Returns the authenticated user's account details.",
     responses={
-        401: {"description": "Not authenticated"},
+        401: RESP_401_NOT_AUTHENTICATED,
         404: {"description": "Account not found"},
     },
 )
@@ -43,8 +44,8 @@ async def get_authenticated_user(
     description="Creates a new account for the authenticated user if one does not exist.",
     status_code=status.HTTP_201_CREATED,
     responses={
-        401: {"description": "Not authenticated"},
-        403: {"description": "Account not approved"},
+        401: RESP_401_NOT_AUTHENTICATED,
+        403: RESP_403_ACCOUNT_NOT_APPROVED,
         409: {"description": "Account already exists"},
     },
 )
