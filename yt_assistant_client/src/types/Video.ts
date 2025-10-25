@@ -12,6 +12,8 @@ export type Summary = {
 };
 
 export type Message = {
+  id: string;
+  conversation_id: string;
   user_message: string;
   ai_response: string;
 };

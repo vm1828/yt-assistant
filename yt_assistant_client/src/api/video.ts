@@ -107,11 +107,10 @@ export const getSummaryByVideoId = async (
   // 2) POST to create
   try {
     return await postSummary(videoId, token);
-  } catch (creationErr: unknown) {
+  } catch (error_: unknown) {
     logger.error(
       {
-        err:
-          creationErr instanceof Error ? creationErr.message : "Unknown error",
+        err: error_ instanceof Error ? error_.message : "Unknown error",
       },
       "Error creating summary",
     );
@@ -164,11 +163,10 @@ export const getConversationByVideoId = async (
   // 2) POST to create
   try {
     return await postConversation(videoId, token);
-  } catch (creationErr: unknown) {
+  } catch (error_: unknown) {
     logger.error(
       {
-        err:
-          creationErr instanceof Error ? creationErr.message : "Unknown error",
+        err: error_ instanceof Error ? error_.message : "Unknown error",
       },
       "Error creating conversation",
     );

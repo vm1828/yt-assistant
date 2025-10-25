@@ -110,8 +110,8 @@ export const QAChat = () => {
     <div className="mt-2 flex h-full flex-col overflow-hidden rounded-md bg-white/60 p-4 shadow-md backdrop-blur-md dark:bg-black/60">
       {/* Scrollable messages */}
       <div className="hide-scrollbar min-h-0 flex-1 overflow-y-auto pr-1 text-xs">
-        {conversation.messages.map((msg, index) => (
-          <div key={index} className="flex flex-col gap-1">
+        {conversation.messages.map((msg) => (
+          <div key={msg.id} className="flex flex-col gap-1">
             {/* User message */}
             {msg.user_message && (
               <div className="flex justify-end">
@@ -130,10 +130,11 @@ export const QAChat = () => {
                     </span>
                   ) : (
                     <ReactMarkdown
-                      children={msg.ai_response}
                       remarkPlugins={[remarkMath]}
                       rehypePlugins={[rehypeKatex]}
-                    />
+                    >
+                      {msg.ai_response}
+                    </ReactMarkdown>
                   )}
                 </div>
               </div>

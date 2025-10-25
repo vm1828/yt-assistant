@@ -91,10 +91,11 @@ export const Summary = () => {
       <div className="hide-scrollbar min-h-0 flex-1 overflow-auto text-xs">
         <div className="w-full">
           <ReactMarkdown
-            children={content}
             remarkPlugins={[remarkMath]}
             rehypePlugins={[rehypeKatex]}
-          />
+          >
+            {content}
+          </ReactMarkdown>
         </div>
       </div>
     </div>

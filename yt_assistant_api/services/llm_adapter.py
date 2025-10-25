@@ -15,7 +15,7 @@ class LLM(Enum):
 # =================================== LLM ADAPTER =======================================
 class LLMAdapter(ABC):
     @abstractmethod
-    async def invoke(self, txt: str) -> str:
+    async def invoke(self, txt: str, prompt: ChatPromptTemplate) -> str:
         pass
 
 

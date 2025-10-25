@@ -1,7 +1,5 @@
 from unittest.mock import patch
 
-from fastapi import HTTPException, status
-
 from core.exceptions import (
     EXC_401_INVALID_TOKEN,
     EXC_401_NOT_AUTHENTICATED,
