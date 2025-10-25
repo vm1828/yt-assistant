@@ -10,9 +10,11 @@ YT-Assistant is a web application designed to help users summarize YouTube video
 - [x] Extracting Transcripts
 - [x] Video Transcripts Summarization
 - [x] Storing Transcripts data for RAG
-- [ ] Q&A Sessions
-- [ ] Video Player Integration
-- [ ] UI Refinement and Unit Testing
+- [x] Q&A Chat
+- [ ] Video-specific augmented Q&A
+- [ ] Cross-video augmented Q&A
+- [ ] Cross-conversation augmented Q&A (user specific)
+- [ ] UI Refinement
 - [ ] Future Enhancements
 
 ## Stack
