@@ -127,7 +127,7 @@ def test_post_conversation_400_invalid_video_id(client_factory):
 
 
 # Case 401: Unauthorized
-def test_get_conversation_401_unauthorized(client_factory):
+def test_post_conversation_401_unauthorized(client_factory):
     # ---------------- ARRANGE ----------------
     client = client_factory(TEST_USER_1_SUB, auth=False)
 

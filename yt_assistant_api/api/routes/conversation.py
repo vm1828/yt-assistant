@@ -36,7 +36,7 @@ async def get_conversation(
 ):
     validate_video_id(video_id)
 
-    logger.info(f"Fetching conversation...")
+    logger.info("Fetching conversation...")
     conversation = await get_conversation_by_user_and_video(
         db, auth0_user.sub, video_id, lazy=False
     )
