@@ -27,10 +27,11 @@ def test_get_summary_size(txt, expected):
 
 
 # UNIT: summarize
+@pytest.mark.asyncio
 @patch("services.summary.summarization_prompt", new_callable=MagicMock)
 @patch("services.summary.get_summary_size")
 @patch("services.summary.get_adapter")
-def test_summarize(mock_get_adapter, mock_get_size, mock_prompt):
+async def test_summarize(mock_get_adapter, mock_get_size, mock_prompt):
     # ---------------- ARRANGE ----------------
     transcript_txt = TEST_TRANSCRIPT_1.transcript_text
     expected_summary = TEST_SUMMARY_1.summary_text
@@ -41,7 +42,7 @@ def test_summarize(mock_get_adapter, mock_get_size, mock_prompt):
     mock_get_adapter.return_value = fake_adapter
 
     # ----------------- ACT ------------------
-    actual_summary = summarize(transcript_txt)
+    actual_summary = await summarize(transcript_txt)
 
     # ---------------- ASSERT ----------------
     mock_get_size.assert_called_once_with(transcript_txt)

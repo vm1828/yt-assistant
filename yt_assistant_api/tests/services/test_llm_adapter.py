@@ -47,8 +47,9 @@ def test_get_adapter_unsupported_model():
 
 
 # UNIT: GeminiAdapter.invoke
+@pytest.mark.asyncio
 @patch("services.llm_adapter.ChatGoogleGenerativeAI")
-def test_gemini_adapter_invoke(mock_llm_class):
+async def test_gemini_adapter_invoke(mock_llm_class):
     # ---------------- ARRANGE ----------------
     fake_txt = "user message"
     fake_prompt = MagicMock()
@@ -65,7 +66,7 @@ def test_gemini_adapter_invoke(mock_llm_class):
     adapter = GeminiAdapter(max_tokens=123)
 
     # ----------------- ACT ------------------
-    actual_response = adapter.invoke(fake_txt, fake_prompt)
+    actual_response = await adapter.invoke(fake_txt, fake_prompt)
 
     # ---------------- ASSERT ----------------
     fake_prompt.format_messages.assert_called_once_with(

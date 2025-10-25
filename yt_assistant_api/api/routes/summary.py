@@ -83,7 +83,7 @@ async def create_video_summary(
     if await get_summary(db, transcript.id):
         raise EXC_409_SUMM_ALREADY_EXISTS
 
-    summary_text = summarize(transcript.transcript_text)
+    summary_text = await summarize(transcript.transcript_text)
     data = SummaryCreate(summary_text=summary_text, transcript_id=transcript.id)
     summary = await create_summary(db, data)
 

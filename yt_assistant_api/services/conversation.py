@@ -31,4 +31,4 @@ chat_prompt = ChatPromptTemplate.from_messages(
 
 async def get_ai_response(user_message: str, model: LLM = LLM.GEMINI_2_0_FLASH) -> str:
     adapter = get_adapter(model, LLMOutputSize.L)
-    return adapter.invoke({"txt": user_message}, chat_prompt)
+    return await adapter.invoke({"txt": user_message}, chat_prompt)

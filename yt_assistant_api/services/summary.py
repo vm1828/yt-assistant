@@ -34,10 +34,10 @@ def get_summary_size(txt: str) -> LLMOutputSize:
     return LLMOutputSize.L
 
 
-def summarize(txt: str, model: LLM = LLM.GEMINI_2_0_FLASH) -> str:
+async def summarize(txt: str, model: LLM = LLM.GEMINI_2_0_FLASH) -> str:
     """
     Summarize input text using the selected model and appropriate output size.
     """
     size = get_summary_size(txt)
     adapter = get_adapter(model, size)
-    return adapter.invoke(txt, summarization_prompt)
+    return await adapter.invoke(txt, summarization_prompt)
