@@ -1,9 +1,8 @@
-import os
-
 from celery import Celery
 
-redis_url = os.getenv("REDIS_URL")
-celery_app = Celery("yt_assistant_api_client", broker=redis_url)
+from config import settings
+
+celery_app = Celery("yt_assistant_api_client", broker=settings.REDIS_URL)
 
 
 def dispatch_transcript_embedding_task(video_id: str):

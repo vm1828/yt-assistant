@@ -9,10 +9,7 @@ from schemas import SummaryCreate
 
 async def create_summary(db: AsyncSession, data: SummaryCreate) -> Summary:
     """Create summary"""
-    summary = Summary(
-        transcript_id=data.transcript_id,
-        summary_text=data.summary_text,
-    )
+    summary = Summary(**data.model_dump())
     db.add(summary)
     await db.commit()
     await db.refresh(summary)

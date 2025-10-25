@@ -1,6 +1,9 @@
 from enum import Enum
 
 
+# -------------------------------
+# Enums
+# -------------------------------
 class Env(Enum):
     LOCAL = "local"
     DEV = "dev"

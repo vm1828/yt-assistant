@@ -1,0 +1,544 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "yt-assistant-local",
+    "description": "Web application designed to help users summarize YouTube video transcripts and extract valuable insights through question answering and reasoning",
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/accounts/": {
+      "get": {
+        "tags": ["Accounts"],
+        "summary": "Get Authenticated User",
+        "description": "Returns the authenticated user's account details.",
+        "operationId": "get_authenticated_user_accounts__get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/AccountResponse" }
+              }
+            }
+          },
+          "401": { "description": "Not authenticated" },
+          "404": { "description": "Account not found" }
+        },
+        "security": [{ "OAuth2PasswordBearer": [] }]
+      },
+      "post": {
+        "tags": ["Accounts"],
+        "summary": "Create Authenticated User Account",
+        "description": "Creates a new account for the authenticated user if one does not exist.",
+        "operationId": "create_authenticated_user_account_accounts__post",
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/AccountResponse" }
+              }
+            }
+          },
+          "401": { "description": "Not authenticated" },
+          "403": { "description": "Account not approved" },
+          "409": { "description": "Account already exists" }
+        },
+        "security": [{ "OAuth2PasswordBearer": [] }]
+      }
+    },
+    "/videos/": {
+      "get": {
+        "tags": ["Videos"],
+        "summary": "Get User Videos",
+        "description": "Returns a list of all videos of the authenticated user.",
+        "operationId": "get_user_videos_videos__get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/VideosResponse" }
+              }
+            }
+          }
+        },
+        "security": [{ "OAuth2PasswordBearer": [] }]
+      },
+      "post": {
+        "tags": ["Videos"],
+        "summary": "Add Video",
+        "description": "Adds a YouTube video to the authenticated user's account.\n- If the video is already added by someone else, adds it to the account.\n- If the video isn't added yet, fetches metadata and transcript, then adds and links to the account.",
+        "operationId": "add_video_videos__post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/VideoRequest" }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/VideoResponse" }
+              }
+            }
+          },
+          "400": { "description": "Invalid YouTube video ID" },
+          "403": { "description": "Account not approved" },
+          "404": {
+            "description": "Video not found or failed to fetch a transcript"
+          },
+          "409": { "description": "Video already added to the account" },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        },
+        "security": [{ "OAuth2PasswordBearer": [] }]
+      }
+    },
+    "/videos/{video_id}": {
+      "get": {
+        "tags": ["Videos"],
+        "summary": "Get User Video",
+        "description": "Returns details of a specific video added to the authenticated user's account.",
+        "operationId": "get_user_video_videos__video_id__get",
+        "security": [{ "OAuth2PasswordBearer": [] }],
+        "parameters": [
+          {
+            "name": "video_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "title": "Video Id" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/VideoResponse" }
+              }
+            }
+          },
+          "400": { "description": "Invalid YouTube video ID" },
+          "403": { "description": "Account not approved" },
+          "404": { "description": "Video not found for this user" },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/transcripts/{video_id}": {
+      "get": {
+        "tags": ["Transcripts"],
+        "summary": "Get Video Transcript",
+        "description": "Returns the transcript of a specific video for the authenticated user.",
+        "operationId": "get_video_transcript_transcripts__video_id__get",
+        "security": [{ "OAuth2PasswordBearer": [] }],
+        "parameters": [
+          {
+            "name": "video_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "title": "Video Id" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/TranscriptResponse" }
+              }
+            }
+          },
+          "400": { "description": "Invalid YouTube video ID" },
+          "401": { "description": "Not authenticated" },
+          "403": { "description": "Account not approved" },
+          "404": { "description": "No video has been added" },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/summaries/{video_id}": {
+      "get": {
+        "tags": ["Summaries"],
+        "summary": "Get Video Summary",
+        "description": "Returns the summary of a video transcript for the authenticated user.",
+        "operationId": "get_video_summary_summaries__video_id__get",
+        "security": [{ "OAuth2PasswordBearer": [] }],
+        "parameters": [
+          {
+            "name": "video_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "title": "Video Id" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SummaryResponse" }
+              }
+            }
+          },
+          "400": { "description": "Invalid YouTube video ID" },
+          "401": { "description": "Not authenticated" },
+          "403": { "description": "Account not approved" },
+          "404": { "description": "Summary does not exist yet" },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/summaries/": {
+      "post": {
+        "tags": ["Summaries"],
+        "summary": "Create Video Summary",
+        "description": "Creates a summary of a video transcript for the authenticated user.",
+        "operationId": "create_video_summary_summaries__post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/SummaryRequest" }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SummaryResponse" }
+              }
+            }
+          },
+          "400": { "description": "Invalid YouTube video ID" },
+          "401": { "description": "Not authenticated" },
+          "403": { "description": "Account not approved" },
+          "404": { "description": "Video is not added yet" },
+          "409": { "description": "Summary already exists" },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        },
+        "security": [{ "OAuth2PasswordBearer": [] }]
+      }
+    },
+    "/conversations/{video_id}": {
+      "get": {
+        "tags": ["Conversations"],
+        "summary": "Get Conversation",
+        "description": "Returns the conversation for the authenticated user's account and the given video.",
+        "operationId": "get_conversation_conversations__video_id__get",
+        "security": [{ "OAuth2PasswordBearer": [] }],
+        "parameters": [
+          {
+            "name": "video_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "title": "Video Id" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConversationResponse"
+                }
+              }
+            }
+          },
+          "400": { "description": "Invalid YouTube video ID" },
+          "401": { "description": "Not authenticated" },
+          "403": { "description": "Account not approved" },
+          "404": { "description": "Conversation not found" },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/conversations/": {
+      "post": {
+        "tags": ["Conversations"],
+        "summary": "Post Conversation",
+        "description": "Creates a conversation for the authenticated user's account and the given video.",
+        "operationId": "post_conversation_conversations__post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/ConversationRequest" }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConversationResponse"
+                }
+              }
+            }
+          },
+          "400": { "description": "Invalid YouTube video ID" },
+          "401": { "description": "Not authenticated" },
+          "403": { "description": "Account not approved" },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        },
+        "security": [{ "OAuth2PasswordBearer": [] }]
+      }
+    },
+    "/messages/": {
+      "post": {
+        "tags": ["Messages"],
+        "summary": "Post Message",
+        "description": "Post a new message within a conversation.",
+        "operationId": "post_message_messages__post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/MessageRequest" }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/MessageResponse" }
+              }
+            }
+          },
+          "400": { "description": "Invalid YouTube video ID" },
+          "401": { "description": "Not authenticated" },
+          "403": { "description": "Account not approved" },
+          "404": { "description": "Conversation is not added yet" },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        },
+        "security": [{ "OAuth2PasswordBearer": [] }]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AccountResponse": {
+        "properties": { "id": { "type": "string", "title": "Id" } },
+        "type": "object",
+        "required": ["id"],
+        "title": "AccountResponse"
+      },
+      "ConversationRequest": {
+        "properties": { "video_id": { "type": "string", "title": "Video Id" } },
+        "type": "object",
+        "required": ["video_id"],
+        "title": "ConversationRequest"
+      },
+      "ConversationResponse": {
+        "properties": {
+          "id": { "type": "string", "format": "uuid", "title": "Id" },
+          "video_id": { "type": "string", "title": "Video Id" },
+          "messages": {
+            "anyOf": [
+              {
+                "items": { "$ref": "#/components/schemas/MessageRead" },
+                "type": "array"
+              },
+              { "type": "null" }
+            ],
+            "title": "Messages",
+            "default": []
+          }
+        },
+        "type": "object",
+        "required": ["id", "video_id"],
+        "title": "ConversationResponse"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": { "$ref": "#/components/schemas/ValidationError" },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "MessageRead": {
+        "properties": {
+          "user_message": { "type": "string", "title": "User Message" },
+          "ai_response": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Ai Response"
+          }
+        },
+        "type": "object",
+        "required": ["user_message", "ai_response"],
+        "title": "MessageRead"
+      },
+      "MessageRequest": {
+        "properties": {
+          "conversation_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Conversation Id"
+          },
+          "user_message": { "type": "string", "title": "User Message" }
+        },
+        "type": "object",
+        "required": ["conversation_id", "user_message"],
+        "title": "MessageRequest"
+      },
+      "MessageResponse": {
+        "properties": {
+          "ai_response": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Ai Response"
+          }
+        },
+        "type": "object",
+        "required": ["ai_response"],
+        "title": "MessageResponse"
+      },
+      "SummaryRequest": {
+        "properties": { "video_id": { "type": "string", "title": "Video Id" } },
+        "type": "object",
+        "required": ["video_id"],
+        "title": "SummaryRequest"
+      },
+      "SummaryResponse": {
+        "properties": {
+          "video_id": { "type": "string", "title": "Video Id" },
+          "summary_text": { "type": "string", "title": "Summary Text" }
+        },
+        "type": "object",
+        "required": ["video_id", "summary_text"],
+        "title": "SummaryResponse"
+      },
+      "TranscriptResponse": {
+        "properties": {
+          "video_id": { "type": "string", "title": "Video Id" },
+          "transcript_text": { "type": "string", "title": "Transcript Text" }
+        },
+        "type": "object",
+        "required": ["video_id", "transcript_text"],
+        "title": "TranscriptResponse"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": { "anyOf": [{ "type": "string" }, { "type": "integer" }] },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": { "type": "string", "title": "Message" },
+          "type": { "type": "string", "title": "Error Type" }
+        },
+        "type": "object",
+        "required": ["loc", "msg", "type"],
+        "title": "ValidationError"
+      },
+      "VideoRequest": {
+        "properties": { "id": { "type": "string", "title": "Id" } },
+        "type": "object",
+        "required": ["id"],
+        "title": "VideoRequest"
+      },
+      "VideoResponse": {
+        "properties": {
+          "id": { "type": "string", "title": "Id" },
+          "title": { "type": "string", "title": "Title" }
+        },
+        "type": "object",
+        "required": ["id", "title"],
+        "title": "VideoResponse"
+      },
+      "VideosResponse": {
+        "properties": {
+          "videos": {
+            "anyOf": [
+              {
+                "items": { "$ref": "#/components/schemas/VideoResponse" },
+                "type": "array"
+              },
+              { "type": "null" }
+            ],
+            "title": "Videos",
+            "default": []
+          }
+        },
+        "type": "object",
+        "title": "VideosResponse"
+      }
+    },
+    "securitySchemes": {
+      "OAuth2PasswordBearer": {
+        "type": "oauth2",
+        "flows": { "password": { "scopes": {}, "tokenUrl": "token" } }
+      }
+    }
+  }
+}

@@ -1,7 +1,11 @@
 from unittest.mock import patch
 
-from fastapi import HTTPException, status
-
+from core.exceptions import (
+    EXC_401_INVALID_TOKEN,
+    EXC_401_NOT_AUTHENTICATED,
+    EXC_404_ACC_NOT_FOUND,
+    EXC_409_ACC_ALREADY_EXISTS,
+)
 from models import Account
 from tests.data import *
 
@@ -41,7 +45,7 @@ def test_get_authenticated_user_404_if_account_missing(
     # ---------------- ASSERT ----------------
     assert mock_get_account_by_id.call_count == 1
     assert response.status_code == 404
-    assert response.json() == {"detail": "Account not found"}
+    assert response.json()["detail"] == EXC_404_ACC_NOT_FOUND.detail
 
 
 # Case 401: Unauthorized access with invalid token
@@ -54,9 +58,7 @@ def test_get_authenticated_user_401_rejects_unauthorized_request(
     headers = {"Authorization": "Bearer invalid_token"}
 
     # mock_get_jwk.return_value = {}
-    mock_verify_jwt_token.side_effect = HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token"
-    )
+    mock_verify_jwt_token.side_effect = EXC_401_INVALID_TOKEN
 
     # ----------------- ACT ------------------
     response = unauthenticated_client.get("/accounts/", headers=headers)
@@ -64,7 +66,7 @@ def test_get_authenticated_user_401_rejects_unauthorized_request(
     # ---------------- ASSERT ----------------
     assert mock_verify_jwt_token.call_count == 1
     assert response.status_code == 401
-    assert response.json() == {"detail": "Invalid token"}
+    assert response.json()["detail"] == EXC_401_INVALID_TOKEN.detail
 
 
 # Case 401: Unauthorized access with missing Authorization header
@@ -80,7 +82,7 @@ def test_get_authenticated_user_401_missing_auth_header(
     # Token verification shouldn't even be called
     assert mock_verify_jwt_token.call_count == 0
     assert response.status_code == 401
-    assert response.json() == {"detail": "Not authenticated"}
+    assert response.json()["detail"] == EXC_401_NOT_AUTHENTICATED.detail
 
 
 # =========================================== POST ===========================================
@@ -124,7 +126,7 @@ def test_post_authenticated_user_409_if_account_exists(
     assert mock_get_account_by_id.call_count == 1
     assert mock_create_account.call_count == 0
     assert response.status_code == 409
-    assert response.json() == {"detail": "Account already exists"}
+    assert response.json()["detail"] == EXC_409_ACC_ALREADY_EXISTS.detail
 
 
 # Case 401: Unauthorized access with invalid token
@@ -136,9 +138,7 @@ def test_post_authenticated_user_401_invalid_token(
     unauthenticated_client = client_factory("asdf", auth=False)
     headers = {"Authorization": "Bearer invalid_token"}
 
-    mock_verify_jwt_token.side_effect = HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token"
-    )
+    mock_verify_jwt_token.side_effect = EXC_401_INVALID_TOKEN
 
     # ----------------- ACT ------------------
     response = unauthenticated_client.post("/accounts/", headers=headers)
@@ -146,7 +146,7 @@ def test_post_authenticated_user_401_invalid_token(
     # ---------------- ASSERT ----------------
     assert mock_verify_jwt_token.call_count == 1
     assert response.status_code == 401
-    assert response.json() == {"detail": "Invalid token"}
+    assert response.json()["detail"] == EXC_401_INVALID_TOKEN.detail
 
 
 # Case 401: Unauthorized access with missing Authorization header
@@ -161,4 +161,4 @@ def test_post_authenticated_user_401_missing_auth_header(
     # ---------------- ASSERT ----------------
     assert mock_verify_jwt_token.call_count == 0
     assert response.status_code == 401
-    assert response.json() == {"detail": "Not authenticated"}
+    assert response.json()["detail"] == EXC_401_NOT_AUTHENTICATED.detail

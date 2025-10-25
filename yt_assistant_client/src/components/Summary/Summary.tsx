@@ -1,7 +1,7 @@
 import { getTranscriptByVideoId, getSummaryByVideoId } from "@/api";
 import { useVideoStore } from "@/store";
 import { useAuth0 } from "@auth0/auth0-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
@@ -24,7 +24,17 @@ export const Summary = () => {
     setCurrentTranscript,
     setCurrentSummary,
   } = useVideoStore();
-  if (!currentVideo) return;
+
+  // Show cached summary immediately when currentVideo changes
+  useEffect(() => {
+    if (!currentVideo) return;
+    const cachedSummary = summaryCache[currentVideo.id];
+    if (cachedSummary) {
+      setContent(cachedSummary.summary_text);
+    } else {
+      setContent("No summary available yet.");
+    }
+  }, [currentVideo, summaryCache]);
 
   const fetchContent = async <T,>(
     videoId: string,
@@ -66,8 +76,9 @@ export const Summary = () => {
   };
 
   return (
-    <div className="mt-5 flex h-full flex-col">
-      <div className="mb-4 flex justify-between">
+    <div className="mt-2 flex h-full flex-col overflow-hidden">
+      {/* Buttons */}
+      <div className="mb-2 flex flex-shrink-0 justify-between">
         <button onClick={getSummary} className="button-action mr-2 w-1/2">
           Summary
         </button>
@@ -76,12 +87,16 @@ export const Summary = () => {
         </button>
       </div>
 
-      <div className="hide-scrollbar prose prose-sm max-h-[80vh] overflow-auto text-sm">
-        <ReactMarkdown
-          children={content}
-          remarkPlugins={[remarkMath]}
-          rehypePlugins={[rehypeKatex]}
-        />
+      {/* Scrollable content */}
+      <div className="hide-scrollbar min-h-0 flex-1 overflow-auto text-xs">
+        <div className="w-full">
+          <ReactMarkdown
+            remarkPlugins={[remarkMath]}
+            rehypePlugins={[rehypeKatex]}
+          >
+            {content}
+          </ReactMarkdown>
+        </div>
       </div>
     </div>
   );

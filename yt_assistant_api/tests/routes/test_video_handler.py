@@ -1,5 +1,11 @@
 from unittest.mock import patch
 
+from core.exceptions import (
+    EXC_400_INVALID_YT_ID,
+    EXC_404_NO_VID_OR_TRANSCRIPT,
+    EXC_404_USER_VID_NOT_FOUND,
+    EXC_409_VID_ALREADY_ADDED_TO_ACC,
+)
 from models import Video
 from schemas import VideoResponse
 from tests.data import *
@@ -36,7 +42,7 @@ def test_get_user_video_400_invalid_video_id(client_factory):
 
     # ---------------- ASSERT ----------------
     assert response.status_code == 400
-    assert response.json() == {"detail": "Invalid YouTube video ID"}
+    assert response.json()["detail"] == EXC_400_INVALID_YT_ID.detail
 
 
 # Case 404: Video not found in the account
@@ -53,7 +59,7 @@ def test_get_user_video_404_video_not_found(mock_get_account_video, client_facto
     # ---------------- ASSERT ----------------
     assert mock_get_account_video.call_count == 1
     assert response.status_code == 404
-    assert response.json() == {"detail": "Video not found for this user"}
+    assert response.json()["detail"] == EXC_404_USER_VID_NOT_FOUND.detail
 
 
 # =========================================== POST ===========================================
@@ -141,7 +147,7 @@ def test_post_user_video_400_invalid_video_id(client_factory):
 
     # ---------------- ASSERT ----------------
     assert response.status_code == 400
-    assert response.json() == {"detail": "Invalid YouTube video ID"}
+    assert response.json()["detail"] == EXC_400_INVALID_YT_ID.detail
 
 
 # Case 409: Video in db and already added to the account
@@ -169,7 +175,7 @@ def test_post_user_video_409_video_in_db_already_added_to_account(
     assert mock_get_video.call_count == 1
     assert mock_add_video_to_account.call_count == 0
     assert response.status_code == 409
-    assert response.json() == {"detail": "Video already added to the account"}
+    assert response.json()["detail"] == EXC_409_VID_ALREADY_ADDED_TO_ACC.detail
 
 
 # Case 404: Video not in db and does not exist
@@ -204,9 +210,7 @@ def test_post_user_video_404_video_not_in_db_no_title(
     assert mock_fetch_video_transcript.call_count == 1
     assert mock_create_video.call_count == 0
     assert response.status_code == 404
-    assert response.json() == {
-        "detail": "Video not found or failed to fetch a transcript"
-    }
+    assert response.json()["detail"] == EXC_404_NO_VID_OR_TRANSCRIPT.detail
 
 
 # Case 404: Video not in db and without a transcript
@@ -241,6 +245,4 @@ def test_post_user_video_404_video_not_in_db_no_transcript(
     assert mock_fetch_video_transcript.call_count == 1
     assert mock_create_video.call_count == 0
     assert response.status_code == 404
-    assert response.json() == {
-        "detail": "Video not found or failed to fetch a transcript"
-    }
+    assert response.json()["detail"] == EXC_404_NO_VID_OR_TRANSCRIPT.detail

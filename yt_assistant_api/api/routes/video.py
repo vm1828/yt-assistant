@@ -1,9 +1,18 @@
 # TODO: further normalize post endpoint
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from core import get_current_account, get_db, logger, validate_video_id
+from core.exceptions import (
+    EXC_400_INVALID_YT_ID,
+    EXC_401_NOT_AUTHENTICATED,
+    EXC_403_ACCOUNT_NOT_APPROVED,
+    EXC_404_NO_VID_OR_TRANSCRIPT,
+    EXC_404_USER_VID_NOT_FOUND,
+    EXC_409_VID_ALREADY_ADDED_TO_ACC,
+    create_responses,
+)
 from crud.account import get_account_by_id
 from crud.video import add_video_to_account, create_video, get_account_video, get_video
 from schemas import Auth0Payload
@@ -12,7 +21,6 @@ from services import fetch_video_title, fetch_video_transcript
 from tasks import dispatch_transcript_embedding_task
 
 router = APIRouter()
-
 
 # ========================================= VIDEOS =========================================
 
@@ -23,6 +31,7 @@ router = APIRouter()
     "/",
     response_model=VideosResponse,
     description="Returns a list of all videos of the authenticated user.",
+    responses=create_responses(EXC_401_NOT_AUTHENTICATED, EXC_403_ACCOUNT_NOT_APPROVED),
 )
 async def get_user_videos(
     auth0_user: Auth0Payload = Depends(get_current_account),
@@ -43,11 +52,12 @@ async def get_user_videos(
     "/{video_id}",
     response_model=VideoResponse,
     description="Returns details of a specific video added to the authenticated user's account.",
-    responses={
-        400: {"description": "Invalid YouTube video ID"},
-        403: {"description": "Account not approved"},
-        404: {"description": "Video not found for this user"},
-    },
+    responses=create_responses(
+        EXC_400_INVALID_YT_ID,
+        EXC_401_NOT_AUTHENTICATED,
+        EXC_403_ACCOUNT_NOT_APPROVED,
+        EXC_404_USER_VID_NOT_FOUND,
+    ),
 )
 async def get_user_video(
     video_id: str,
@@ -59,10 +69,7 @@ async def get_user_video(
     logger.info("Fetching video from account videos...")
     video = await get_account_video(db, auth0_user.sub, video_id)
     if not video:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Video not found for this user",
-        )
+        raise EXC_404_USER_VID_NOT_FOUND
     return video
 
 
@@ -78,12 +85,13 @@ async def get_user_video(
         "- If the video is already added by someone else, adds it to the account.\n"
         "- If the video isn't added yet, fetches metadata and transcript, then adds and links to the account.\n"
     ),
-    responses={
-        400: {"description": "Invalid YouTube video ID"},
-        403: {"description": "Account not approved"},
-        404: {"description": "Video not found or failed to fetch a transcript"},
-        409: {"description": "Video already added to the account"},
-    },
+    responses=create_responses(
+        EXC_400_INVALID_YT_ID,
+        EXC_401_NOT_AUTHENTICATED,
+        EXC_403_ACCOUNT_NOT_APPROVED,
+        EXC_404_NO_VID_OR_TRANSCRIPT,
+        EXC_409_VID_ALREADY_ADDED_TO_ACC,
+    ),
 )
 async def add_video(
     payload: VideoRequest,
@@ -100,9 +108,7 @@ async def add_video(
 
     if video:
         if any(link.account_id == auth0_user.sub for link in video.account_videos):
-            raise HTTPException(
-                status_code=409, detail="Video already added to the account"
-            )
+            raise EXC_409_VID_ALREADY_ADDED_TO_ACC
         logger.info("Adding existing video to the account...")
         await add_video_to_account(db, auth0_user.sub, video_id)
 
@@ -112,10 +118,7 @@ async def add_video(
         transcript_text = await fetch_video_transcript(video_id)
 
         if not (title and transcript_text):
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="Video not found or failed to fetch a transcript",
-            )
+            raise EXC_404_NO_VID_OR_TRANSCRIPT
 
         logger.info("Adding new video...")
         data = VideoCreate(id=video_id, title=title, transcript_text=transcript_text)

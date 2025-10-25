@@ -1,11 +1,13 @@
 from unittest.mock import patch
 
-from tests.data import (
-    TEST_HEADERS,
-    TEST_SUMMARY_1,
-    TEST_TRANSCRIPT_1,
-    TEST_USER_1_SUB,
+from core.exceptions import (
+    EXC_400_INVALID_YT_ID,
+    EXC_401_NOT_AUTHENTICATED,
+    EXC_404_SUMM_NOT_FOUND,
+    EXC_404_VID_NOT_ADDED,
+    EXC_409_SUMM_ALREADY_EXISTS,
 )
+from tests.data import TEST_HEADERS, TEST_SUMMARY_1, TEST_TRANSCRIPT_1, TEST_USER_1_SUB
 
 # =========================================== GET ===========================================
 
@@ -44,7 +46,7 @@ def test_get_video_summary_400_invalid_video_id(client_factory):
 
     # ---------------- ASSERT ----------------
     assert response.status_code == 400
-    assert response.json() == {"detail": "Invalid YouTube video ID"}
+    assert response.json()["detail"] == EXC_400_INVALID_YT_ID.detail
 
 
 # Case 401: Unauthorized
@@ -57,7 +59,7 @@ def test_get_video_summary_401_unauthorized(client_factory):
 
     # ---------------- ASSERT ----------------
     assert response.status_code == 401
-    assert response.json() == {"detail": "Not authenticated"}
+    assert response.json()["detail"] == EXC_401_NOT_AUTHENTICATED.detail
 
 
 # Case 404: No transcript
@@ -78,9 +80,7 @@ def test_get_video_summary_404_no_transcript(
     # ---------------- ASSERT ----------------
     assert mock_get_transcript.call_count == 1
     assert response.status_code == 404
-    assert response.json() == {
-        "detail": "Video is not added yet. Please add the video first."
-    }
+    assert response.json()["detail"] == EXC_404_VID_NOT_ADDED.detail
 
 
 # Case 404: Summary not found
@@ -100,9 +100,7 @@ def test_get_video_summary_404_no_summary(
     )
     # ---------------- ASSERT ----------------
     assert response.status_code == 404
-    assert response.json() == {
-        "detail": "Summary does not exist yet. Please create it first."
-    }
+    assert response.json()["detail"] == EXC_404_SUMM_NOT_FOUND.detail
 
 
 # =========================================== POST ===========================================
@@ -159,7 +157,7 @@ def test_create_video_summary_400_invalid_video_id(client_factory):
 
     # ---------------- ASSERT ----------------
     assert response.status_code == 400
-    assert response.json() == {"detail": "Invalid YouTube video ID"}
+    assert response.json()["detail"] == EXC_400_INVALID_YT_ID.detail
 
 
 # Case 401: Unauthorized
@@ -172,7 +170,7 @@ def test_create_video_summary_401_unauthorized(client_factory):
 
     # ---------------- ASSERT ----------------
     assert response.status_code == 401
-    assert response.json() == {"detail": "Not authenticated"}
+    assert response.json()["detail"] == EXC_401_NOT_AUTHENTICATED.detail
 
 
 # Case 404: No transcript
@@ -192,9 +190,7 @@ def test_create_video_summary_404_no_transcript(mock_get_transcript, client_fact
 
     # ---------------- ASSERT ----------------
     assert response.status_code == 404
-    assert response.json() == {
-        "detail": "Video is not added yet. Please add the video first."
-    }
+    assert response.json()["detail"] == EXC_404_VID_NOT_ADDED.detail
 
 
 # Case 409: Summary already exists
@@ -228,4 +224,4 @@ def test_create_video_summary_409_summary_exists(
     assert mock_summarize.call_count == 0
     assert mock_create_summary.call_count == 0
     assert response.status_code == 409
-    assert response.json() == {"detail": "Summary already exists"}
+    assert response.json()["detail"] == EXC_409_SUMM_ALREADY_EXISTS.detail

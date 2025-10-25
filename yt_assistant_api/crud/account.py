@@ -2,7 +2,6 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
-from core import logger
 from models import Account, AccountVideo
 from schemas import AccountCreate
 
@@ -16,7 +15,6 @@ async def create_account(db: AsyncSession, data: AccountCreate):
 
 
 async def get_account_by_id(db: AsyncSession, account_id: str, lazy: bool = True):
-    logger.info("Fetching user account...")
     stmt = select(Account).where(Account.id == account_id)
 
     if not lazy:

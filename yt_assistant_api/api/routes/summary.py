@@ -1,7 +1,16 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from core import get_current_account, get_db, logger, validate_video_id
+from core.exceptions import (
+    EXC_400_INVALID_YT_ID,
+    EXC_401_NOT_AUTHENTICATED,
+    EXC_403_ACCOUNT_NOT_APPROVED,
+    EXC_404_SUMM_NOT_FOUND,
+    EXC_404_VID_NOT_ADDED,
+    EXC_409_SUMM_ALREADY_EXISTS,
+    create_responses,
+)
 from crud import create_summary, get_summary, get_transcript
 from schemas import SummaryCreate, SummaryRequest, SummaryResponse
 from services import summarize
@@ -16,12 +25,12 @@ router = APIRouter()
     response_model=SummaryResponse,
     description="Returns the summary of a video transcript for the authenticated user.",
     dependencies=[Depends(get_current_account)],
-    responses={
-        400: {"description": "Invalid YouTube video ID"},
-        401: {"description": "Not authenticated"},
-        403: {"description": "Account not approved"},
-        404: {"description": "Summary does not exist yet"},
-    },
+    responses=create_responses(
+        EXC_400_INVALID_YT_ID,
+        EXC_401_NOT_AUTHENTICATED,
+        EXC_403_ACCOUNT_NOT_APPROVED,
+        EXC_404_SUMM_NOT_FOUND,
+    ),
 )
 async def get_video_summary(
     video_id: str,
@@ -34,11 +43,11 @@ async def get_video_summary(
         db, video_id
     )  # TODO denormalize Summary by adding `video_id` for querying it directly
     if not transcript:
-        raise HTTPException(404, "Video is not added yet. Please add the video first.")
+        raise EXC_404_VID_NOT_ADDED
 
     summary = await get_summary(db, transcript.id)
     if not summary:
-        raise HTTPException(404, "Summary does not exist yet. Please create it first.")
+        raise EXC_404_SUMM_NOT_FOUND
 
     return SummaryResponse(video_id=video_id, summary_text=summary.summary_text)
 
@@ -52,13 +61,13 @@ async def get_video_summary(
     status_code=status.HTTP_201_CREATED,
     description="Creates a summary of a video transcript for the authenticated user.",
     dependencies=[Depends(get_current_account)],
-    responses={
-        400: {"description": "Invalid YouTube video ID"},
-        401: {"description": "Not authenticated"},
-        403: {"description": "Account not approved"},
-        404: {"description": "Video is not added yet"},
-        409: {"description": "Summary already exists"},
-    },
+    responses=create_responses(
+        EXC_400_INVALID_YT_ID,
+        EXC_401_NOT_AUTHENTICATED,
+        EXC_403_ACCOUNT_NOT_APPROVED,
+        EXC_404_VID_NOT_ADDED,
+        EXC_409_SUMM_ALREADY_EXISTS,
+    ),
 )
 async def create_video_summary(
     payload: SummaryRequest,
@@ -69,12 +78,12 @@ async def create_video_summary(
 
     transcript = await get_transcript(db, video_id)
     if not transcript:
-        raise HTTPException(404, "Video is not added yet. Please add the video first.")
+        raise EXC_404_VID_NOT_ADDED
 
     if await get_summary(db, transcript.id):
-        raise HTTPException(409, "Summary already exists")
+        raise EXC_409_SUMM_ALREADY_EXISTS
 
-    summary_text = summarize(transcript.transcript_text)
+    summary_text = await summarize(transcript.transcript_text)
     data = SummaryCreate(summary_text=summary_text, transcript_id=transcript.id)
     summary = await create_summary(db, data)
 
