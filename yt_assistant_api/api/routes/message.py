@@ -3,7 +3,6 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from core import get_current_account, get_db, logger
 from core.exceptions import (
-    EXC_400_INVALID_YT_ID,
     EXC_401_NOT_AUTHENTICATED,
     EXC_403_ACCOUNT_NOT_APPROVED,
     EXC_404_CONV_NOT_ADDED,
@@ -25,7 +24,6 @@ router = APIRouter()
     status_code=status.HTTP_201_CREATED,
     dependencies=[Depends(get_current_account)],
     responses=create_responses(
-        EXC_400_INVALID_YT_ID,
         EXC_401_NOT_AUTHENTICATED,
         EXC_403_ACCOUNT_NOT_APPROVED,
         EXC_404_CONV_NOT_ADDED,

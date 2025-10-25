@@ -22,6 +22,9 @@ class MessageRead(BaseModel):
 
 
 class MessageResponse(BaseModel):
+    id: UUID
+    conversation_id: UUID
+    user_message: str
     ai_response: str | None
 
     model_config = ConfigDict(from_attributes=True)

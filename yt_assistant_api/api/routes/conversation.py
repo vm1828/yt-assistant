@@ -80,4 +80,4 @@ async def post_conversation(
 
     conversation_data = ConversationCreate(account_id=auth0_user.sub, video_id=video_id)
     conversation = await create_conversation(db, conversation_data)
-    return ConversationResponse(id=conversation.id, messages=[])
+    return ConversationResponse(id=conversation.id, video_id=video_id, messages=[])
