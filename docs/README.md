@@ -24,7 +24,7 @@ YT-Assistant is a web application designed to help users summarize YouTube video
 - **Database**: PostgreSQL + pgvector
 - **Task Processing**: Celery + Redis
 - **LLM**: Gemini (Google GenAI) + LangChain
-- **Code Quality**: black, isort, flake8, SonarQube
+- **Code Quality**: ruff, SonarQube
 - **CI/CD**: GitHub Actions
 
 ### Models
@@ -274,18 +274,9 @@ Utility scripts are in `scripts/` dir.
 - `init.sh`
 - `alembic_migrate.sh`
 
-## Code Formatting & Linting (outdated, needs revisiting)
+## Code Formatting & Linting
 
 ```bash
 # Check
-cd yt_assistant_api
-poetry run black --check .
-poetry run isort --check .
-poetry run flake8 .
-```
-
-```bash
-# Autofix
-poetry run black .
-poetry run isort .
+ruff check
 ```
