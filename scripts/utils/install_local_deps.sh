@@ -13,10 +13,7 @@ cd yt_assistant_emb
 curl -LsSf https://astral.sh/uv/install.sh | sh
 uv sync
 # Manually install torch without GPU
-source .venv/bin/activate
-pip install --break-system-packages torch==2.9.0+cpu --index-url https://download.pytorch.org/whl/cpu
-pip install --break-system-packages sentence-transformers==5.1.2
-deactivate
+uv pip install torch==2.9.0+cpu --index-url https://download.pytorch.org/whl/cpu && uv pip install sentence-transformers==5.1.2
 cd ..
 
 echo "Instaling Node.js dependencies..."

@@ -1,6 +1,3 @@
-from fastapi import APIRouter, Depends, status
-from sqlalchemy.ext.asyncio import AsyncSession
-
 from core import get_current_account, get_db, logger
 from core.exceptions import (
     EXC_401_NOT_AUTHENTICATED,
@@ -9,8 +6,10 @@ from core.exceptions import (
     create_responses,
 )
 from crud import create_message, get_conversation_by_id
+from fastapi import APIRouter, Depends, status
 from schemas import MessageCreate, MessageRequest, MessageResponse
 from services import get_ai_response
+from sqlalchemy.ext.asyncio import AsyncSession
 
 router = APIRouter()
 
@@ -33,7 +32,6 @@ async def post_message(
     payload: MessageRequest,
     db: AsyncSession = Depends(get_db),
 ):
-    print(payload)
     user_message, conversation_id = (
         payload.user_message,
         payload.conversation_id,

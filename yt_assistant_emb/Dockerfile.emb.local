@@ -6,13 +6,11 @@ WORKDIR /app
 RUN apt-get update && apt-get install -y libpq-dev build-essential && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Install dependencies
+RUN rm -rf /app/.venv
 COPY pyproject.toml uv.lock /app/
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 RUN uv sync
-RUN uv run pip install --break-system-packages torch==2.9.0+cpu --index-url https://download.pytorch.org/whl/cpu \
-    && uv run pip install --break-system-packages sentence-transformers==5.1.2
 COPY tasks/ adapters.py /app/
 
 # Start Celery worker
-CMD ["/app/.venv/bin/celery", "-A", "tasks.embed", "worker", "--loglevel=info"]
-
+CMD ["uv", "run", "celery", "-A", "tasks.embed.celery_app", "worker", "--loglevel=info"]
