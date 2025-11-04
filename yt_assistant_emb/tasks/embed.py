@@ -21,7 +21,6 @@ redis_url = os.getenv("REDIS_URL")
 db_url = os.getenv("POSTGRES_URL")
 google_api_key = os.getenv("GOOGLE_API_KEY")
 local = os.getenv("ENV") == "local"
-print(local)
 
 CHUNK_SIZE = 1024
 CHUNK_OVERLAP = 100
@@ -123,7 +122,7 @@ def process_transcript_embedding(
         transcript_id, chunk_count = process_transcript_embedding_logic(
             video_id=video_id,
             conn=conn,
-            emb_adapter=get_emb_adapter(),
+            emb_adapter=get_emb_adapter(local),
         )
     logger.info(f"Stored {chunk_count} embeddings for transcript {transcript_id}")
     result = ProcessTranscriptEmbeddingResult(video_id, transcript_id, chunk_count)

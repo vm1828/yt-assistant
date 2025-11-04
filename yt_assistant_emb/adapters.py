@@ -13,16 +13,8 @@ class EmbeddingAdapter(ABC):
         pass
 
 
-class LocalEmbeddingAdapter(EmbeddingAdapter):
-    def __init__(self, model_name: str = "all-MiniLM-L6-v2"):
-        self.model = SentenceTransformer(model_name)
-
-    def embed(self, texts: List[str]) -> List[List[float]]:
-        return self.model.encode(texts, show_progress_bar=False).tolist()
-
-
 class GoogleEmbeddingAdapter(EmbeddingAdapter):
-    def __init__(self, model: str = "models/embedding-001"):
+    def __init__(self, model: str = "models/embedding-001"):  # 768 dim
         self.model = GoogleGenerativeAIEmbeddings(
             model=model,
             google_api_key=os.getenv("GOOGLE_API_KEY"),
@@ -30,6 +22,14 @@ class GoogleEmbeddingAdapter(EmbeddingAdapter):
 
     def embed(self, texts: List[str]) -> List[List[float]]:
         return self.model.embed_documents(texts)
+
+
+class LocalEmbeddingAdapter(EmbeddingAdapter):
+    def __init__(self, model_name: str = "all-mpnet-base-v2"):  # 768 dim
+        self.model = SentenceTransformer(model_name)
+
+    def embed(self, texts: list[str]) -> list[list[float]]:
+        return self.model.encode(texts, show_progress_bar=False).tolist()
 
 
 # lazy init of embedding adapter
