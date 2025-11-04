@@ -2,10 +2,9 @@ import asyncio
 from abc import ABC, abstractmethod
 from enum import Enum, IntEnum
 
+from config import settings
 from langchain.prompts import ChatPromptTemplate
 from langchain_google_genai import ChatGoogleGenerativeAI
-
-from config import settings
 
 
 class LLM(Enum):
@@ -29,11 +28,11 @@ class GeminiAdapter(LLMAdapter):
             max_retries=1,
         )
 
-    async def invoke(self, txt: str, prompt: ChatPromptTemplate) -> str:
-        return await asyncio.to_thread(self._invoke_sync, txt, prompt)
+    async def invoke(self, txt: str, prompt: ChatPromptTemplate, context: str = '') -> str:
+        return await asyncio.to_thread(self._invoke_sync, txt, prompt, context)
 
-    def _invoke_sync(self, txt: str, prompt: ChatPromptTemplate) -> str:
-        messages = prompt.format_messages(txt=txt)
+    def _invoke_sync(self, txt: str, prompt: ChatPromptTemplate, context: str) -> str:
+        messages = prompt.format_messages(txt=txt, context=context)
         result = self.llm.invoke(
             messages
         )  # LangChain ChatGoogleGenerativeAI.invoke does not support async

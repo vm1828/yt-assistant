@@ -1,34 +1,71 @@
-# conversation.py
+from config import settings
+from crud import get_top_similar_chunks_for_video
 from langchain.prompts import ChatPromptTemplate
+from models import Conversation
 
+from .emb_adapter import get_emb_adapter
 from .llm_adapter import LLM, LLMOutputSize, get_adapter
 
-# ===================================== PROMPT TEMPLATE =====================================
+# ===================================== PROMPT TEMPLATES =====================================
+
+rag_judge_prompt = ChatPromptTemplate.from_template(
+    """
+    You are classifying whether the following user message requires the current video context to answer.
+
+    Message: "{txt}"
+
+    Answer only "YES" or "NO".
+    """
+)
 
 chat_prompt = ChatPromptTemplate.from_messages(
     [
         (
             "system",
-            """You are a knowledgeable assistant that explains technical concepts clearly and concisely.
-            - Use markdown for formatting, should be rendering easily.
-            - Include code blocks or LaTeX formulas when relevant.
-            - Do NOT wrap math in square brackets `[...]` or parentheses `(...)` outside of proper LaTeX delimiters.
-            - Focus on accuracy, clarity, and completeness without unnecessary filler.""",
+            """You are a helpful and knowledgeable assistant in an ongoing conversation.
+            - Keep responses concise, natural, and relevant — sound like you're talking to the user, not writing a report.
+            - Respond conversationally, using markdown, LaTeX, and code if relevant.
+            - Include code blocks or LaTeX formulas when appropriate.
+            - Do NOT output full context dumps or irrelevant transcript parts.
+            - Focus on what directly helps the user understand or solve the current question.
+            - If the user’s question can be answered without using context, ignore the context.
+            - Maintain clarity and precision while staying conversational.""",
         ),
         (
             "human",
             """
-            User message: {txt}
+            User message: {{txt}}
 
-            Provide a helpful and concise answer using markdown and LaTeX where needed.""",
+            {% if context %}
+            Some related video transcript snippets:
+            ---
+            {{context}}
+            ---
+            {% endif %}
+            """,
         ),
-    ]
+    ],
+    template_format="jinja2"
 )
 
 
 # =================================== CONVERSATION ========================================
 
+def get_user_msg_w_history(user_message: str, conversation: Conversation) -> str:
+    history = []
+    for msg in conversation.messages:
+        history.append(f"User: {msg.user_message}")
+        history.append(f"Assistant: {msg.ai_response}")
+    history.append(f"User: {user_message}")
+    return "\n".join(history)
 
-async def get_ai_response(user_message: str, model: LLM = LLM.GEMINI_2_0_FLASH) -> str:
+
+async def should_use_context(user_msg: str, model: LLM = LLM.GEMINI_2_0_FLASH) -> bool:
     adapter = get_adapter(model, LLMOutputSize.L)
-    return await adapter.invoke({"txt": user_message}, chat_prompt)
+    result = await adapter.invoke(user_msg, rag_judge_prompt)
+    return result == 'YES'
+
+
+async def get_ai_response(user_msg_w_history: str, context: str, model: LLM = LLM.GEMINI_2_0_FLASH) -> str:
+    adapter = get_adapter(model, LLMOutputSize.L)
+    return await adapter.invoke(user_msg_w_history, chat_prompt, context)

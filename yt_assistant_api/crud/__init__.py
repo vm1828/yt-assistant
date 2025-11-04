@@ -3,6 +3,7 @@ from .conversation import (
     create_conversation,
     get_conversation_by_id,
     get_conversation_by_user_and_video,
+    get_top_similar_chunks_for_video,
 )
 from .message import create_message
 from .summary import create_summary, get_summary

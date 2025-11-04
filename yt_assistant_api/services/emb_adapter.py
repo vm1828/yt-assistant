@@ -1,3 +1,6 @@
+# TODO Package and share between api and emb service 
+
+import asyncio
 import os
 from abc import ABC, abstractmethod
 from typing import List
@@ -8,7 +11,7 @@ from sentence_transformers import SentenceTransformer
 
 class EmbeddingAdapter(ABC):
     @abstractmethod
-    def embed(self, texts: List[str]) -> List[List[float]]:
+    async def embed(self, texts: List[str]) -> List[List[float]]:
         """Return embeddings for a list of texts"""
         pass
 
@@ -20,20 +23,20 @@ class GoogleEmbeddingAdapter(EmbeddingAdapter):
             google_api_key=os.getenv("GOOGLE_API_KEY"),
         )
 
-    def embed(self, texts: List[str]) -> List[List[float]]:
-        return self.model.embed_documents(texts)
+    async def embed(self, texts: List[str]) -> List[List[float]]:
+        return await asyncio.to_thread(self.model.embed_documents, texts)
 
 
 class LocalEmbeddingAdapter(EmbeddingAdapter):
     def __init__(self, model_name: str = "all-mpnet-base-v2"):  # 768 dim
         self.model = SentenceTransformer(model_name)
 
-    def embed(self, texts: list[str]) -> list[list[float]]:
-        return self.model.encode(texts, show_progress_bar=False).tolist()
+    async def embed(self, texts: list[str]) -> list[list[float]]:
+        return await asyncio.to_thread(self.model.encode, texts, show_progress_bar=False)
 
 
 # lazy init of embedding adapter
-_emb_adapter = None
+_emb_adapter: EmbeddingAdapter | None = None
 
 
 def get_emb_adapter(local: bool = False) -> EmbeddingAdapter:
