@@ -58,6 +58,7 @@ export const Summary = () => {
   };
 
   const getSummary = () => {
+    if (!currentVideo) return;
     return fetchContent(currentVideo.id, {
       cache: summaryCache,
       fetchFn: getSummaryByVideoId,
@@ -67,6 +68,7 @@ export const Summary = () => {
   };
 
   const getTranscript = () => {
+    if (!currentVideo) return;
     return fetchContent(currentVideo.id, {
       cache: transcriptCache,
       fetchFn: getTranscriptByVideoId,

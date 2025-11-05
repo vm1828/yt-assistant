@@ -23,8 +23,8 @@ def test_process_transcript_embedding_logic(mock_splitter_cls, mock_execute_valu
     mock_splitter_cls.return_value = mock_splitter
 
     # Mock embeddings model
-    mock_embedding_model = MagicMock()
-    mock_embedding_model.embed_documents.return_value = [
+    mock_emb_adapter = MagicMock()
+    mock_emb_adapter.embed.return_value = [
         [0.1] * 768,
         [0.2] * 768,
     ]
@@ -33,7 +33,7 @@ def test_process_transcript_embedding_logic(mock_splitter_cls, mock_execute_valu
 
     # ---------------------- ACT -----------------------
     transcript_id, chunk_count = process_transcript_embedding_logic(
-        video_id, mock_conn, mock_embedding_model
+        video_id, mock_conn, mock_emb_adapter
     )
 
     # --------------------- ASSERT ---------------------
@@ -46,8 +46,8 @@ def test_process_transcript_embedding_logic(mock_splitter_cls, mock_execute_valu
     )
 
     # Chunks were passed to embeddings
-    assert mock_embedding_model.embed_documents.call_count == 1
-    assert mock_embedding_model.embed_documents.call_args[0][0] == ["chunk1", "chunk2"]
+    assert mock_emb_adapter.embed.call_count == 1
+    assert mock_emb_adapter.embed.call_args[0][0] == ["chunk1", "chunk2"]
 
     # execute_values called for chunks insert and for embeddings insert
     assert len(mock_execute_values.call_args_list) == 2

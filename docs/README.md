@@ -11,7 +11,7 @@ YT-Assistant is a web application designed to help users summarize YouTube video
 - [x] Video Transcripts Summarization
 - [x] Storing Transcripts data for RAG
 - [x] Q&A Chat
-- [ ] Video-specific augmented Q&A
+- [x] Video-specific augmented Q&A
 - [ ] Cross-video augmented Q&A
 - [ ] Cross-conversation augmented Q&A (user specific)
 - [ ] UI Refinement
@@ -24,7 +24,7 @@ YT-Assistant is a web application designed to help users summarize YouTube video
 - **Database**: PostgreSQL + pgvector
 - **Task Processing**: Celery + Redis
 - **LLM**: Gemini (Google GenAI) + LangChain
-- **Code Quality**: black, isort, flake8, SonarQube
+- **Code Quality**: ruff, SonarQube
 - **CI/CD**: GitHub Actions
 
 ### Models
@@ -242,8 +242,6 @@ Handles transcript chunk embeddings and vector storage.
 2. API dispatches a task to Celery via Redis.
 3. The embedding service splits the transcript into chunks, computes embeddings for each chunk, and stores them in the database (transcript_chunk and embedding tables).
 
-\*\*Storing chunks alongside the full transcript, rather than just using offset indexes, slightly denormalizes the database but significantly improves search speed and RAG performance, making the tradeoff worthwhile.
-
 ## Unit Testing
 
 To run unit tests for the api and embedding service:
@@ -274,18 +272,9 @@ Utility scripts are in `scripts/` dir.
 - `init.sh`
 - `alembic_migrate.sh`
 
-## Code Formatting & Linting (outdated, needs revisiting)
+## Code Formatting & Linting
 
 ```bash
 # Check
-cd yt_assistant_api
-poetry run black --check .
-poetry run isort --check .
-poetry run flake8 .
-```
-
-```bash
-# Autofix
-poetry run black .
-poetry run isort .
+ruff check
 ```

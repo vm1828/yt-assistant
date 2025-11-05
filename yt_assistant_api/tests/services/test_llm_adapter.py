@@ -2,7 +2,6 @@ from enum import Enum
 from unittest.mock import MagicMock, patch
 
 import pytest
-
 from services import llm_adapter
 from services.llm_adapter import (
     _ADAPTERS,
@@ -70,7 +69,7 @@ async def test_gemini_adapter_invoke(mock_llm_class):
 
     # ---------------- ASSERT ----------------
     fake_prompt.format_messages.assert_called_once_with(
-        txt=fake_txt
+        txt=fake_txt, context=""
     )  # prompt was used to format messages
     fake_llm_instance.invoke.assert_called_once_with(
         fake_messages

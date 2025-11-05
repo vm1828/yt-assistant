@@ -20,9 +20,7 @@ jobs:
       - name: Run api linters
         run: |
           cd yt_assistant_api
-          poetry run black --check .
-          poetry run isort --check .
-          poetry run flake8 .
+          poetry run ruff check
 
   api-unit-tests:
     runs-on: ubuntu-latest
@@ -46,9 +44,8 @@ jobs:
       - name: Run emb linters
         run: |
           cd yt_assistant_emb
-          black --check .
-          isort --check .
-          flake8 .
+          uvx ruff check
+
 
   emb-unit-tests:
     runs-on: ubuntu-latest
@@ -60,5 +57,6 @@ jobs:
       - name: Run emb unit tests
         run: |
           cd yt_assistant_emb
+          source .venv/bin/activate
           PYTHONPATH=. pytest --cov
 

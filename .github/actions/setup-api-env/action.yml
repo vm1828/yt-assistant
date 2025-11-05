@@ -13,6 +13,7 @@ runs:
     - name: Cache Poetry
       uses: actions/cache@v4
       with:
+        clean: true
         path: |
           ~/.cache/pypoetry
           ~/.virtualenvs

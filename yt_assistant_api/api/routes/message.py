@@ -1,6 +1,4 @@
-from fastapi import APIRouter, Depends, status
-from sqlalchemy.ext.asyncio import AsyncSession
-
+from config import settings
 from core import get_current_account, get_db, logger
 from core.exceptions import (
     EXC_401_NOT_AUTHENTICATED,
@@ -8,9 +6,20 @@ from core.exceptions import (
     EXC_404_CONV_NOT_ADDED,
     create_responses,
 )
-from crud import create_message, get_conversation_by_id
+from crud import (
+    create_message,
+    get_conversation_by_id,
+    get_top_similar_chunks_for_video,
+)
+from fastapi import APIRouter, Depends, status
 from schemas import MessageCreate, MessageRequest, MessageResponse
-from services import get_ai_response
+from services import (
+    get_ai_response,
+    get_emb_adapter,
+    get_user_msg_w_history,
+    should_use_context,
+)
+from sqlalchemy.ext.asyncio import AsyncSession
 
 router = APIRouter()
 
@@ -33,8 +42,7 @@ async def post_message(
     payload: MessageRequest,
     db: AsyncSession = Depends(get_db),
 ):
-    print(payload)
-    user_message, conversation_id = (
+    user_msg, conversation_id = (
         payload.user_message,
         payload.conversation_id,
     )
@@ -44,22 +52,25 @@ async def post_message(
     if not conversation:
         raise EXC_404_CONV_NOT_ADDED
 
-    # Create context-aware LLM input
-    history = []
-    for msg in conversation.messages:
-        history.append(f"User: {msg.user_message}")
-        history.append(f"Assistant: {msg.ai_response}")
-    history.append(f"User: {user_message}")
+    logger.info("Preparing context...")
     # TODO Imporove efficiency and avoid limitations (limit messages / isolated embedding spaces / summarized history etc.)
-    context_aware_msg = "\n".join(history)
+    user_msg_w_history = get_user_msg_w_history(user_msg, conversation)
+    context = ""
+    if await should_use_context(user_msg):
+        emb_adapter = get_emb_adapter(settings.ENV == "local")
+        query_embedding = await emb_adapter.embed([user_msg])
+        chunks = await get_top_similar_chunks_for_video(
+            db, conversation.video_id, query_embedding[0]
+        )
+        context = "\n\n".join(chunks)
 
     logger.info("Trying to get response from LLM...")
-    ai_response = await get_ai_response(context_aware_msg)
+    ai_response = await get_ai_response(user_msg_w_history, context)
 
     logger.info("Writing message to db...")
     data = MessageCreate(
         conversation_id=conversation_id,
-        user_message=user_message,
+        user_message=user_msg,
         ai_response=ai_response,
     )
     message = await create_message(db, data)

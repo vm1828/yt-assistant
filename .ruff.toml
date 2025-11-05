@@ -1,0 +1,17 @@
+line-length = 88
+exclude = [
+    ".git",
+    "__pycache__",
+    "build",
+    "dist",
+    "alembic",
+]
+
+lint.ignore = [
+    "E203",
+    "E266",
+    "E501",
+]
+
+lint.per-file-ignores = { "__init__.py" = ["F401"], "*/tests/*.py" = ["F403", "F405"] }
+

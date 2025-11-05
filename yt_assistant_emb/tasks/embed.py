@@ -4,9 +4,9 @@ import uuid
 from dataclasses import asdict, dataclass
 from typing import Tuple
 
+from adapters import get_emb_adapter
 from celery import Celery
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain_google_genai import GoogleGenerativeAIEmbeddings
 from psycopg2 import connect
 from psycopg2.extras import execute_values
 
@@ -20,25 +20,12 @@ logger = logging.getLogger(__name__)
 redis_url = os.getenv("REDIS_URL")
 db_url = os.getenv("POSTGRES_URL")
 google_api_key = os.getenv("GOOGLE_API_KEY")
+local = os.getenv("ENV") == "local"
 
 CHUNK_SIZE = 1024
 CHUNK_OVERLAP = 100
 
 celery_app = Celery("yt_assistant_emb_worker", broker=redis_url)
-
-# ---------------------------- Model ----------------------------
-# lazy init of embedding model
-_emb_model = None
-
-
-def get_emb_model():
-    global _emb_model
-    if _emb_model is None:
-        _emb_model = GoogleGenerativeAIEmbeddings(
-            model="models/embedding-001", google_api_key=google_api_key
-        )
-    return _emb_model
-
 
 # ---------------------------- Task ----------------------------
 
@@ -53,7 +40,7 @@ class ProcessTranscriptEmbeddingResult:
 def process_transcript_embedding_logic(
     video_id: str,
     conn,
-    emb_model,
+    emb_adapter,
     chunk_size: int = CHUNK_SIZE,
     chunk_overlap: int = CHUNK_OVERLAP,
 ) -> Tuple[str, int]:
@@ -97,7 +84,7 @@ def process_transcript_embedding_logic(
         logger.info(f"Inserted {len(chunk_records)} transcript chunks")
 
         # 4. Generate embeddings
-        vectors = emb_model.embed_documents(chunks)
+        vectors = emb_adapter.embed(chunks)
 
         # 5. Insert embeddings
         embedding_records = [
@@ -135,7 +122,7 @@ def process_transcript_embedding(
         transcript_id, chunk_count = process_transcript_embedding_logic(
             video_id=video_id,
             conn=conn,
-            emb_model=get_emb_model(),
+            emb_adapter=get_emb_adapter(local),
         )
     logger.info(f"Stored {chunk_count} embeddings for transcript {transcript_id}")
     result = ProcessTranscriptEmbeddingResult(video_id, transcript_id, chunk_count)
