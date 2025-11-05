@@ -6,7 +6,6 @@ WORKDIR /app
 RUN apt-get update && apt-get install -y libpq-dev build-essential && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Install dependencies
-RUN rm -rf /app/.venv
 COPY pyproject.toml uv.lock /app/
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 RUN uv sync

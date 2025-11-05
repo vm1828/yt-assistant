@@ -55,12 +55,14 @@ async def post_message(
     logger.info("Preparing context...")
     # TODO Imporove efficiency and avoid limitations (limit messages / isolated embedding spaces / summarized history etc.)
     user_msg_w_history = get_user_msg_w_history(user_msg, conversation)
-    context = ''
+    context = ""
     if await should_use_context(user_msg):
-        emb_adapter = get_emb_adapter(settings.ENV=='local')
+        emb_adapter = get_emb_adapter(settings.ENV == "local")
         query_embedding = await emb_adapter.embed([user_msg])
-        chunks = await get_top_similar_chunks_for_video(db, conversation.video_id, query_embedding[0])
-        context = "\n\n".join(chunk for chunk in chunks)
+        chunks = await get_top_similar_chunks_for_video(
+            db, conversation.video_id, query_embedding[0]
+        )
+        context = "\n\n".join(chunks)
 
     logger.info("Trying to get response from LLM...")
     ai_response = await get_ai_response(user_msg_w_history, context)

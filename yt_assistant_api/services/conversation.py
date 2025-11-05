@@ -1,9 +1,6 @@
-from config import settings
-from crud import get_top_similar_chunks_for_video
 from langchain.prompts import ChatPromptTemplate
 from models import Conversation
 
-from .emb_adapter import get_emb_adapter
 from .llm_adapter import LLM, LLMOutputSize, get_adapter
 
 # ===================================== PROMPT TEMPLATES =====================================
@@ -22,7 +19,7 @@ chat_prompt = ChatPromptTemplate.from_messages(
     [
         (
             "system",
-            """You are a helpful and knowledgeable assistant in an ongoing conversation.
+            """You are a helpful assistant helping the user understand and talk about the YouTube video they’re currently watching or asking about.
             - Keep responses concise, natural, and relevant — sound like you're talking to the user, not writing a report.
             - Respond conversationally, using markdown, LaTeX, and code if relevant.
             - Include code blocks or LaTeX formulas when appropriate.
@@ -45,11 +42,12 @@ chat_prompt = ChatPromptTemplate.from_messages(
             """,
         ),
     ],
-    template_format="jinja2"
+    template_format="jinja2",
 )
 
 
 # =================================== CONVERSATION ========================================
+
 
 def get_user_msg_w_history(user_message: str, conversation: Conversation) -> str:
     history = []
@@ -63,9 +61,11 @@ def get_user_msg_w_history(user_message: str, conversation: Conversation) -> str
 async def should_use_context(user_msg: str, model: LLM = LLM.GEMINI_2_0_FLASH) -> bool:
     adapter = get_adapter(model, LLMOutputSize.L)
     result = await adapter.invoke(user_msg, rag_judge_prompt)
-    return result == 'YES'
+    return result == "YES"
 
 
-async def get_ai_response(user_msg_w_history: str, context: str, model: LLM = LLM.GEMINI_2_0_FLASH) -> str:
+async def get_ai_response(
+    user_msg_w_history: str, context: str, model: LLM = LLM.GEMINI_2_0_FLASH
+) -> str:
     adapter = get_adapter(model, LLMOutputSize.L)
     return await adapter.invoke(user_msg_w_history, chat_prompt, context)

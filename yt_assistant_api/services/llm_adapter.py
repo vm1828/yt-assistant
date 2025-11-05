@@ -28,7 +28,9 @@ class GeminiAdapter(LLMAdapter):
             max_retries=1,
         )
 
-    async def invoke(self, txt: str, prompt: ChatPromptTemplate, context: str = '') -> str:
+    async def invoke(
+        self, txt: str, prompt: ChatPromptTemplate, context: str = ""
+    ) -> str:
         return await asyncio.to_thread(self._invoke_sync, txt, prompt, context)
 
     def _invoke_sync(self, txt: str, prompt: ChatPromptTemplate, context: str) -> str:
