@@ -1,0 +1,5 @@
+celery==5.5.3
+langchain==0.3.25
+langchain-google-genai==2.1.4
+psycopg2==2.9.10
+redis==6.4.0

@@ -42,7 +42,6 @@ YT-Assistant is a web application designed to help users summarize YouTube video
 ### Dependencies
 
 - Python 3.12
-- Poetry 2.1.2
 - Node.js v22 + npm v10
 - Docker 28.1.1
 
@@ -247,14 +246,16 @@ Handles transcript chunk embeddings and vector storage.
 To run unit tests for the api and embedding service:
 
 ```bash
+
 cd yt_assistant_api
-poetry shell
+source .venv/bin/activate
 PYTHONPATH=. pytest --cov
-coverage report -m
+deactivate
+
 cd ../yt_assistant_emb
+source .venv/bin/activate
 PYTHONPATH=. pytest --cov
-coverage report -m
-exit
+deactivate
 ```
 
 To run unit tests for the client:

@@ -30,7 +30,7 @@ if [ "$BUILD" = true ]; then
     echo "Building and starting Docker containers..."
     docker compose up --build -d
     sleep 3
-    docker compose exec yt_assistant_api poetry run alembic upgrade head
+    docker compose exec yt_assistant_api python3 -m alembic upgrade head
 else
     echo "Starting Docker containers without rebuilding..."
     docker compose up -d

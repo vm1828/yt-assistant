@@ -1,19 +1,27 @@
-name: Setup yt_assistant_emb Environment
+name: "Setup `yt_assistant_emb` Environment"
+description: "Set up Python, venv, and install dependencies for yt_assistant_emb"
 
 runs:
   using: "composite"
   steps:
-    # ---------------------- Set up Python ----------------------
     - name: Set up Python 3.12
       uses: actions/setup-python@v5
       with:
         python-version: "3.12"
 
-    # ---------------------- Install dev dependencies ----------------------
-    - name: Install dev dependencies
+    - name: Cache pip packages
+      uses: actions/cache@v4
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-emb-${{ hashFiles('yt_assistant_emb/requirements*.txt') }}
+        restore-keys: ${{ runner.os }}-pip-emb-
+
+    - name: Install dependencies
       run: |
-        python -m pip install --upgrade pip
-        curl -LsSf https://astral.sh/uv/install.sh | sh
         cd yt_assistant_emb
-        uv sync
+        python3 -m venv .venv
+        .venv/bin/python -m pip install --upgrade pip setuptools wheel
+        .venv/bin/python -m pip install -r requirements.txt -r requirements-dev.txt
+        .venv/bin/python -m pip install torch==2.9.0+cpu --index-url https://download.pytorch.org/whl/cpu
+        .venv/bin/python -m pip install sentence-transformers==5.1.2
       shell: bash

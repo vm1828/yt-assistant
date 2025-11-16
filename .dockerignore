@@ -23,6 +23,7 @@
 **/*.log
 **/mypy_cache/
 **/.pytest_cache/
+**/.venv/
 
 # Other
 **/.vscode/
